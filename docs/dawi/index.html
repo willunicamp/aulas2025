@@ -1,462 +1,243 @@
-﻿<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apresentação: Flexbox - O Poder Individual</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Prof. William Paiva - 2025 - COTIL</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-            color: #1f2937;
-            overflow: hidden;
+        /* Estilo para garantir que a página ocupe toda a tela, sem margens */
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Evita barras de rolagem */
+            height: 100%;
+            font-family: 'Roboto Mono', monospace;
+            background-color: #eef2f7; /* Tom de branco levemente azulado */
         }
 
-        .slide {
+        /* O canvas ocupará toda a área visível */
+        #interactiveCanvas {
+            display: block;
             width: 100vw;
             height: 100vh;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem 4rem;
-            text-align: center;
+        }
+
+        /* Título posicionado sobre o canvas */
+        .overlay-title {
             position: absolute;
-            top: 0;
-            left: 0;
-            transition: opacity 0.5s ease;
-        }
-
-            .slide.active {
-                display: flex;
-            }
-
-            .slide h1 {
-                font-size: 4rem;
-                font-weight: 900;
-                color: #004AAD;
-            }
-
-            .slide h2 {
-                font-size: 1.75rem;
-                font-weight: 700;
-                color: #0079FF;
-                margin-top: -0.5rem;
-            }
-
-            .slide ul {
-                list-style-position: inside;
-                text-align: left;
-                max-width: 700px;
-                margin-top: 2rem;
-            }
-
-            .slide li {
-                margin-bottom: 1rem;
-                font-size: 1.4rem;
-            }
-
-        .progress-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            height: 8px;
-            background-color: #0079FF;
-            transition: width 0.2s ease;
-            z-index: 10;
-        }
-
-        .example-container {
-            display: flex;
-            border: 3px dashed #99C7FF;
-            background-color: #e6f2ff;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
-            min-height: 150px;
-            width: 100%;
-            max-width: 800px;
-            transition: all 0.3s ease;
-        }
-
-        .example-item {
-            background-color: #0079FF;
-            color: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            text-align: center;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4a5568; /* Cor de texto escura e suave */
+            font-size: 2.5em;
             font-weight: 700;
-            min-width: 80px;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
+            pointer-events: none; /* Permite que cliques "atravessem" o título e cheguem ao canvas */
         }
 
-        .controls {
-            margin-top: 1rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-            .controls button {
-                background-color: #004AAD;
-                color: white;
-                padding: 0.5rem 1rem;
-                border-radius: 0.5rem;
-                font-weight: 700;
-                transition: background-color 0.2s;
-                border: none;
-                cursor: pointer;
-                font-size: 1rem;
+        /* Ajuste de fonte para telas menores */
+        @media (max-width: 768px) {
+            .overlay-title {
+                font-size: 1.8em;
+                width: 90%;
             }
-
-                .controls button:hover {
-                    background-color: #003380;
-                }
-
-        .code-snippet {
-            background-color: #2d3748;
-            color: #e2e8f0;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            text-align: left;
-            font-family: monospace;
-            margin-top: 1rem;
-            max-width: 800px;
-            width: 100%;
-            font-size: 1.2rem;
         }
-
-        .inline-code {
-            background-color: #e2e8f0;
-            color: #4a5568;
-            padding: 0.1em 0.4em;
-            border-radius: 0.25rem;
-            font-family: monospace;
-            font-size: 0.9em;
-        }
-
-        h1 .inline-code {
-            font-size: 0.7em;
-            vertical-align: middle;
-        }
-
-        .title-attention {
-            line-height: 1.2 !important;
-        }
-
-        #fullscreen-btn {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 100;
-            background-color: rgba(0, 74, 173, 0.7);
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            line-height: 1;
-            transition: background-color 0.2s;
-        }
-
-            #fullscreen-btn:hover {
-                background-color: #004AAD;
-            }
     </style>
 </head>
 <body>
+    <!-- Título da página que fica por cima do canvas -->
+    <h1 class="overlay-title">Prof. William Paiva - 2025 - COTIL</h1>
 
-    <button id="fullscreen-btn" title="Ativar/Desativar Tela Cheia">⛶</button>
-
-    <div id="slide-container">
-
-        <section class="slide active">
-            <h1>Aula 3: Flexbox - O Poder Individual</h1>
-            <h2>Dando poderes únicos para cada herói do seu layout!</h2>
-            <p class="mt-8 text-2xl text-gray-600">Pressione Espaço ou → para avançar</p>
-            <p class="mt-2 text-lg text-gray-500">Nota: este slide é responsivo.</p>
-        </section>
-
-        <section class="slide">
-            <img src="img01.png" alt="Espaço para imagem" class="rounded-lg shadow-md mb-8">
-            <h1>Na Última Aventura...</h1>
-            <ul>
-                <li>Já somos mestres do <strong>Contêiner Flex (o Chefe)</strong>.</li>
-                <li>Sabemos dar ordens para a equipe inteira com <code class="inline-code">display</code>, <code class="inline-code">flex-direction</code>, <code class="inline-code">justify-content</code> e <code class="inline-code">align-items</code>.</li>
-                <li><strong>O problema:</strong> E se um dos heróis precisar ser diferente do resto do time?</li>
-            </ul>
-        </section>
-
-        <section class="slide">
-            <h1>A Missão de Hoje</h1>
-            <ul class="text-lg">
-                <li><strong>Uma Regra Final para o Chefe:</strong> A propriedade <code class="inline-code">gap</code>.</li>
-                <li><strong>Os Poderes de Tamanho:</strong> <code class="inline-code">flex-grow</code>, <code class="inline-code">flex-shrink</code>, e <code class="inline-code">flex-basis</code>.</li>
-                <li><strong>Os Poderes de Posição:</strong> <code class="inline-code">order</code> e <code class="inline-code">align-self</code>.</li>
-            </ul>
-        </section>
-
-        <section class="slide">
-            <h1>Última Regra do Chefe: <code class="inline-code">gap</code></h1>
-            <p class="text-2xl max-w-3xl mt-4"><code class="inline-code">gap</code> cria um espaçamento <em>apenas entre</em> os itens. Também pode ser dividido em <code class="inline-code">row-gap</code> e <code class="inline-code">column-gap</code>.</p>
-            <div class="code-snippet">.container { display: flex; gap: 20px; }</div>
-            <div id="gap-example" class="example-container items-center">
-                <div class="example-item">Item 1</div>
-                <div class="example-item">Item 2</div>
-                <div class="example-item">Item 3</div>
-            </div>
-            <div class="controls">
-                <button id="gap-btn">Adicionar/Remover <code class="inline-code">gap: 20px</code></button>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h1 class="text-4xl text-center text-red-600 font-black title-attention">Atenção: A partir de agora, os poderes são aplicados nos ITENS (filhos)!</h1>
-        </section>
-
-        <section class="slide">
-            <h1>Poder Individual #1: <code class="inline-code">flex-grow</code></h1>
-            <p class="text-xl max-w-3xl mt-4">Define a <strong>proporção</strong> com que um item deve "crescer" para ocupar o <strong>espaço positivo livre</strong> no contêiner. Se um item tem <code class="inline-code">grow: 2</code> e outro <code class="inline-code">grow: 1</code>, o primeiro crescerá o dobro do segundo.</p>
-            <div class="code-snippet">.item-1 { flex-grow: 1; } .item-3 { flex-grow: 2; }</div>
-            <div id="grow-example" class="example-container items-center">
-                <div id="grow-item-1" class="example-item">Item 1</div>
-                <div id="grow-item-2" class="example-item bg-pink-500">Item 2</div>
-                <div id="grow-item-3" class="example-item">Item 3</div>
-            </div>
-            <div class="controls">
-                <button id="grow-btn-1">Item 2: <code class="inline-code">flex-grow: 1</code></button>
-                <button id="grow-btn-2">Item 1: <code class="inline-code">grow:1</code> | Item 3: <code class="inline-code">grow:2</code></button>
-                <button id="grow-btn-reset">Resetar</button>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h1>Poder Individual #2: <code class="inline-code">flex-shrink</code></h1>
-            <p class="text-xl max-w-3xl mt-4">Define a <strong>proporção</strong> com que um item deve "encolher" quando há <strong>espaço negativo</strong> (os itens são maiores que o contêiner). Um item com <code class="inline-code">shrink: 2</code> encolherá o dobro de um item com <code class="inline-code">shrink: 1</code>.</p>
-            <div class="code-snippet">.item-teimoso { flex-shrink: 0; } /* Não encolhe */ .item-flexivel { flex-shrink: 4; } /* Encolhe 4x mais */</div>
-            <div id="shrink-example" class="example-container items-center" style="width: 500px;">
-                <div id="shrink-item-1" class="example-item" style="width: 200px;">Item 1</div>
-                <div id="shrink-item-2" class="example-item bg-pink-500" style="width: 200px;">Item 2</div>
-                <div id="shrink-item-3" class="example-item" style="width: 200px;">Item 3</div>
-            </div>
-            <div class="controls">
-                <button id="shrink-btn-1">Proteger Item 2 (<code class="inline-code">shrink: 0</code>)</button>
-                <button id="shrink-btn-2">Item 3 encolhe 4x mais (<code class="inline-code">shrink: 4</code>)</button>
-                <button id="shrink-btn-reset">Resetar</button>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h1>Poder Individual #3: <code class="inline-code">flex-basis</code></h1>
-            <p class="text-2xl max-w-3xl mt-4">Define o tamanho inicial de um item antes do espaço ser distribuído. É o "ponto de partida" para o <code class="inline-code">flex-grow</code> e <code class="inline-code">flex-shrink</code> agirem.</p>
-            <div class="code-snippet">.item-com-base { flex-basis: 250px; } /* Começa com 250px */</div>
-            <div class="example-container items-center">
-                <div class="example-item" style="flex-basis: 150px;">basis: 150px</div>
-                <div class="example-item flex-grow" style="flex-grow: 1;">grow: 1</div>
-                <div class="example-item" style="flex-basis: 200px;">basis: 200px</div>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h1>O Combo: <code class="inline-code">flex</code></h1>
-            <p class="text-2xl max-w-3xl mt-4">É um atalho para <code class="inline-code">flex-grow</code>, <code class="inline-code">flex-shrink</code>, e <code class="inline-code">flex-basis</code>.</p>
-            <div class="bg-gray-800 text-white p-4 rounded-lg mt-4 text-left max-w-4xl w-full text-xl">
-                <pre><code class="language-css">.item { flex: [grow] [shrink] [basis]; }
-
-/* COMUNS: */
-flex: 1;      /* Atalho para: flex: 1 1 0%; (cresce e encolhe, base 0) */
-flex: auto;   /* Atalho para: flex: 1 1 auto; (cresce e encolhe, baseia-se no conteúdo) */
-flex: none;   /* Atalho para: flex: 0 0 auto; (não cresce nem encolhe, rígido) */
-</code></pre>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h1>Poder Individual #4: <code class="inline-code">order</code></h1>
-            <p class="text-2xl max-w-3xl mt-4">Muda a ordem visual dos itens, sem alterar o HTML. O padrão é <code class="inline-code">order: 0</code>. Valores negativos vêm primeiro.</p>
-            <div class="code-snippet">.item-primeiro { order: -1; } .item-ultimo { order: 1; }</div>
-            <div id="order-example" class="example-container items-center">
-                <div id="order-item-1" class="example-item">Item 1</div>
-                <div id="order-item-2" class="example-item bg-pink-500">Item 2</div>
-                <div id="order-item-3" class="example-item">Item 3</div>
-            </div>
-            <div class="controls">
-                <button id="order-btn-1">Item 2 para o final (<code class="inline-code">order: 1</code>)</button>
-                <button id="order-btn-2">Item 3 para o início (<code class="inline-code">order: -1</code>)</button>
-                <button id="order-btn-reset">Resetar</button>
-            </div>
-        </section>
-
-        <section class="slide">
-            <h1>Poder Individual #5: <code class="inline-code">align-self</code></h1>
-            <p class="text-2xl max-w-3xl mt-4">Permite que um único item ignore o <code class="inline-code">align-items</code> do contêiner e escolha seu próprio alinhamento vertical.</p>
-            <div class="code-snippet">.item-rebelde { align-self: flex-end; }</div>
-            <div id="self-example" class="example-container items-center" style="height: 200px;">
-                <div class="example-item">Item 1</div>
-                <div id="self-item" class="example-item bg-pink-500">Item 2 (Rebelde)</div>
-                <div class="example-item">Item 3</div>
-            </div>
-            <div class="controls">
-                <button onclick="changeAlignSelf('flex-start')"><code class="inline-code">align-self: flex-start</code></button>
-                <button onclick="changeAlignSelf('center')"><code class="inline-code">align-self: center</code></button>
-                <button onclick="changeAlignSelf('flex-end')"><code class="inline-code">align-self: flex-end</code></button>
-                <button onclick="changeAlignSelf('auto')">Resetar</button>
-            </div>
-        </section>
-
-        <section class="slide">
-            <img src="img02.png" alt="Espaço para imagem" class="rounded-lg shadow-md mb-8">
-            <h1>Dúvidas?</h1>
-            <h2>Perguntas, Heróis?</h2>
-        </section>
-
-    </div>
-
-    <div id="progress-bar" class="progress-bar"></div>
+    <!-- O elemento canvas onde tudo será desenhado -->
+    <canvas id="interactiveCanvas"></canvas>
 
     <script>
-        const slides = document.querySelectorAll('.slide');
-        const progressBar = document.getElementById('progress-bar');
-        const fullscreenBtn = document.getElementById('fullscreen-btn');
-        const docEl = document.documentElement;
-        let currentSlide = 0;
+        // --- CONFIGURAÇÃO INICIAL ---
+        const canvas = document.getElementById('interactiveCanvas');
+        const ctx = canvas.getContext('2d');
 
-        function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
+        // A configuração das turmas foi movida para cá para evitar erros de carregamento de arquivos locais.
+        const classes = [
+            { "text": "Aula 04 - Flexbox 2",   "link": "./04/" },
+            { "text": "Aula 04 - Exercício",   "link": "./04/ex.html" },
+        ];
+
+        let buttons = [];
+        let mouse = { x: undefined, y: undefined };
+
+        // --- FUNÇÃO AUXILIAR PARA DESENHAR RETÂNGULOS ARREDONDADOS ---
+        function drawRoundedRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // --- FUNÇÃO PARA QUEBRAR O TEXTO EM LINHAS ---
+        function getWrappedLines(ctx, text, maxWidth) {
+            const words = text.split('-');
+            if (words.length <= 1) return [text];
+
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                const word = words[i];
+                const testLine = currentLine + "-" + word;
+                const width = ctx.measureText(testLine).width;
+
+                if (width < maxWidth) {
+                    currentLine = testLine;
+                } else {
+                    lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // --- CLASSE PARA OS BOTÕES ---
+        class Button {
+            constructor(x, y, width, height, text, link) {
+                this.x = x; this.y = y;
+                this.width = width; this.height = height;
+                this.text = text; this.link = link;
+                this.scale = 1; this.targetScale = 1;
+                this.shadowBlur = 15; this.targetShadowBlur = 15;
+                this.textColor = '#4a5568';
+            }
+
+            update() {
+                this.scale += (this.targetScale - this.scale) * 0.1;
+                this.shadowBlur += (this.targetShadowBlur - this.shadowBlur) * 0.1;
+            }
+
+            draw() {
+                this.update();
+                const scaledWidth = this.width * this.scale;
+                const scaledHeight = this.height * this.scale;
+                const scaledX = this.x - (scaledWidth - this.width) / 2;
+                const scaledY = this.y - (scaledHeight - this.height) / 2;
+
+                ctx.save();
+                ctx.shadowColor = 'rgba(163, 177, 198, 0.6)';
+                ctx.shadowBlur = this.shadowBlur;
+                ctx.shadowOffsetX = 5;
+                ctx.shadowOffsetY = 5;
+
+                const gradient = ctx.createLinearGradient(scaledX, scaledY, scaledX, scaledY + scaledHeight);
+                gradient.addColorStop(0, '#fdfdff');
+                gradient.addColorStop(1, '#e8edf3');
+                ctx.fillStyle = gradient;
+
+                drawRoundedRect(ctx, scaledX, scaledY, scaledWidth, scaledHeight, 20);
+                ctx.fill();
+                ctx.restore();
+
+                ctx.fillStyle = this.textColor;
+                ctx.font = 'bold 16px "Roboto Mono"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                const lineHeight = 20;
+                const padding = 20;
+                const lines = getWrappedLines(ctx, this.text, this.width - padding);
+                const totalTextHeight = lines.length * lineHeight;
+                let startY = (this.y + this.height / 2) - (totalTextHeight / 2) + (lineHeight / 2);
+
+                lines.forEach(line => {
+                    ctx.fillText(line, this.x + this.width / 2, startY);
+                    startY += lineHeight;
+                });
+            }
+
+            isMouseOver(mouseX, mouseY) {
+                return mouseX > this.x && mouseX < this.x + this.width &&
+                    mouseY > this.y && mouseY < this.y + this.height;
+            }
+        }
+
+        // --- FUNÇÕES DE CONTROLE ---
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            buttons = [];
+            if (classes.length === 0) return;
+
+            const isMobile = canvas.width < 768;
+            const columns = isMobile ? 2 : 4;
+            const rows = Math.ceil(classes.length / columns);
+            const cardWidth = 200; const cardHeight = 80;
+            const gapX = 40; const gapY = 40;
+            const totalGridWidth = (columns * cardWidth) + ((columns - 1) * gapX);
+            const totalGridHeight = (rows * cardHeight) + ((rows - 1) * gapY);
+            const startX = (canvas.width - totalGridWidth) / 2;
+            const startY = (canvas.height - totalGridHeight) / 2 + 50;
+
+            let classIndex = 0;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < columns; c++) {
+                    if (classIndex < classes.length) {
+                        const x = startX + c * (cardWidth + gapX);
+                        const y = startY + r * (cardHeight + gapY);
+                        const classInfo = classes[classIndex];
+                        buttons.push(new Button(x, y, cardWidth, cardHeight, classInfo.text, classInfo.link));
+                        classIndex++;
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#eef2f7';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            buttons.forEach(button => button.draw());
+            requestAnimationFrame(animate);
+        }
+
+        // --- EVENT LISTENERS ---
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.clientX; mouse.y = event.clientY;
+            let isOverAnyButton = false;
+            buttons.forEach(button => {
+                if (button.isMouseOver(mouse.x, mouse.y)) {
+                    button.targetScale = 1.05;
+                    button.targetShadowBlur = 25;
+                    isOverAnyButton = true;
+                } else {
+                    button.targetScale = 1;
+                    button.targetShadowBlur = 15;
+                }
             });
-            const progress = ((index + 1) / slides.length) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
-
-        function nextSlide() {
-            if (currentSlide < slides.length - 1) {
-                currentSlide++;
-                showSlide(currentSlide);
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 0) {
-                currentSlide--;
-                showSlide(currentSlide);
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' || e.code === 'ArrowRight') {
-                e.preventDefault();
-                nextSlide();
-            } else if (e.code === 'ArrowLeft') {
-                e.preventDefault();
-                prevSlide();
-            } else if (e.code === 'KeyF') {
-                e.preventDefault();
-                toggleFullScreen();
-            }
+            document.body.style.cursor = isOverAnyButton ? 'pointer' : 'default';
         });
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-                if (docEl.requestFullscreen) {
-                    docEl.requestFullscreen();
-                } else if (docEl.mozRequestFullScreen) { /* Firefox */
-                    docEl.mozRequestFullScreen();
-                } else if (docEl.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                    docEl.webkitRequestFullscreen();
-                } else if (docEl.msRequestFullscreen) { /* IE/Edge */
-                    docEl.msRequestFullscreen();
+        window.addEventListener('click', (event) => {
+            buttons.forEach(button => {
+                if (button.isMouseOver(event.clientX, event.clientY)) {
+                    window.location.href = button.link;
                 }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) { /* Firefox */
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { /* IE/Edge */
-                    document.msExitFullscreen();
-                }
-            }
-        }
-
-        fullscreenBtn.addEventListener('click', toggleFullScreen);
-
-        // Interactive Examples Logic
-        document.getElementById('gap-btn').addEventListener('click', () => {
-            document.getElementById('gap-example').classList.toggle('gap-5');
+            });
         });
 
-        const growItem1 = document.getElementById('grow-item-1');
-        const growItem2 = document.getElementById('grow-item-2');
-        const growItem3 = document.getElementById('grow-item-3');
-        document.getElementById('grow-btn-1').addEventListener('click', () => {
-            growItem1.style.flexGrow = '0';
-            growItem2.style.flexGrow = '1';
-            growItem3.style.flexGrow = '0';
-        });
-        document.getElementById('grow-btn-2').addEventListener('click', () => {
-            growItem1.style.flexGrow = '1';
-            growItem2.style.flexGrow = '0';
-            growItem3.style.flexGrow = '2';
-        });
-        document.getElementById('grow-btn-reset').addEventListener('click', () => {
-            growItem1.style.flexGrow = '0';
-            growItem2.style.flexGrow = '0';
-            growItem3.style.flexGrow = '0';
-        });
+        window.addEventListener('resize', init);
 
-        const shrinkItem1 = document.getElementById('shrink-item-1');
-        const shrinkItem2 = document.getElementById('shrink-item-2');
-        const shrinkItem3 = document.getElementById('shrink-item-3');
-        document.getElementById('shrink-btn-1').addEventListener('click', () => {
-            shrinkItem1.style.flexShrink = '1';
-            shrinkItem2.style.flexShrink = '0';
-            shrinkItem3.style.flexShrink = '1';
-        });
-        document.getElementById('shrink-btn-2').addEventListener('click', () => {
-            shrinkItem1.style.flexShrink = '1';
-            shrinkItem2.style.flexShrink = '1';
-            shrinkItem3.style.flexShrink = '4';
-        });
-        document.getElementById('shrink-btn-reset').addEventListener('click', () => {
-            shrinkItem1.style.flexShrink = '1';
-            shrinkItem2.style.flexShrink = '1';
-            shrinkItem3.style.flexShrink = '1';
-        });
-
-
-        const orderItem1 = document.getElementById('order-item-1');
-        const orderItem2 = document.getElementById('order-item-2');
-        const orderItem3 = document.getElementById('order-item-3');
-        document.getElementById('order-btn-1').addEventListener('click', () => {
-            orderItem2.style.order = '1';
-        });
-        document.getElementById('order-btn-2').addEventListener('click', () => {
-            orderItem3.style.order = '-1';
-        });
-        document.getElementById('order-btn-reset').addEventListener('click', () => {
-            orderItem1.style.order = '0';
-            orderItem2.style.order = '0';
-            orderItem3.style.order = '0';
-        });
-
-        function changeAlignSelf(value) {
-            document.getElementById('self-item').style.alignSelf = value;
-        }
-
-        showSlide(currentSlide);
+        // --- INICIALIZAÇÃO ---
+        init();
+        animate();
     </script>
 </body>
 </html>
