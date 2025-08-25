@@ -699,6 +699,7 @@
 
         <section class="slide active">
             <h1>Tecnologias de Redes Sem Fio (WLAN)</h1>
+            <h1 class="overlay-title">Prof. William Paiva - 2025 - COTIL</h1>
             <p class="subtitle">O Universo do Wi-Fi: Padrões, Protocolos e Frequências</p>
         </section>
 
@@ -822,9 +823,11 @@
             <div class="interactive-container">
                 <div id="channel-visualizer" class="interactive-visuals">
                     <!-- Labels dos canais -->
-                    <script>for (let i = 1; i <= 13; i++) {
+                    <script>
+                        for (let i = 1; i <= 13; i++) {
                             document.write(`<div class="channel-label" style="left: calc(${((i - 1) * 7.5) + 4}%);">${i}</div>`);
-                        }</script>
+                        }
+                    </script>
                     <div id="interference-bar"></div>
                 </div>
                 <p id="channel-description" class="interactive-description">Os canais 1, 6 e 11 são os únicos que não se sobrepõem.</p>
@@ -1045,312 +1048,381 @@
         <button class="nav-btn" id="next-btn" title="Avançar (Seta Direita)">&#8594;</button>
     </div>
 
-    <script>document.addEventListener('DOMContentLoaded', () => {
-        // --- LÓGICA DE NAVEGAÇÃO DOS SLIDES ---
-        const slides = document.querySelectorAll('.slide');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const slideCounter = document.getElementById('slide-counter');
-        let currentSlide = 0;
-        const totalSlides = slides.length;
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- LÓGICA DE NAVEGAÇÃO DOS SLIDES ---
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
 
-        function showSlide(index) {
-            if (index >= totalSlides || index < 0) return;
-            slides[currentSlide].classList.remove('active');
-            currentSlide = index;
-            slides[currentSlide].classList.add('active');
-            slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
-            prevBtn.disabled = currentSlide === 0;
-            nextBtn.disabled = currentSlide === totalSlides - 1;
-        }
+            function showSlide(index) {
+                if (index >= totalSlides || index < 0) return;
+                slides[currentSlide].classList.remove('active');
+                currentSlide = index;
+                slides[currentSlide].classList.add('active');
+                slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
 
-        nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
-        prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => showSlide(currentSlide + 1));
+            prevBtn.addEventListener('click', () => showSlide(currentSlide - 1));
 
-        // NOVA LÓGICA DE NAVEGAÇÃO POR TECLADO
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                const activeSlide = slides[currentSlide];
-                if (activeSlide.dataset.interactive) {
-                    const controls = activeSlide.querySelector('.interactive-controls');
-                    const nextStepBtn = controls.querySelector('button[data-step]:not(:disabled):not([data-step="reset"])');
-                    if (nextStepBtn) {
-                        nextStepBtn.click();
+            // NOVA LÓGICA DE NAVEGAÇÃO POR TECLADO
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    const activeSlide = slides[currentSlide];
+                    if (activeSlide.dataset.interactive) {
+                        const controls = activeSlide.querySelector('.interactive-controls');
+                        const nextStepBtn = controls.querySelector('button[data-step]:not(:disabled):not([data-step="reset"])');
+                        if (nextStepBtn) {
+                            nextStepBtn.click();
+                        } else {
+                            nextBtn.click();
+                        }
                     } else {
                         nextBtn.click();
                     }
-                } else {
-                    nextBtn.click();
-                }
-            } else if (e.key === 'ArrowLeft') {
-                const activeSlide = slides[currentSlide];
-                if (activeSlide.dataset.interactive) {
-                    const controls = activeSlide.querySelector('.interactive-controls');
-                    const firstStepBtn = controls.querySelector('button[data-step="1"]');
-                    const isAtStart = firstStepBtn && !firstStepBtn.disabled;
+                } else if (e.key === 'ArrowLeft') {
+                    const activeSlide = slides[currentSlide];
+                    if (activeSlide.dataset.interactive) {
+                        const controls = activeSlide.querySelector('.interactive-controls');
+                        const firstStepBtn = controls.querySelector('button[data-step="1"]');
+                        const isAtStart = firstStepBtn && !firstStepBtn.disabled;
 
-                    if (!isAtStart) {
-                        const resetBtn = controls.querySelector('button[data-step="reset"]');
-                        if (resetBtn) resetBtn.click();
+                        if (!isAtStart) {
+                            const resetBtn = controls.querySelector('button[data-step="reset"]');
+                            if (resetBtn) resetBtn.click();
+                        } else {
+                            prevBtn.click();
+                        }
                     } else {
                         prevBtn.click();
                     }
-                } else {
-                    prevBtn.click();
                 }
-            }
-        });
-        showSlide(0);
+            });
+            showSlide(0);
 
-        // --- LÓGICA DAS ANIMAÇÕES ---
+            // --- LÓGICA DAS ANIMAÇÕES ---
 
-        // CSMA/CA
-        const csma = {
-            controls: document.getElementById('csma-controls'),
-            desc: document.getElementById('csma-description'),
-            packet: document.getElementById('packet'),
-            ack: document.getElementById('ack'),
-            ap: document.getElementById('csma-ap'),
-            wave: document.getElementById('listening-wave'),
-            waitIcon: document.getElementById('waiting-icon'),
-            statusDev2: document.getElementById('status-device2'),
-            reset: () => {
-                csma.desc.textContent = 'Seu notebook quer enviar um pacote para o Access Point. Clique nos botões para ver o passo a passo.';
-                [csma.packet, csma.ack].forEach(el => {
-                    el.style.transition = 'none';
-                    el.style.opacity = '0';
-                    el.style.transform = 'translate(0, 0)';
-                    el.offsetHeight;
-                    el.style.transition = 'all 1s ease-in-out';
-                });
-                csma.wave.style.transform = 'scale(0)';
-                csma.wave.style.opacity = '0';
-                csma.waitIcon.style.opacity = '0';
-                csma.statusDev2.style.opacity = '0';
-                csma.controls.querySelectorAll('button').forEach(b => b.disabled = (b.dataset.step !== '1' && !b.dataset.step.includes('reset')));
-            }
-        };
-        csma.controls.addEventListener('click', (e) => {
-            const step = e.target.dataset.step;
-            if (!step) return;
-
-            const currentBtn = csma.controls.querySelector(`[data-step="${step}"]`);
-            if (currentBtn) currentBtn.disabled = true;
-
-            const nextStepBtn = csma.controls.querySelector(`[data-step="${parseInt(step) + 1}"]`);
-
-            switch(step) {
-                case '1':
-                    csma.desc.textContent = '1. O notebook emite uma "onda" para escutar o meio e ver se está livre.';
-                    csma.wave.style.transform = 'scale(8)';
-                    csma.wave.style.opacity = '1';
-                    csma.statusDev2.textContent = "Silêncio...";
-                    csma.statusDev2.style.opacity = '1';
-                    setTimeout(() => {
-                        csma.wave.style.opacity = '0';
-                        if (nextStepBtn) nextStepBtn.disabled = false;
-                    }, 1000);
-                    break;
-                case '2':
-                    csma.desc.textContent = '2. Meio livre! Por segurança, ele espera um tempo aleatório (Backoff).';
+            // CSMA/CA
+            const csma = {
+                controls: document.getElementById('csma-controls'),
+                desc: document.getElementById('csma-description'),
+                packet: document.getElementById('packet'),
+                ack: document.getElementById('ack'),
+                ap: document.getElementById('csma-ap'),
+                wave: document.getElementById('listening-wave'),
+                waitIcon: document.getElementById('waiting-icon'),
+                statusDev2: document.getElementById('status-device2'),
+                reset: () => {
+                    csma.desc.textContent = 'Seu notebook quer enviar um pacote para o Access Point. Clique nos botões para ver o passo a passo.';
+                    [csma.packet, csma.ack].forEach(el => {
+                        el.style.transition = 'none';
+                        el.style.opacity = '0';
+                        el.style.transform = 'translate(0, 0)';
+                        el.offsetHeight;
+                        el.style.transition = 'all 1s ease-in-out';
+                    });
+                    csma.wave.style.transform = 'scale(0)';
+                    csma.wave.style.opacity = '0';
+                    csma.waitIcon.style.opacity = '0';
                     csma.statusDev2.style.opacity = '0';
-                    csma.waitIcon.style.opacity = '1';
-                    setTimeout(() => {
-                        csma.waitIcon.style.opacity = '0';
-                        if (nextStepBtn) nextStepBtn.disabled = false;
-                    }, 1200);
-                    break;
-                case '3':
-                    csma.desc.textContent = '3. Agora sim! O notebook envia o pacote para o Access Point.';
-                    const moveX = csma.ap.getBoundingClientRect().left - csma.packet.getBoundingClientRect().left + 15;
-                    csma.packet.style.transform = `translate(${moveX}px, -110px)`;
-                    csma.packet.style.opacity = '1';
-                    setTimeout(() => { if (nextStepBtn) nextStepBtn.disabled = false; }, 1000);
-                    break;
-                case '4':
-                    csma.desc.textContent = '4. O Access Point confirma o recebimento (ACK). Missão cumprida!';
-                    const ackMoveX = document.getElementById('csma-device').getBoundingClientRect().left - csma.ack.getBoundingClientRect().left + 100;
-                    csma.ack.style.transform = `translate(${ackMoveX}px, 110px)`;
-                    csma.ack.style.opacity = '1';
-                    break;
-                case 'reset':
-                    csma.reset();
-                    break;
-            }
-        });
+                    csma.controls.querySelectorAll('button').forEach(b => b.disabled = (b.dataset.step !== '1' && !b.dataset.step.includes('reset')));
+                }
+            };
+            csma.controls.addEventListener('click', (e) => {
+                const step = e.target.dataset.step;
+                if (!step) return;
 
-        // Hidden Node
-        const hn = {
-            controls: document.getElementById('hidden-node-controls'),
-            desc: document.getElementById('hidden-node-description'),
-            nodeA: document.getElementById('node-a'),
-            nodeB: document.getElementById('node-b'),
-            nodeC: document.getElementById('node-c'),
-            statusA: document.getElementById('status-a'),
-            statusC: document.getElementById('status-c'),
-            rangeA: document.getElementById('range-a'),
-            rangeC: document.getElementById('range-c'),
-            carA: document.getElementById('car-a'),
-            carC: document.getElementById('car-c'),
-            collision: document.getElementById('collision'),
-            reset: () => {
-                hn.desc.textContent = 'A e C querem enviar pacotes para o AP, mas não se ouvem. O que acontece?';
-                [hn.rangeA, hn.rangeC, hn.collision, hn.statusA, hn.statusC].forEach(el => { el.style.transform = el.classList.contains('node-status') ? 'translateX(-50%) scale(0.5)' : 'scale(0)'; el.style.opacity = '0';});
-                [hn.carA, hn.carC].forEach(el => { el.style.opacity = 0; el.style.transition = 'none'; el.style.transform = el.id === 'car-c' ? 'translateX(0) scaleX(-1)' : 'translateX(0)'; el.offsetHeight; el.style.transition = 'all 1.5s ease-in-out'; });
-                hn.controls.querySelectorAll('button').forEach(b => b.disabled = (b.dataset.step !== '1' && !b.dataset.step.includes('reset')));
-            }
-        };
-        hn.controls.addEventListener('click', (e) => {
-            const step = e.target.dataset.step;
-            if (!step) return;
-            hn.controls.querySelector(`[data-step="${step}"]`).disabled = true;
-            const nextStep = hn.controls.querySelector(`[data-step="${parseInt(step) + 1}"]`);
-            if(nextStep) nextStep.disabled = false;
+                const currentBtn = csma.controls.querySelector(`[data-step="${step}"]`);
+                if (currentBtn) currentBtn.disabled = true;
 
-            const apRect = hn.nodeB.getBoundingClientRect();
-            const carARect = hn.carA.getBoundingClientRect();
-            const carCRect = hn.carC.getBoundingClientRect();
+                const nextStepBtn = csma.controls.querySelector(`[data-step="${parseInt(step) + 1}"]`);
 
-            switch(step) {
-                case '1':
-                    hn.desc.textContent = '1. O alcance de A chega ao AP, mas não em C. O mesmo vale para C.';
-                    hn.rangeA.style.cssText = `top: ${hn.nodeA.offsetTop - 125}px; left: ${hn.nodeA.offsetLeft - 100}px; width: 550px; height: 300px; transform: scale(1); opacity: 0.5;`;
-                    hn.rangeC.style.cssText = `top: ${hn.nodeC.offsetTop - 125}px; left: ${hn.nodeC.offsetLeft - 450}px; width: 550px; height: 300px; transform: scale(1); opacity: 0.5;`;
-                    break;
-                case '2':
-                    hn.desc.textContent = '2. Ambos "escutam", não ouvem ninguém e decidem que o canal está livre.';
-                    [hn.statusA, hn.statusC].forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateX(-50%) scale(1)'; });
-                    break;
-                case '3':
-                    hn.desc.textContent = '3. Ao mesmo tempo, eles enviam seus pacotes... COLISÃO no AP!';
-                    [hn.statusA, hn.statusC].forEach(el => { el.style.opacity = '0'; });
-                    hn.carA.style.opacity = 1;
-                    hn.carC.style.opacity = 1;
-                    const moveX_A = apRect.left - carARect.left;
-                    const moveY_A = apRect.top - carARect.top;
-                    hn.carA.style.transform = `translate(${moveX_A}px, ${moveY_A}px)`;
-                    const moveX_C = apRect.left - carCRect.left;
-                    const moveY_C = apRect.top - carCRect.top;
-                    hn.carC.style.transform = `translate(${moveX_C}px, ${moveY_C}px) scaleX(-1)`;
-                    setTimeout(() => {
-                        hn.collision.style.opacity = '1';
-                        hn.collision.style.transform = 'translate(-50%, -50%) scale(1)';
-                    }, 750);
-                    break;
-                case 'reset': hn.reset(); break;
-            }
-        });
-
-        // RTS/CTS (SVG Animation)
-        // No JS needed for the main animation loop
-
-        // Channel Visualizer
-        const channelViz = {
-            controls: document.getElementById('channel-controls'),
-            desc: document.getElementById('channel-description'),
-            visualizer: document.getElementById('channel-visualizer'),
-            interferenceBar: document.getElementById('interference-bar'),
-            reset: () => {
-                channelViz.desc.textContent = 'Os canais 1, 6 e 11 são os únicos que não se sobrepõem.';
-                channelViz.visualizer.querySelectorAll('.channel-bar').forEach(bar => bar.remove());
-                channelViz.interferenceBar.style.opacity = '0';
-                channelViz.controls.querySelector('[data-step="4"]').textContent = 'Ligar Interferência';
-                channelViz.controls.querySelectorAll('button').forEach(b => b.disabled = false);
-            },
-            showChannel: (channel) => {
-                const bar = document.createElement('div');
-                bar.className = 'channel-bar';
-                const width = 22 / 90 * 100; // 22MHz width over ~90MHz total span
-                const start = (channel - 1) * 5 / 90 * 100;
-                bar.style.left = `${start}%`;
-                bar.style.width = `${width}%`;
-                channelViz.visualizer.appendChild(bar);
-            }
-        };
-        channelViz.controls.addEventListener('click', (e) => {
-            const step = e.target.dataset.step;
-            if (!step) return;
-
-            if (step === 'reset') {
-                channelViz.reset();
-                return;
-            }
-
-            const currentBtn = channelViz.controls.querySelector(`[data-step="${step}"]`);
-            if (currentBtn) currentBtn.disabled = true;
-
-            switch(step) {
-                case '1':
-                    channelViz.desc.textContent = 'Canal 1 selecionado.';
-                    channelViz.showChannel(1);
-                    break;
-                case '2':
-                    channelViz.desc.textContent = 'Canal 6 selecionado. Note que não há sobreposição com o canal 1.';
-                    channelViz.showChannel(6);
-                    break;
-                case '3':
-                    channelViz.desc.textContent = 'Canal 11 selecionado. Os três canais operam sem interferir entre si.';
-                    channelViz.showChannel(11);
-                    break;
-                case '4':
-                    const isOff = channelViz.interferenceBar.style.opacity === '0' || channelViz.interferenceBar.style.opacity === '';
-                    channelViz.interferenceBar.style.opacity = isOff ? '1' : '0';
-                    currentBtn.textContent = isOff ? 'Desligar Interferência' : 'Ligar Interferência';
-                    channelViz.desc.textContent = isOff ? 'Aparelhos como micro-ondas operam em ~2.45GHz, interferindo nos canais centrais (5-11).' : 'Interferência desligada.';
-                    currentBtn.disabled = false; // Allow toggling
-                    break;
-            }
-        });
-
-        // MIMO & Beamforming
-        document.getElementById('play-mimo').addEventListener('click', () => {
-            document.querySelectorAll('.stream').forEach(s => {
-                s.style.transition = 'none';
-                s.style.width = '0';
-                s.querySelector('span').style.opacity = '0';
-                s.offsetHeight;
-                s.style.transition = 'width 1s';
-                s.style.width = '200px';
-                s.querySelector('span').style.opacity = '1';
-            });
-        });
-        document.getElementById('play-beamforming').addEventListener('click', () => {
-            const omni = document.getElementById('omni-signal');
-            const beam = document.getElementById('beam');
-            beam.style.transition = 'none';
-            beam.style.width = '0';
-            omni.style.transition = 'none';
-            omni.style.transform = 'translateY(-50%) scale(0)';
-            omni.style.opacity = '0';
-            omni.offsetHeight;
-
-            omni.style.transition = 'all 1s';
-            beam.style.transition = 'all 1s';
-
-            omni.style.transform = 'translateY(-50%) scale(3)';
-            omni.style.opacity = '1';
-
-            setTimeout(() => {
-                omni.style.opacity = '0';
-                beam.style.width = '200px';
-            }, 500);
-        });
-
-        // Reset animations when returning to slide
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (entry.target.contains(csma.controls)) csma.reset();
-                    if (entry.target.contains(hn.controls)) hn.reset();
-                    // if (entry.target.contains(rts.controls)) rts.reset(); // SVG loop doesn't need reset
-                    if (entry.target.contains(channelViz.controls)) channelViz.reset();
+                switch (step) {
+                    case '1':
+                        csma.desc.textContent = '1. O notebook emite uma "onda" para escutar o meio e ver se está livre.';
+                        csma.wave.style.transform = 'scale(8)';
+                        csma.wave.style.opacity = '1';
+                        csma.statusDev2.textContent = "Silêncio...";
+                        csma.statusDev2.style.opacity = '1';
+                        setTimeout(() => {
+                            csma.wave.style.opacity = '0';
+                            if (nextStepBtn) nextStepBtn.disabled = false;
+                        }, 1000);
+                        break;
+                    case '2':
+                        csma.desc.textContent = '2. Meio livre! Por segurança, ele espera um tempo aleatório (Backoff).';
+                        csma.statusDev2.style.opacity = '0';
+                        csma.waitIcon.style.opacity = '1';
+                        setTimeout(() => {
+                            csma.waitIcon.style.opacity = '0';
+                            if (nextStepBtn) nextStepBtn.disabled = false;
+                        }, 1200);
+                        break;
+                    case '3':
+                        csma.desc.textContent = '3. Agora sim! O notebook envia o pacote para o Access Point.';
+                        const moveX = csma.ap.getBoundingClientRect().left - csma.packet.getBoundingClientRect().left + 15;
+                        csma.packet.style.transform = `translate(${moveX}px, -110px)`;
+                        csma.packet.style.opacity = '1';
+                        setTimeout(() => { if (nextStepBtn) nextStepBtn.disabled = false; }, 1000);
+                        break;
+                    case '4':
+                        csma.desc.textContent = '4. O Access Point confirma o recebimento (ACK). Missão cumprida!';
+                        const ackMoveX = document.getElementById('csma-device').getBoundingClientRect().left - csma.ack.getBoundingClientRect().left + 100;
+                        csma.ack.style.transform = `translate(${ackMoveX}px, 110px)`;
+                        csma.ack.style.opacity = '1';
+                        break;
+                    case 'reset':
+                        csma.reset();
+                        break;
                 }
             });
-        }, { threshold: 0.5 });
 
-        [csma.controls, hn.controls, channelViz.controls].forEach(el => {
-            if (el) observer.observe(el.closest('.slide'));
+            // Hidden Node
+            const hn = {
+                controls: document.getElementById('hidden-node-controls'),
+                desc: document.getElementById('hidden-node-description'),
+                nodeA: document.getElementById('node-a'),
+                nodeB: document.getElementById('node-b'),
+                nodeC: document.getElementById('node-c'),
+                statusA: document.getElementById('status-a'),
+                statusC: document.getElementById('status-c'),
+                rangeA: document.getElementById('range-a'),
+                rangeC: document.getElementById('range-c'),
+                carA: document.getElementById('car-a'),
+                carC: document.getElementById('car-c'),
+                collision: document.getElementById('collision'),
+                reset: () => {
+                    hn.desc.textContent = 'A e C querem enviar pacotes para o AP, mas não se ouvem. O que acontece?';
+                    [hn.rangeA, hn.rangeC, hn.collision, hn.statusA, hn.statusC].forEach(el => { el.style.transform = el.classList.contains('node-status') ? 'translateX(-50%) scale(0.5)' : 'scale(0)'; el.style.opacity = '0'; });
+                    [hn.carA, hn.carC].forEach(el => { el.style.opacity = 0; el.style.transition = 'none'; el.style.transform = el.id === 'car-c' ? 'translateX(0) scaleX(-1)' : 'translateX(0)'; el.offsetHeight; el.style.transition = 'all 1.5s ease-in-out'; });
+                    hn.controls.querySelectorAll('button').forEach(b => b.disabled = (b.dataset.step !== '1' && !b.dataset.step.includes('reset')));
+                }
+            };
+            hn.controls.addEventListener('click', (e) => {
+                const step = e.target.dataset.step;
+                if (!step) return;
+                hn.controls.querySelector(`[data-step="${step}"]`).disabled = true;
+                const nextStep = hn.controls.querySelector(`[data-step="${parseInt(step) + 1}"]`);
+                if (nextStep) nextStep.disabled = false;
+
+                const apRect = hn.nodeB.getBoundingClientRect();
+                const carARect = hn.carA.getBoundingClientRect();
+                const carCRect = hn.carC.getBoundingClientRect();
+
+                switch (step) {
+                    case '1':
+                        hn.desc.textContent = '1. O alcance de A chega ao AP, mas não em C. O mesmo vale para C.';
+                        hn.rangeA.style.cssText = `top: ${hn.nodeA.offsetTop - 125}px; left: ${hn.nodeA.offsetLeft - 100}px; width: 550px; height: 300px; transform: scale(1); opacity: 0.5;`;
+                        hn.rangeC.style.cssText = `top: ${hn.nodeC.offsetTop - 125}px; left: ${hn.nodeC.offsetLeft - 450}px; width: 550px; height: 300px; transform: scale(1); opacity: 0.5;`;
+                        break;
+                    case '2':
+                        hn.desc.textContent = '2. Ambos "escutam", não ouvem ninguém e decidem que o canal está livre.';
+                        [hn.statusA, hn.statusC].forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateX(-50%) scale(1)'; });
+                        break;
+                    case '3':
+                        hn.desc.textContent = '3. Ao mesmo tempo, eles enviam seus pacotes... COLISÃO no AP!';
+                        [hn.statusA, hn.statusC].forEach(el => { el.style.opacity = '0'; });
+                        hn.carA.style.opacity = 1;
+                        hn.carC.style.opacity = 1;
+                        const moveX_A = apRect.left - carARect.left;
+                        const moveY_A = apRect.top - carARect.top;
+                        hn.carA.style.transform = `translate(${moveX_A}px, ${moveY_A}px)`;
+                        const moveX_C = apRect.left - carCRect.left;
+                        const moveY_C = apRect.top - carCRect.top;
+                        hn.carC.style.transform = `translate(${moveX_C}px, ${moveY_C}px) scaleX(-1)`;
+                        setTimeout(() => {
+                            hn.collision.style.opacity = '1';
+                            hn.collision.style.transform = 'translate(-50%, -50%) scale(1)';
+                        }, 750);
+                        break;
+                    case 'reset': hn.reset(); break;
+                }
+            });
+
+            // RTS/CTS
+            const rts = {
+                controls: document.getElementById('rts-cts-controls'),
+                desc: document.getElementById('rts-cts-description'),
+                nodeC: document.getElementById('rts-node-c'),
+                statusC: document.getElementById('status-rts-c'),
+                rtsPacket: document.getElementById('rts-packet'),
+                ctsPacket: document.getElementById('cts-packet'),
+                ctsWave: document.getElementById('cts-wave'),
+                dataPacket: document.getElementById('rts-data'),
+                reset: () => {
+                    rts.desc.textContent = 'Usando "bilhetes" de permissão para organizar a conversa.';
+                    rts.nodeC.style.filter = 'none';
+                    rts.statusC.style.opacity = '0';
+                    [rts.rtsPacket, rts.dataPacket, rts.ctsPacket].forEach(el => { el.style.opacity = 0; el.style.transition = 'none'; el.style.transform = 'translate(0, 0)'; el.offsetHeight; el.style.transition = 'all 1s ease-in-out'; });
+                    rts.ctsWave.style.transform = 'translateX(-50%) scale(0)';
+                    rts.ctsWave.style.opacity = '0';
+                    rts.controls.querySelectorAll('button').forEach(b => b.disabled = (b.dataset.step !== '1' && !b.dataset.step.includes('reset')));
+                }
+            };
+            rts.controls.addEventListener('click', (e) => {
+                const step = e.target.dataset.step;
+                if (!step) return;
+                rts.controls.querySelector(`[data-step="${step}"]`).disabled = true;
+                const nextStep = rts.controls.querySelector(`[data-step="${parseInt(step) + 1}"]`);
+
+                const ap = document.getElementById('rts-node-b');
+                const nodeA = document.getElementById('rts-node-a');
+
+                switch (step) {
+                    case '1':
+                        rts.desc.textContent = '1. "A" envia um "Pedido para Enviar" (RTS) para o AP.';
+                        const moveRTSX = ap.offsetLeft - nodeA.offsetLeft - 15;
+                        const moveRTSY = ap.offsetTop - nodeA.offsetTop;
+                        rts.rtsPacket.style.transform = `translate(${moveRTSX}px, ${moveRTSY}px)`;
+                        rts.rtsPacket.style.opacity = 1;
+                        setTimeout(() => { if (nextStep) nextStep.disabled = false; }, 1000);
+                        break;
+                    case '2':
+                        rts.desc.textContent = '2. O AP responde com um "Livre para Enviar" (CTS) para TODOS na área.';
+                        rts.ctsWave.style.opacity = '0.5';
+                        rts.ctsWave.style.transform = 'translateX(-50%) scale(15)';
+                        setTimeout(() => {
+                            rts.ctsWave.style.opacity = '0';
+                            if (nextStep) nextStep.disabled = false;
+                        }, 1000);
+                        break;
+                    case '3':
+                        rts.desc.textContent = '3. "C" recebe o CTS e sabe que precisa esperar. Ele fica em silêncio.';
+                        rts.nodeC.style.filter = 'grayscale(100%) brightness(0.7)';
+                        rts.statusC.textContent = "Silêncio...";
+                        rts.statusC.style.opacity = '1';
+                        if (nextStep) nextStep.disabled = false;
+                        break;
+                    case '4':
+                        rts.desc.textContent = '4. Agora "A" pode enviar seu pacote ao AP sem risco de colisão.';
+                        rts.dataPacket.style.left = `${nodeA.offsetLeft + nodeA.offsetWidth - 20}px`;
+                        rts.dataPacket.style.top = `${nodeA.offsetTop + 10}px`;
+                        rts.dataPacket.offsetHeight;
+                        const dataPacketRect = rts.dataPacket.getBoundingClientRect();
+                        const apRect = ap.getBoundingClientRect();
+                        const moveDataX = apRect.left - dataPacketRect.left + (ap.offsetWidth / 2) - (rts.dataPacket.offsetWidth / 2);
+                        const moveDataY = apRect.top - dataPacketRect.top + (ap.offsetHeight / 2) - (rts.dataPacket.offsetHeight / 2);
+                        rts.dataPacket.style.transform = `translate(${moveDataX}px, ${moveDataY}px)`;
+                        rts.dataPacket.style.opacity = 1;
+                        break;
+                    case 'reset': rts.reset(); break;
+                }
+            });
+
+            // Channel Visualizer
+            const channelViz = {
+                controls: document.getElementById('channel-controls'),
+                desc: document.getElementById('channel-description'),
+                visualizer: document.getElementById('channel-visualizer'),
+                interferenceBar: document.getElementById('interference-bar'),
+                reset: () => {
+                    channelViz.desc.textContent = 'Os canais 1, 6 e 11 são os únicos que não se sobrepõem.';
+                    channelViz.visualizer.querySelectorAll('.channel-bar').forEach(bar => bar.remove());
+                    channelViz.interferenceBar.style.opacity = '0';
+                    channelViz.controls.querySelector('[data-step="4"]').textContent = 'Ligar Interferência';
+                    channelViz.controls.querySelectorAll('button').forEach(b => b.disabled = false);
+                },
+                showChannel: (channel) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'channel-bar';
+                    const width = 22 / 90 * 100; // 22MHz width over ~90MHz total span
+                    const start = (channel - 1) * 5 / 90 * 100;
+                    bar.style.left = `${start}%`;
+                    bar.style.width = `${width}%`;
+                    channelViz.visualizer.appendChild(bar);
+                }
+            };
+            channelViz.controls.addEventListener('click', (e) => {
+                const step = e.target.dataset.step;
+                if (!step) return;
+
+                if (step === 'reset') {
+                    channelViz.reset();
+                    return;
+                }
+
+                const currentBtn = channelViz.controls.querySelector(`[data-step="${step}"]`);
+                if (currentBtn) currentBtn.disabled = true;
+
+                switch (step) {
+                    case '1':
+                        channelViz.desc.textContent = 'Canal 1 selecionado.';
+                        channelViz.showChannel(1);
+                        break;
+                    case '2':
+                        channelViz.desc.textContent = 'Canal 6 selecionado. Note que não há sobreposição com o canal 1.';
+                        channelViz.showChannel(6);
+                        break;
+                    case '3':
+                        channelViz.desc.textContent = 'Canal 11 selecionado. Os três canais operam sem interferir entre si.';
+                        channelViz.showChannel(11);
+                        break;
+                    case '4':
+                        const isOff = channelViz.interferenceBar.style.opacity === '0' || channelViz.interferenceBar.style.opacity === '';
+                        channelViz.interferenceBar.style.opacity = isOff ? '1' : '0';
+                        currentBtn.textContent = isOff ? 'Desligar Interferência' : 'Ligar Interferência';
+                        channelViz.desc.textContent = isOff ? 'Aparelhos como micro-ondas operam em ~2.45GHz, interferindo nos canais centrais (5-11).' : 'Interferência desligada.';
+                        currentBtn.disabled = false; // Allow toggling
+                        break;
+                }
+            });
+
+            // MIMO & Beamforming
+            document.getElementById('play-mimo').addEventListener('click', () => {
+                document.querySelectorAll('.stream').forEach(s => {
+                    s.style.transition = 'none';
+                    s.style.width = '0';
+                    s.querySelector('span').style.opacity = '0';
+                    s.offsetHeight;
+                    s.style.transition = 'width 1s';
+                    s.style.width = '200px';
+                    s.querySelector('span').style.opacity = '1';
+                });
+            });
+            document.getElementById('play-beamforming').addEventListener('click', () => {
+                const omni = document.getElementById('omni-signal');
+                const beam = document.getElementById('beam');
+                beam.style.transition = 'none';
+                beam.style.width = '0';
+                omni.style.transition = 'none';
+                omni.style.transform = 'translateY(-50%) scale(0)';
+                omni.style.opacity = '0';
+                omni.offsetHeight;
+
+                omni.style.transition = 'all 1s';
+                beam.style.transition = 'all 1s';
+
+                omni.style.transform = 'translateY(-50%) scale(3)';
+                omni.style.opacity = '1';
+
+                setTimeout(() => {
+                    omni.style.opacity = '0';
+                    beam.style.width = '200px';
+                }, 500);
+            });
+
+            // Reset animations when returning to slide
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.contains(csma.controls)) csma.reset();
+                        if (entry.target.contains(hn.controls)) hn.reset();
+                        if (entry.target.contains(rts.controls)) rts.reset();
+                        if (entry.target.contains(channelViz.controls)) channelViz.reset();
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            [csma.controls, hn.controls, rts.controls, channelViz.controls].forEach(el => {
+                if (el) observer.observe(el.closest('.slide'));
+            });
         });
-    });</script>
+    </script>
 </body>
 </html>
