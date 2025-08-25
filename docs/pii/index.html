@@ -111,55 +111,80 @@
         </div>
     </div>
 
-    <script>// --- DADOS DA ÁRVORE (WBS) ATUALIZADOS ---
+    <script>
+    // --- DADOS DA ÁRVORE (WBS) ATUALIZADOS ---
         const treeData = {
             id: '1.0', title: 'App de Caronas', level: 1,
             children: [
-                { id: '1.1', title: 'Desenvolvimento Mobile', level: 2, children: [
-                    { id: '1.1.1', title: 'Aplicativo do Passageiro', level: 3, children: [
-                        { id: '1.1.1.1', title: 'Gerenciamento de Conta', level: 4, children: [
-                            { id: '1.1.1.1.1', title: 'Cadastro de Usuário', level: 5 },
-                            { id: '1.1.1.1.2', title: 'Login e Autenticação', level: 5 },
-                            { id: '1.1.1.1.3', title: 'Perfil do Usuário', level: 5 },
-                        ]},
-                        { id: '1.1.1.2', title: 'Módulo de Caronas', level: 4, children: [
-                            { id: '1.1.1.2.1', title: 'Busca de Caronas', level: 5 },
-                            { id: '1.1.1.2.2', title: 'Reserva de Vaga', level: 5 },
-                            { id: '1.1.1.2.3', title: 'Histórico de Viagens', level: 5 },
-                        ]},
-                        { id: '1.1.1.3', title: 'Sistema de Pagamento', level: 4, children: [
-                            { id: '1.1.1.3.1', title: 'Cadastro de Cartão', level: 5 },
-                            { id: '1.1.1.3.2', title: 'Processamento do Pagamento', level: 5 },
-                        ]},
-                    ]},
-                    { id: '1.1.2', title: 'Aplicativo do Motorista', level: 3, children: [
-                        { id: '1.1.2.1', title: 'Gerenciamento de Conta', level: 4, children: [
-                            { id: '1.1.2.1.1', title: 'Validação de Documentos', level: 5 },
-                            { id: '1.1.2.1.2', title: 'Cadastro de Veículo', level: 5 },
-                        ]},
-                        { id: '1.1.2.2', title: 'Módulo de Rotas', level: 4, children: [
-                            { id: '1.1.2.2.1', title: 'Oferta de Carona', level: 5 },
-                            { id: '1.1.2.2.2', title: 'Gerenciamento de Passageiros', level: 5 },
-                        ]},
-                    ]},
-                ]},
-                { id: '1.2', title: 'Desenvolvimento Frontend', level: 2, children: [
-                     { id: '1.2.1', title: 'Painel Administrativo', level: 3, children: [
-                        { id: '1.2.1.1', title: 'Dashboard Principal', level: 4 },
-                        { id: '1.2.1.2', title: 'Gestão de Usuários', level: 4 },
-                        { id: '1.2.1.3', title: 'Relatórios', level: 4 },
-                    ]},
-                ]},
-                { id: '1.3', title: 'Desenvolvimento Backend', level: 2, children: [
-                    { id: '1.3.1', title: 'API de Dados', level: 3 },
-                    { id: '1.3.2', title: 'Banco de Dados', level: 3 },
-                    { id: '1.3.3', title: 'Serviço de Autenticação', level: 3 },
-                ]},
-                { id: '1.4', title: 'Gerenciamento do Projeto', level: 2, children: [
-                    { id: '1.4.1', title: 'Documentação', level: 3 },
-                    { id: '1.4.2', title: 'Reuniões de Acompanhamento', level: 3 },
-                    { id: '1.4.3', title: 'Controle de Qualidade', level: 3 },
-                ]},
+                {
+                    id: '1.1', title: 'Desenvolvimento Mobile', level: 2, children: [
+                        {
+                            id: '1.1.1', title: 'Aplicativo do Passageiro', level: 3, children: [
+                                {
+                                    id: '1.1.1.1', title: 'Gerenciamento de Conta', level: 4, children: [
+                                        { id: '1.1.1.1.1', title: 'Cadastro de Usuário', level: 5 },
+                                        { id: '1.1.1.1.2', title: 'Login e Autenticação', level: 5 },
+                                        { id: '1.1.1.1.3', title: 'Perfil do Usuário', level: 5 },
+                                    ]
+                                },
+                                {
+                                    id: '1.1.1.2', title: 'Módulo de Caronas', level: 4, children: [
+                                        { id: '1.1.1.2.1', title: 'Busca de Caronas', level: 5 },
+                                        { id: '1.1.1.2.2', title: 'Reserva de Vaga', level: 5 },
+                                        { id: '1.1.1.2.3', title: 'Histórico de Viagens', level: 5 },
+                                    ]
+                                },
+                                {
+                                    id: '1.1.1.3', title: 'Sistema de Pagamento', level: 4, children: [
+                                        { id: '1.1.1.3.1', title: 'Cadastro de Cartão', level: 5 },
+                                        { id: '1.1.1.3.2', title: 'Processamento do Pagamento', level: 5 },
+                                    ]
+                                },
+                            ]
+                        },
+                        {
+                            id: '1.1.2', title: 'Aplicativo do Motorista', level: 3, children: [
+                                {
+                                    id: '1.1.2.1', title: 'Gerenciamento de Conta', level: 4, children: [
+                                        { id: '1.1.2.1.1', title: 'Validação de Documentos', level: 5 },
+                                        { id: '1.1.2.1.2', title: 'Cadastro de Veículo', level: 5 },
+                                    ]
+                                },
+                                {
+                                    id: '1.1.2.2', title: 'Módulo de Rotas', level: 4, children: [
+                                        { id: '1.1.2.2.1', title: 'Oferta de Carona', level: 5 },
+                                        { id: '1.1.2.2.2', title: 'Gerenciamento de Passageiros', level: 5 },
+                                    ]
+                                },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    id: '1.2', title: 'Desenvolvimento Frontend', level: 2, children: [
+                        {
+                            id: '1.2.1', title: 'Painel Administrativo', level: 3, children: [
+                                { id: '1.2.1.1', title: 'Dashboard Principal', level: 4 },
+                                { id: '1.2.1.2', title: 'Gestão de Usuários', level: 4 },
+                                { id: '1.2.1.3', title: 'Relatórios', level: 4 },
+                            ]
+                        },
+                    ]
+                },
+                {
+                    id: '1.3', title: 'Desenvolvimento Backend', level: 2, children: [
+                        { id: '1.3.1', title: 'API de Dados', level: 3 },
+                        { id: '1.3.2', title: 'Banco de Dados', level: 3 },
+                        { id: '1.3.3', title: 'Serviço de Autenticação', level: 3 },
+                    ]
+                },
+                {
+                    id: '1.4', title: 'Gerenciamento do Projeto', level: 2, children: [
+                        { id: '1.4.1', title: 'Documentação', level: 3 },
+                        { id: '1.4.2', title: 'Reuniões de Acompanhamento', level: 3 },
+                        { id: '1.4.3', title: 'Controle de Qualidade', level: 3 },
+                    ]
+                },
             ]
         };
 
