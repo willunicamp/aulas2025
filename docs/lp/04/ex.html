@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExercÌcios: Matrizes em C</title>
+    <title>Exerc√≠cios: Matrizes em C</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
             border: 1px solid #d1d5db; /* Gray 300 */
         }
 
-        /* Estilos Otimizados para Impress„o */
+        /* Estilos Otimizados para Impress√£o */
         @media print {
             body {
                 background-color: #ffffff !important;
@@ -85,49 +85,49 @@
     <div class="max-w-4xl mx-auto p-6 sm:p-8 md:p-12">
 
         <main>
-            <!-- Bloco para evitar quebra na impress„o -->
+            <!-- Bloco para evitar quebra na impress√£o -->
             <div class="print-no-break">
                 <header class="text-center mb-12">
-                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3">ExercÌcios Pr·ticos</h1>
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-3">Exerc√≠cios Pr√°ticos</h1>
                     <p class="text-lg md:text-xl text-green-600">Matrizes (Arrays Bidimensionais) em C</p>
                     <div class="w-24 h-1 bg-green-500 mx-auto mt-4 rounded print-hr"></div>
                 </header>
 
-                <!-- ExercÌcio 1: Jogo da Velha Simples -->
+                <!-- Exerc√≠cio 1: Jogo da Velha Simples -->
                 <section class="exercise-card bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-md">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">ExercÌcio 1: Jogo da Velha Simples</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Exerc√≠cio 1: Jogo da Velha Simples</h2>
 
                     <div class="space-y-6">
                         <div>
                             <h3 class="text-xl font-semibold text-green-600 mb-2">Contexto</h3>
                             <p class="text-gray-700 leading-relaxed">
-                                Vamos criar a base para um jogo da velha! O objetivo È criar um programa que desenha o tabuleiro na tela e permite que um jogador faÁa uma jogada. Este exercÌcio È perfeito para entender como os Ìndices de uma matriz correspondem a uma grade visual.
+                                Vamos criar a base para um jogo da velha! O objetivo √© criar um programa que desenha o tabuleiro na tela e permite que um jogador fa√ßa uma jogada. Este exerc√≠cio √© perfeito para entender como os √≠ndices de uma matriz correspondem a uma grade visual.
                             </p>
                         </div>
 
                         <div>
                             <h3 class="text-xl font-semibold text-green-600 mb-2">Requisitos</h3>
                             <ul class="list-disc list-inside text-gray-700 space-y-2 pl-2">
-                                <li><strong class="text-gray-800">Boa pr·tica:</strong> Use <code>#define LINHAS 3</code> e <code>#define COLUNAS 3</code> para definir o tamanho do tabuleiro.</li>
+                                <li><strong class="text-gray-800">Boa pr√°tica:</strong> Use <code>#define LINHAS 3</code> e <code>#define COLUNAS 3</code> para definir o tamanho do tabuleiro.</li>
                                 <li>Crie uma matriz de caracteres: <code>char tabuleiro[LINHAS][COLUNAS];</code>.</li>
-                                <li>Inicialize a matriz. Use um laÁo aninhado para preencher todas as posiÁıes com um espaÁo em branco <code>' '</code>.</li>
-                                <li>Crie um trecho de cÛdigo para <strong>exibir o tabuleiro</strong> de forma formatada, com as linhas e colunas separadas, como no exemplo.</li>
-                                <li>PeÁa ao usu·rio para digitar a <strong>linha (0 a LINHAS-1)</strong> e a <strong>coluna (0 a COLUNAS-1)</strong> da sua jogada.</li>
-                                <li>Marque a posiÁ„o escolhida na matriz com o caractere <strong>'X'</strong>.</li>
+                                <li>Inicialize a matriz. Use um la√ßo aninhado para preencher todas as posi√ß√µes com um espa√ßo em branco <code>' '</code>.</li>
+                                <li>Crie um trecho de c√≥digo para <strong>exibir o tabuleiro</strong> de forma formatada, com as linhas e colunas separadas, como no exemplo.</li>
+                                <li>Pe√ßa ao usu√°rio para digitar a <strong>linha (0 a LINHAS-1)</strong> e a <strong>coluna (0 a COLUNAS-1)</strong> da sua jogada.</li>
+                                <li>Marque a posi√ß√£o escolhida na matriz com o caractere <strong>'X'</strong>.</li>
                                 <li>Exiba o tabuleiro novamente com a jogada realizada.</li>
                             </ul>
                         </div>
 
                         <div>
-                            <h3 class="text-xl font-semibold text-green-600 mb-2">Passos para a ImplementaÁ„o</h3>
+                            <h3 class="text-xl font-semibold text-green-600 mb-2">Passos para a Implementa√ß√£o</h3>
                             <ol class="list-decimal list-inside text-gray-700 space-y-3 pl-2">
-                                <li><strong>Estrutura Inicial:</strong> Comece com a estrutura b·sica de um programa em C, incluindo a biblioteca <code>&lt;stdio.h&gt;</code>, os <code>#define</code> para `LINHAS` e `COLUNAS`, e a funÁ„o <code>main</code>.</li>
-                                <li><strong>DeclaraÁ„o:</strong> Dentro da <code>main</code>, declare a matriz <code>char tabuleiro[LINHAS][COLUNAS];</code> e duas vari·veis <code>int</code> para guardar a linha e a coluna da jogada.</li>
-                                <li><strong>InicializaÁ„o do Tabuleiro:</strong> Crie um laÁo <code>for</code> aninhado. O laÁo externo percorrer· as linhas (de 0 a `LINHAS-1`) e o interno as colunas. Dentro do laÁo interno, atribua um espaÁo em branco a cada posiÁ„o: <code>tabuleiro[i][j] = ' ';</code>.</li>
-                                <li><strong>ExibiÁ„o do Tabuleiro (1™ vez):</strong> ApÛs inicializar, crie outro laÁo aninhado para mostrar o tabuleiro. Use <code>printf</code> para desenhar as linhas e colunas, exibindo o conte˙do de <code>tabuleiro[i][j]</code> em cada cÈlula.</li>
-                                <li><strong>Entrada do Usu·rio:</strong> Use <code>printf</code> para pedir ao usu·rio que digite a linha e a coluna. Use <code>scanf</code> para ler os dois n˙meros e guard·-los nas vari·veis que vocÍ criou.</li>
-                                <li><strong>Realizar a Jogada:</strong> Acesse a posiÁ„o da matriz informada pelo usu·rio e atribua o caractere 'X': <code>tabuleiro[linha][coluna] = 'X';</code>.</li>
-                                <li><strong>ExibiÁ„o Final:</strong> Copie e cole o mesmo cÛdigo que vocÍ usou para exibir o tabuleiro pela primeira vez. Agora ele mostrar· o tabuleiro com a jogada 'X' marcada.</li>
+                                <li><strong>Estrutura Inicial:</strong> Comece com a estrutura b√°sica de um programa em C, incluindo a biblioteca <code>&lt;stdio.h&gt;</code>, os <code>#define</code> para `LINHAS` e `COLUNAS`, e a fun√ß√£o <code>main</code>.</li>
+                                <li><strong>Declara√ß√£o:</strong> Dentro da <code>main</code>, declare a matriz <code>char tabuleiro[LINHAS][COLUNAS];</code> e duas vari√°veis <code>int</code> para guardar a linha e a coluna da jogada.</li>
+                                <li><strong>Inicializa√ß√£o do Tabuleiro:</strong> Crie um la√ßo <code>for</code> aninhado. O la√ßo externo percorrer√° as linhas (de 0 a `LINHAS-1`) e o interno as colunas. Dentro do la√ßo interno, atribua um espa√ßo em branco a cada posi√ß√£o: <code>tabuleiro[i][j] = ' ';</code>.</li>
+                                <li><strong>Exibi√ß√£o do Tabuleiro (1¬™ vez):</strong> Ap√≥s inicializar, crie outro la√ßo aninhado para mostrar o tabuleiro. Use <code>printf</code> para desenhar as linhas e colunas, exibindo o conte√∫do de <code>tabuleiro[i][j]</code> em cada c√©lula.</li>
+                                <li><strong>Entrada do Usu√°rio:</strong> Use <code>printf</code> para pedir ao usu√°rio que digite a linha e a coluna. Use <code>scanf</code> para ler os dois n√∫meros e guard√°-los nas vari√°veis que voc√™ criou.</li>
+                                <li><strong>Realizar a Jogada:</strong> Acesse a posi√ß√£o da matriz informada pelo usu√°rio e atribua o caractere 'X': <code>tabuleiro[linha][coluna] = 'X';</code>.</li>
+                                <li><strong>Exibi√ß√£o Final:</strong> Copie e cole o mesmo c√≥digo que voc√™ usou para exibir o tabuleiro pela primeira vez. Agora ele mostrar√° o tabuleiro com a jogada 'X' marcada.</li>
                             </ol>
                         </div>
 
@@ -154,48 +154,48 @@ Digite a coluna (0-2): 1
                 </section>
             </div>
 
-            <!-- ExercÌcio 2: Mapa de Assentos do Cinema -->
+            <!-- Exerc√≠cio 2: Mapa de Assentos do Cinema -->
             <section class="exercise-card mt-10 bg-white rounded-xl p-6 md:p-8 border border-gray-200 shadow-md">
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">ExercÌcio 2: Mapa de Assentos do Cinema</h2>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Exerc√≠cio 2: Mapa de Assentos do Cinema</h2>
 
                 <div class="space-y-6">
                     <div>
                         <h3 class="text-xl font-semibold text-green-600 mb-2">Contexto</h3>
                         <p class="text-gray-700 leading-relaxed">
-                            VocÍ È o respons·vel pelo sistema de reservas de um pequeno cinema. Sua tarefa È criar um programa que exibe os assentos disponÌveis, permite que um cliente escolha um lugar e atualiza o mapa para mostrar que o assento agora est· ocupado.
+                            Voc√™ √© o respons√°vel pelo sistema de reservas de um pequeno cinema. Sua tarefa √© criar um programa que exibe os assentos dispon√≠veis, permite que um cliente escolha um lugar e atualiza o mapa para mostrar que o assento agora est√° ocupado.
                         </p>
                     </div>
 
                     <div>
                         <h3 class="text-xl font-semibold text-green-600 mb-2">Requisitos</h3>
                         <ul class="list-disc list-inside text-gray-700 space-y-2 pl-2">
-                            <li><strong class="text-gray-800">Boa pr·tica:</strong> Use <code>#define FILEIRAS 5</code> e <code>#define POLTRONAS 5</code> para definir o tamanho do cinema.</li>
+                            <li><strong class="text-gray-800">Boa pr√°tica:</strong> Use <code>#define FILEIRAS 5</code> e <code>#define POLTRONAS 5</code> para definir o tamanho do cinema.</li>
                             <li>Crie uma matriz de caracteres: <code>char cinema[FILEIRAS][POLTRONAS];</code>.</li>
                             <li>Inicialize todos os assentos como <strong>'L'</strong> (Livre).</li>
-                            <li>Exiba o mapa de assentos na tela, mostrando as fileiras e poltronas numeradas para facilitar a escolha do usu·rio.</li>
-                            <li>PeÁa ao usu·rio para digitar a <strong>fileira</strong> e a <strong>poltrona</strong> que deseja reservar.</li>
-                            <li>Verifique se o assento escolhido est· livre (se o valor na matriz È 'L').</li>
+                            <li>Exiba o mapa de assentos na tela, mostrando as fileiras e poltronas numeradas para facilitar a escolha do usu√°rio.</li>
+                            <li>Pe√ßa ao usu√°rio para digitar a <strong>fileira</strong> e a <strong>poltrona</strong> que deseja reservar.</li>
+                            <li>Verifique se o assento escolhido est√° livre (se o valor na matriz √© 'L').</li>
                             <li>Se estiver livre, mude o valor para <strong>'O'</strong> (Ocupado) e mostre uma mensagem de sucesso.</li>
                             <li>Exiba o mapa de assentos atualizado.</li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 class="text-xl font-semibold text-green-600 mb-2">Passos para a ImplementaÁ„o</h3>
+                        <h3 class="text-xl font-semibold text-green-600 mb-2">Passos para a Implementa√ß√£o</h3>
                         <ol class="list-decimal list-inside text-gray-700 space-y-3 pl-2">
-                            <li><strong>Estrutura Inicial:</strong> Comece com os <code>#include</code>, os <code>#define</code> para `FILEIRAS` e `POLTRONAS`, e a funÁ„o <code>main</code>.</li>
-                            <li><strong>DeclaraÁ„o:</strong> Declare a matriz <code>char cinema[FILEIRAS][POLTRONAS];</code> e vari·veis para a fileira e poltrona escolhidas pelo usu·rio.</li>
-                            <li><strong>InicializaÁ„o do Cinema:</strong> Use um laÁo aninhado para percorrer a matriz e preencher todas as posiÁıes com o caractere 'L'.</li>
-                            <li><strong>ExibiÁ„o do Mapa:</strong> Crie um laÁo aninhado para exibir o mapa. Use <code>printf</code> para mostrar os n˙meros das fileiras e poltronas e o conte˙do de cada posiÁ„o da matriz.</li>
-                            <li><strong>Entrada do Usu·rio:</strong> PeÁa para o usu·rio digitar a fileira e a poltrona desejadas. Lembre-se que o usu·rio digitar· de 1 a 5, mas a matriz usa Ìndices de 0 a 4. VocÍ precisar· subtrair 1 dos valores lidos antes de us·-los.</li>
+                            <li><strong>Estrutura Inicial:</strong> Comece com os <code>#include</code>, os <code>#define</code> para `FILEIRAS` e `POLTRONAS`, e a fun√ß√£o <code>main</code>.</li>
+                            <li><strong>Declara√ß√£o:</strong> Declare a matriz <code>char cinema[FILEIRAS][POLTRONAS];</code> e vari√°veis para a fileira e poltrona escolhidas pelo usu√°rio.</li>
+                            <li><strong>Inicializa√ß√£o do Cinema:</strong> Use um la√ßo aninhado para percorrer a matriz e preencher todas as posi√ß√µes com o caractere 'L'.</li>
+                            <li><strong>Exibi√ß√£o do Mapa:</strong> Crie um la√ßo aninhado para exibir o mapa. Use <code>printf</code> para mostrar os n√∫meros das fileiras e poltronas e o conte√∫do de cada posi√ß√£o da matriz.</li>
+                            <li><strong>Entrada do Usu√°rio:</strong> Pe√ßa para o usu√°rio digitar a fileira e a poltrona desejadas. Lembre-se que o usu√°rio digitar√° de 1 a 5, mas a matriz usa √≠ndices de 0 a 4. Voc√™ precisar√° subtrair 1 dos valores lidos antes de us√°-los.</li>
                             <li>
-                                <strong>VerificaÁ„o e Reserva:</strong> Use um <code>if</code> para checar o conte˙do da matriz na posiÁ„o escolhida: <code>if (cinema[fileira-1][poltrona-1] == 'L')</code>.
+                                <strong>Verifica√ß√£o e Reserva:</strong> Use um <code>if</code> para checar o conte√∫do da matriz na posi√ß√£o escolhida: <code>if (cinema[fileira-1][poltrona-1] == 'L')</code>.
                                 <ul>
                                     <li class="mt-2 ml-4">Se for 'L', mude para 'O' e imprima uma mensagem de sucesso.</li>
-                                    <li class="ml-4">Caso contr·rio (<code>else</code>), imprima uma mensagem dizendo que o assento est· ocupado.</li>
+                                    <li class="ml-4">Caso contr√°rio (<code>else</code>), imprima uma mensagem dizendo que o assento est√° ocupado.</li>
                                 </ul>
                             </li>
-                            <li><strong>ExibiÁ„o Final:</strong> Mostre o mapa atualizado, repetindo o cÛdigo de exibiÁ„o.</li>
+                            <li><strong>Exibi√ß√£o Final:</strong> Mostre o mapa atualizado, repetindo o c√≥digo de exibi√ß√£o.</li>
                         </ol>
                     </div>
 
@@ -229,7 +229,7 @@ F5 L  L  L  L  L
         </main>
 
         <footer class="text-center mt-12 text-gray-500 text-sm">
-            <p>Bons estudos e boa programaÁ„o!</p>
+            <p>Bons estudos e boa programa√ß√£o!</p>
         </footer>
 
     </div>
