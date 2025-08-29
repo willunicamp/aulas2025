@@ -1,0 +1,732 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação: CSS Grid - Desvendando Layouts 2D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1f2937;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.5s ease;
+            overflow-y: auto;
+        }
+
+            .slide.active {
+                display: flex;
+            }
+
+            .slide h1 {
+                font-size: 3.5rem;
+                font-weight: 900;
+                color: #0d9488; /* Teal-600 */
+                line-height: 1.2;
+            }
+
+            .slide h2 {
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: #0d9488;
+                margin-top: -0.5rem;
+            }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 8px;
+            background-color: #14b8a6; /* Teal-500 */
+            transition: width 0.2s ease;
+            z-index: 10;
+        }
+
+        .example-grid {
+            display: grid;
+            border: 3px dashed #5eead4; /* Teal-300 */
+            background-color: #ccfbf1; /* Teal-100 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            width: 100%;
+            max-width: 800px;
+            transition: all 0.4s ease;
+        }
+
+        .example-item {
+            background-color: #14b8a6; /* Teal-500 */
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+        }
+
+        .controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+            .controls button {
+                background-color: #0f766e; /* Teal-700 */
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                font-weight: 700;
+                transition: background-color 0.2s;
+                border: none;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+                .controls button:hover {
+                    background-color: #134e4a; /* Teal-900 */
+                }
+
+        .code-snippet {
+            background-color: #282828; /* Gruvbox BG */
+            color: #ebdbb2; /* Gruvbox FG */
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            text-align: left;
+            font-family: monospace;
+            margin-top: 1rem;
+            max-width: 800px;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+            .code-snippet .comment {
+                color: #928374;
+            }
+
+            .code-snippet .property {
+                color: #fe8019;
+            }
+
+            .code-snippet .value {
+                color: #b8bb26;
+            }
+
+            .code-snippet .function {
+                color: #83a598;
+            }
+
+            .code-snippet .selector {
+                color: #fabd2f;
+            }
+
+        .inline-code {
+            background-color: #ebdbb2;
+            color: #3c3836;
+            padding: 0.1em 0.4em;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        h1 .inline-code {
+            font-size: 0.7em;
+            vertical-align: middle;
+        }
+
+        #fullscreen-btn, #prev-btn, #next-btn, #slide-counter {
+            position: fixed;
+            z-index: 100;
+            background-color: rgba(13, 148, 136, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+            #fullscreen-btn:hover, #prev-btn:hover, #next-btn:hover {
+                background-color: #0d9488;
+            }
+
+        #fullscreen-btn {
+            top: 1rem;
+            right: 1rem;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
+
+        #prev-btn {
+            bottom: 1rem;
+            left: 1rem;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+        }
+
+        #next-btn {
+            bottom: 1rem;
+            right: 1rem;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+        }
+
+        #slide-counter {
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 40px;
+            padding: 0 1.5rem;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="fullscreen-btn" title="Ativar/Desativar Tela Cheia">⛶</button>
+    <button id="prev-btn" title="Slide Anterior (←)">‹</button>
+    <button id="next-btn" title="Próximo Slide (→)">›</button>
+    <div id="slide-counter">1 / 23</div>
+
+    <div id="slide-container">
+
+        <section class="slide active">
+            <h1>CSS Grid Layout</h1>
+            <h2>Desvendando Layouts Bidimensionais</h2>
+            <p class="mt-8 text-2xl text-gray-600">Pressione Espaço ou → para avançar</p>
+        </section>
+
+        <section class="slide">
+            <h1>Flexbox vs. Grid</h1>
+            <p class="text-2xl max-w-4xl mt-4">Flexbox é incrível para alinhar itens em <strong>UMA DIMENSÃO</strong> (uma linha ou uma coluna).<br><br>Grid foi criado para layouts em <strong>DUAS DIMENSÕES</strong> (linhas E colunas ao mesmo tempo). É o poder supremo para criar a estrutura principal de uma página.</p>
+        </section>
+
+        <section class="slide">
+            <h1 class="text-4xl text-center text-red-600 font-black">Parte 1: Poderes do Contêiner Grid (Pai)</h1>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">display: grid</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Este é o comando que ativa a magia. Transforma um elemento em contêiner grid e seus filhos diretos em itens grid.</p>
+            <div class="code-snippet"><pre><code class="language-css"><span class="selector">.container</span> { <span class="property">display</span>: <span class="value">grid</span>; }</code></pre></div>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">grid-template-columns/rows</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Define o esqueleto do grid. Você pode usar qualquer unidade de CSS, a unidade <code class="inline-code">fr</code>, e funções.</p>
+            <div class="code-snippet">
+                <pre><code><span class="comment">/* Exemplos de Valores */</span>
+<span class="property">grid-template-columns</span>: <span class="value">100px 100px 100px</span>; <span class="comment">/* 3 colunas de 100px */</span>
+<span class="property">grid-template-columns</span>: <span class="value">25% 50% 25%</span>;       <span class="comment">/* 3 colunas em porcentagem */</span>
+<span class="property">grid-template-columns</span>: <span class="value">1fr 2fr</span>;           <span class="comment">/* 2 colunas, a 2ª com o dobro da largura */</span>
+<span class="property">grid-template-columns</span>: <span class="value">100px 1fr auto</span>;    <span class="comment">/* Misturando unidades */</span>
+</code></pre>
+            </div>
+            <p class="text-xl max-w-3xl mt-4">A unidade <code class="inline-code">fr</code> (fração) representa uma fração do <strong>espaço disponível</strong> no contêiner. É a forma mais poderosa de criar layouts flexíveis com Grid.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Exemplo: <code class="inline-code">grid-template-columns</code></h1>
+            <p class="text-xl max-w-3xl mt-4">Vamos ver na prática como as colunas são definidas.</p>
+            <div class="code-snippet">
+                <pre><code id="template-code" class="language-css"><span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">gap</span>: <span class="value">10px</span>;
+}</code></pre>
+            </div>
+            <div id="template-grid" class="example-grid" style="grid-template-rows: 100px; gap: 10px;">
+                <div class="example-item">1</div><div class="example-item">2</div><div class="example-item">3</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeTemplate('1fr 1fr 1fr')">3 colunas iguais (1fr)</button>
+                <button onclick="changeTemplate('200px 1fr')">Fixa (200px) e Flexível (1fr)</button>
+                <button onclick="changeTemplate('100px auto 100px')">Fixa, Auto, Fixa</button>
+                <button onclick="changeTemplate('')">Resetar</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>Função <code class="inline-code">repeat()</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Uma forma limpa de repetir um padrão de trilhas. Ótimo para grids com muitas colunas ou linhas iguais.</p>
+            <div class="code-snippet">
+                <pre><code><span class="comment">/* Sintaxe: repeat(quantidade, tamanho) */</span>
+<span class="property">grid-template-columns</span>: <span class="function">repeat</span>(<span class="value">3, 1fr</span>); <span class="comment">/* Equivalente a: 1fr 1fr 1fr */</span>
+<span class="property">grid-template-columns</span>: <span class="function">repeat</span>(<span class="value">4, 100px</span>); <span class="comment">/* 4 colunas de 100px */</span>
+<span class="property">grid-template-columns</span>: <span class="function">repeat</span>(<span class="value">2, 1fr 2fr</span>); <span class="comment">/* Padrão: 1fr 2fr 1fr 2fr */</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>Exemplo: <code class="inline-code">repeat()</code></h1>
+            <p class="text-xl max-w-3xl mt-4">Veja como a função <code class="inline-code">repeat()</code> simplifica a criação de grids complexos.</p>
+            <div class="code-snippet">
+                <pre><code id="repeat-code" class="language-css"><span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">gap</span>: <span class="value">10px</span>;
+}</code></pre>
+            </div>
+            <div id="repeat-grid" class="example-grid" style="grid-template-rows: 100px; gap: 10px;">
+                <div class="example-item">1</div><div class="example-item">2</div><div class="example-item">3</div><div class="example-item">4</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeRepeat('repeat(4, 1fr)')">4 colunas iguais</button>
+                <button onclick="changeRepeat('repeat(2, 1fr 2fr)')">Padrão 1fr 2fr (2x)</button>
+                <button onclick="changeRepeat('')">Resetar</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>Função <code class="inline-code">minmax()</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Define um tamanho mínimo e máximo para uma trilha. Essencial para responsividade.</p>
+            <div class="code-snippet">
+                <pre><code><span class="comment">/* Sintaxe: minmax(minimo, maximo) */</span>
+<span class="property">grid-template-columns</span>: <span class="function">minmax</span>(<span class="value">200px, 1fr</span>); <span class="comment">/* Mínimo 200px, máximo 1fr */</span>
+
+<span class="comment">/* Combo poderoso para galerias: */</span>
+<span class="property">grid-template-columns</span>: <span class="function">repeat</span>(<span class="value">auto-fit, <span class="function">minmax</span>(250px, 1fr)</span>);
+</code></pre>
+            </div>
+            <p class="text-xl max-w-3xl mt-4"><code class="inline-code">auto-fit</code>: Cria quantas trilhas couberem no espaço disponível. Se o espaço aumentar, ele cria mais colunas. Se diminuir, ele quebra a linha.</p>
+        </section>
+
+        <section class="slide">
+            <h1>Exemplo: <code class="inline-code">minmax()</code> com <code class="inline-code">auto-fit</code></h1>
+            <p class="text-xl max-w-3xl mt-4">Cria um layout de galeria responsivo que ajusta o número de colunas automaticamente.</p>
+            <div class="code-snippet">
+                <pre><code id="minmax-code" class="language-css"><span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">gap</span>: <span class="value">10px</span>;
+                <span class="property">grid-template-columns</span>: <span class="function">repeat</span>(<span class="value">auto-fit, <span class="function">minmax</span>(150px, 1fr)</span>);
+}</code></pre>
+            </div>
+            <div id="minmax-grid" class="example-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <div class="example-item">1</div><div class="example-item">2</div><div class="example-item">3</div><div class="example-item">4</div>
+            </div>
+            <p class="mt-4 text-lg">Redimensione a janela do navegador para ver a mágica!</p>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">grid-template-areas</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Permite nomear as áreas do grid, criando um "mapa" visual do seu layout. Cada string representa uma linha.</p>
+            <div class="code-snippet">
+                <pre><code class="language-css"><span class="comment">/* CSS do Contêiner (Pai) */</span>
+<span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">grid-template-areas</span>: 
+                <span class="value">"header header"</span>
+                <span class="value">"main   sidebar"</span>;
+}
+
+<span class="comment">/* CSS dos Itens (Filhos) */</span>
+<span class="selector">.header</span> { <span class="property">grid-area</span>: <span class="value">header</span>; }
+<span class="selector">.main</span> { <span class="property">grid-area</span>: <span class="value">main</span>; }
+<span class="selector">.sidebar</span> { <span class="property">grid-area</span>: <span class="value">sidebar</span>; }
+</code></pre>
+            </div>
+            <div class="code-snippet">
+                <pre><code><span class="comment">&lt;!-- HTML --&gt;</span>
+&lt;div class="container"&gt;
+  &lt;div class="header"&gt;Header&lt;/div&gt;
+  &lt;div class="main"&gt;Main&lt;/div&gt;
+  &lt;div class="sidebar"&gt;Sidebar&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>Entendendo <code class="inline-code">grid-template-areas</code></h1>
+            <p class="text-xl max-w-3xl mt-4">A string <code class="inline-code">"main sidebar"</code> define a segunda linha do grid. A palavra <code class="inline-code">main</code> mapeia para a primeira coluna, e <code class="inline-code">sidebar</code> para a segunda. O espaço em branco entre elas é o que separa as colunas.</p>
+            <div class="example-grid" style="grid-template-areas: 'header header' 'main sidebar' 'footer footer'; grid-template-columns: 1fr 200px; gap: 10px;">
+                <div class="example-item" style="grid-area: header;">header</div>
+                <div class="example-item" style="grid-area: main;">main</div>
+                <div class="example-item" style="grid-area: sidebar;">sidebar</div>
+                <div class="example-item" style="grid-area: footer;">footer</div>
+            </div>
+            <p class="text-xl max-w-3xl mt-4">A grande utilidade é poder reorganizar todo o layout apenas mudando o "mapa" de texto, especialmente em media queries.</p>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">grid-template-areas</code> na Prática</h1>
+            <p class="text-xl max-w-3xl mt-4">Veja como podemos mudar completamente o layout para mobile apenas reescrevendo o "mapa" de áreas.</p>
+            <div class="code-snippet">
+                <pre><code id="areas-responsive-code" class="language-css"><span class="comment">/* Desktop */</span>
+<span class="selector">.container</span> {
+                <span class="property">grid-template-areas</span>: 
+                <span class="value">"header header"</span>
+                <span class="value">"main   sidebar"</span>;
+}
+</code></pre>
+            </div>
+            <div id="areas-responsive-grid" class="example-grid" style="gap: 10px;">
+                <div class="example-item" style="grid-area: header;">header</div>
+                <div class="example-item" style="grid-area: main;">main</div>
+                <div class="example-item" style="grid-area: sidebar;">sidebar</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeAreas('desktop')">Ver Layout Desktop</button>
+                <button onclick="changeAreas('mobile')">Ver Layout Mobile</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">gap</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Cria um espaçamento entre as colunas e linhas do grid.</p>
+            <div class="code-snippet">
+                <pre><code id="gap-code" class="language-css"><span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">grid-template-columns</span>: <span class="value">1fr 1fr 1fr</span>;
+                <span class="property">gap</span>: <span class="value">20px</span>;
+}</code></pre>
+            </div>
+            <div id="gap-grid" class="example-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="example-item">1</div><div class="example-item">2</div><div class="example-item">3</div>
+                <div class="example-item">4</div><div class="example-item">5</div><div class="example-item">6</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeGap('20px')">Aplicar `gap: 20px`</button>
+                <button onclick="changeGap('0px')">Remover gap</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">justify-items</code> e <code class="inline-code">align-items</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Alinham os itens <strong>dentro de suas células</strong>. <code class="inline-code">justify</code> no eixo horizontal, <code class="inline-code">align</code> no eixo vertical.</p>
+            <div class="code-snippet">
+                <pre><code id="items-align-code" class="language-css"><span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">justify-items</span>: <span class="value">start</span>;
+                <span class="property">align-items</span>: <span class="value">start</span>;
+}</code></pre>
+            </div>
+            <div id="items-align-grid" class="example-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 150px; gap: 10px;">
+                <div class="example-item w-24 h-24 flex items-center justify-center">1</div><div class="example-item w-24 h-24 flex items-center justify-center">2</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeItemsAlign('start', 'start')">start / start</button>
+                <button onclick="changeItemsAlign('center', 'center')">center / center</button>
+                <button onclick="changeItemsAlign('end', 'end')">end / end</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1 class="text-4xl text-center text-red-600 font-black">Parte 2: Poderes dos Itens Grid (Filhos)</h1>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">grid-column</code> e <code class="inline-code">grid-row</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Determina a localização de um item no grid, especificando em quais <strong>linhas de grade</strong> ele começa e termina. <code class="inline-code">3 / 5</code> significa: comece na linha de grade 3 e termine na linha 5 (ocupando as colunas 3 e 4).</p>
+            <div class="code-snippet">
+                <pre><code id="position-code" class="language-css"><span class="selector">.item-A</span> {
+                <span class="property">grid-column</span>: <span class="value">1 / 3</span>;
+                <span class="property">grid-row</span>: <span class="value">1 / 2</span>;
+}</code></pre>
+            </div>
+            <div id="position-grid" class="example-grid" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 100px); gap: 10px;">
+                <div id="position-item" class="example-item bg-pink-500">A</div>
+                <div class="example-item">B</div><div class="example-item">C</div><div class="example-item">D</div>
+                <div class="example-item">E</div><div class="example-item">F</div><div class="example-item">G</div><div class="example-item">H</div>
+            </div>
+            <div class="controls">
+                <button onclick="changePosition('1 / 3', '1 / 2')">Ocupar 2 colunas</button>
+                <button onclick="changePosition('3 / 5', '1 / 3')">Ocupar 2x2 no final</button>
+                <button onclick="changePosition('1 / 2', '1 / 2')">Resetar</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>A palavra-chave <code class="inline-code">span</code></h1>
+            <p class="text-2xl max-w-4xl mt-4">Em vez de definir o início e o fim, você pode dizer a um item para "se estender" por um número de trilhas a partir de onde ele estiver.</p>
+            <div class="code-snippet">
+                <pre><code><span class="property">grid-column</span>: <span class="value">span 3</span>;   <span class="comment">/* Ocupa 3 colunas a partir de sua posição inicial */</span>
+<span class="property">grid-column</span>: <span class="value">2 / span 2</span>; <span class="comment">/* Começa na linha 2 e ocupa 2 colunas */</span>
+</code></pre>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>Exemplo: <code class="inline-code">span</code></h1>
+            <p class="text-xl max-w-3xl mt-4">Veja como <code class="inline-code">span</code> é uma forma flexível de expandir itens.</p>
+            <div class="code-snippet">
+                <pre><code id="span-code" class="language-css"><span class="selector">.item-A</span> {
+                <span class="property">grid-column</span>: <span class="value">span 2</span>;
+                <span class="property">grid-row</span>: <span class="value">auto</span>;
+}</code></pre>
+            </div>
+            <div id="span-grid" class="example-grid" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 100px); gap: 10px;">
+                <div id="span-item" class="example-item bg-pink-500">A</div>
+                <div class="example-item">B</div><div class="example-item">C</div><div class="example-item">D</div>
+                <div class="example-item">E</div><div class="example-item">F</div><div class="example-item">G</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeSpan('span 2', 'auto')">Ocupar 2 colunas</button>
+                <button onclick="changeSpan('2 / span 3', 'auto')">Começar na 2 e ocupar 3</button>
+                <button onclick="changeSpan('auto', 'span 2')">Ocupar 2 linhas</button>
+                <button onclick="changeSpan('auto', 'auto')">Resetar</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">grid-area</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Atribui um item a uma área nomeada que você definiu no contêiner com <code class="inline-code">grid-template-areas</code>.</p>
+            <div class="code-snippet">
+                <pre><code><span class="selector">.meu-header</span> { <span class="property">grid-area</span>: <span class="value">header</span>; }
+<span class="selector">.meu-main</span> { <span class="property">grid-area</span>: <span class="value">main</span>; }
+<span class="selector">.minha-sidebar</span> { <span class="property">grid-area</span>: <span class="value">sidebar</span>; }
+<span class="selector">.meu-footer</span> { <span class="property">grid-area</span>: <span class="value">footer</span>; }
+</code></pre>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h1>Exemplo: <code class="inline-code">grid-area</code></h1>
+            <p class="text-xl max-w-3xl mt-4">Clique para atribuir cada item à sua área nomeada no grid.</p>
+            <div class="code-snippet"><pre><code id="area-code" class="language-css"><span class="comment">/* Clique nos botões para aplicar o grid-area */</span></code></pre></div>
+            <div id="area-grid" class="example-grid" style="grid-template-columns: 1fr 200px; grid-template-rows: 60px 1fr 60px; gap: 10px; grid-template-areas: 'header header' 'main sidebar' 'footer footer';">
+                <div id="area-header" class="example-item" style="background-color: dimgray;">#area-header</div>
+                <div id="area-main" class="example-item" style="background-color: darkorange;">#area-main</div>
+                <div id="area-sidebar" class="example-item" style="background-color: forestgreen;">#area-sidebar</div>
+                <div id="area-footer" class="example-item" style="background-color:rebeccapurple;">#area-footer</div>
+            </div>
+            <div class="controls">
+                <button onclick="applyArea('header')">Aplicar `grid-area: header`</button>
+                <button onclick="applyArea('main')">Aplicar `grid-area: main`</button>
+                <button onclick="applyArea('sidebar')">Aplicar `grid-area: sidebar`</button>
+                <button onclick="applyArea('footer')">Aplicar `grid-area: footer`</button>
+                <button onclick="applyArea('reset')">Resetar</button>
+            </div>
+
+            <div class="code-snippet">
+                <pre><code class="language-css"><span class="comment">/* CSS do Contêiner (Pai) */</span>
+<span class="selector">.container</span> {
+                <span class="property">display</span>: <span class="value">grid</span>;
+                <span class="property">grid-template-areas</span>: 
+                <span class="value">"header header"</span>
+                <span class="value">"main   sidebar"</span>;
+                <span class="value">"footer footer"</span>;
+}
+
+</code></pre>
+            </div>
+
+
+        </section>
+
+        <section class="slide">
+            <h1><code class="inline-code">justify-self</code> e <code class="inline-code">align-self</code></h1>
+            <p class="text-2xl max-w-3xl mt-4">Permite que um <strong>único item</strong> ignore o alinhamento definido por <code class="inline-code">justify-items</code> e <code class="inline-code">align-items</code> no contêiner.</p>
+            <div class="code-snippet">
+                <pre><code id="self-align-code" class="language-css"><span class="selector">.item-rebelde</span> {
+                <span class="property">justify-self</span>: <span class="value">start</span>;
+                <span class="property">align-self</span>: <span class="value">start</span>;
+}</code></pre>
+            </div>
+            <div id="self-align-grid" class="example-grid" style="grid-template-columns: 1fr 1fr; grid-template-rows: 150px; gap: 10px;">
+                <div class="example-item w-24 h-24 flex items-center justify-center">1</div>
+                <div id="self-align-item" class="example-item bg-pink-500 w-24 h-24 flex items-center justify-center">2 (Rebelde)</div>
+            </div>
+            <div class="controls">
+                <button onclick="changeSelfAlign('end', 'end')">end / end</button>
+                <button onclick="changeSelfAlign('center', 'center')">center / center</button>
+                <button onclick="changeSelfAlign('stretch', 'stretch')">stretch / stretch</button>
+            </div>
+        </section>
+
+        <section class="slide">
+            <img src="duvidas.png" alt="Espaço para imagem" class="rounded-lg shadow-md mb-8">
+            <h1>Dúvidas?</h1>
+            <h2>Perguntas, Construtores de Layouts?</h2>
+        </section>
+
+    </div>
+
+    <div id="progress-bar" class="progress-bar"></div>
+
+    <script>const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress-bar');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        const docEl = document.documentElement;
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            const progress = ((index + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            slideCounter.textContent = `${index + 1} / ${slides.length}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.code === 'ArrowRight') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.code === 'KeyF') {
+                e.preventDefault();
+                toggleFullScreen();
+            }
+        });
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                docEl.requestFullscreen().catch(err => console.error(err));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
+
+        // Interactive Examples
+        const templateGrid = document.getElementById('template-grid');
+        const templateCode = document.getElementById('template-code');
+        function changeTemplate(cols) {
+            templateGrid.style.gridTemplateColumns = cols;
+            if (cols === '') {
+                 templateCode.innerHTML = `<span class="selector">.container</span> {\n  <span class="property">display</span>: <span class="value">grid</span>;\n  <span class="property">gap</span>: <span class="value">10px</span>;\n}`;
+            } else {
+                templateCode.innerHTML = `<span class="selector">.container</span> {\n  <span class="property">display</span>: <span class="value">grid</span>;\n  <span class="property">gap</span>: <span class="value">10px</span>;\n  <span class="property">grid-template-columns</span>: <span class="value">${cols}</span>;\n}`;
+            }
+        }
+
+        const repeatGrid = document.getElementById('repeat-grid');
+        const repeatCode = document.getElementById('repeat-code');
+        function changeRepeat(cols) {
+            repeatGrid.style.gridTemplateColumns = cols;
+             if (cols === '') {
+                 repeatCode.innerHTML = `<span class="selector">.container</span> {\n  <span class="property">display</span>: <span class="value">grid</span>;\n  <span class="property">gap</span>: <span class="value">10px</span>;\n}`;
+            } else {
+                repeatCode.innerHTML = `<span class="selector">.container</span> {\n  <span class="property">display</span>: <span class="value">grid</span>;\n  <span class="property">gap</span>: <span class="value">10px</span>;\n  <span class="property">grid-template-columns</span>: <span class="value">${cols}</span>;\n}`;
+            }
+        }
+
+        const areasResponsiveGrid = document.getElementById('areas-responsive-grid');
+        const areasResponsiveCode = document.getElementById('areas-responsive-code');
+        function changeAreas(view) {
+            if (view === 'mobile') {
+                areasResponsiveGrid.style.gridTemplateAreas = '"header" "main" "sidebar"';
+                areasResponsiveGrid.style.gridTemplateColumns = '1fr';
+                areasResponsiveCode.innerHTML = `<span class="comment">/* Mobile (max-width: 767px) */</span>\n<span class="selector">.container</span> {\n  <span class="property">grid-template-areas</span>: \n    <span class="value">"header"</span>\n    <span class="value">"main"</span>\n    <span class="value">"sidebar"</span>;\n}`;
+            } else {
+                areasResponsiveGrid.style.gridTemplateAreas = '"header header" "main sidebar"';
+                areasResponsiveGrid.style.gridTemplateColumns = '1fr 200px';
+                areasResponsiveCode.innerHTML = `<span class="comment">/* Desktop */</span>\n<span class="selector">.container</span> {\n  <span class="property">grid-template-areas</span>: \n    <span class="value">"header header"</span>\n    <span class="value">"main   sidebar"</span>;\n}`;
+            }
+        }
+        changeAreas('desktop'); // Initial state
+
+        const gapGrid = document.getElementById('gap-grid');
+        const gapCode = document.getElementById('gap-code');
+        function changeGap(value) {
+            gapGrid.style.gap = value;
+            gapCode.innerHTML = `<span class="selector">.container</span> {\n  <span class="property">display</span>: <span class="value">grid</span>;\n  <span class="property">grid-template-columns</span>: <span class="value">1fr 1fr 1fr</span>;\n  <span class="property">gap</span>: <span class="value">${value}</span>;\n}`;
+        }
+
+        const itemsAlignGrid = document.getElementById('items-align-grid');
+        const itemsAlignCode = document.getElementById('items-align-code');
+        function changeItemsAlign(justify, align) {
+            itemsAlignGrid.style.justifyItems = justify;
+            itemsAlignGrid.style.alignItems = align;
+            itemsAlignCode.innerHTML = `<span class="selector">.container</span> {\n  <span class="property">display</span>: <span class="value">grid</span>;\n  <span class="property">justify-items</span>: <span class="value">${justify}</span>;\n  <span class="property">align-items</span>: <span class="value">${align}</span>;\n}`;
+        }
+
+        const positionItem = document.getElementById('position-item');
+        const positionCode = document.getElementById('position-code');
+        function changePosition(col, row) {
+            positionItem.style.gridColumn = col;
+            positionItem.style.gridRow = row;
+            positionCode.innerHTML = `<span class="selector">.item-A</span> {\n  <span class="property">grid-column</span>: <span class="value">${col}</span>;\n  <span class="property">grid-row</span>: <span class="value">${row}</span>;\n}`;
+        }
+
+        const spanItem = document.getElementById('span-item');
+        const spanCode = document.getElementById('span-code');
+        function changeSpan(colSpan, rowSpan) {
+            spanItem.style.gridColumn = colSpan;
+            spanItem.style.gridRow = rowSpan;
+            spanCode.innerHTML = `<span class="selector">.item-A</span> {\n  <span class="property">grid-column</span>: <span class="value">${colSpan}</span>;\n  <span class="property">grid-row</span>: <span class="value">${rowSpan}</span>;\n}`;
+        }
+
+        const areaCode = document.getElementById('area-code');
+        function applyArea(area) {
+            const elements = ['header', 'main', 'sidebar', 'footer'];
+            if (area === 'reset') {
+                elements.forEach(el => document.getElementById(`area-${el}`).style.gridArea = '');
+                areaCode.innerHTML = `<span class="comment">/* Clique nos botões para aplicar o grid-area */</span>`;
+                return;
+            }
+            document.getElementById(`area-${area}`).style.gridArea = area;
+            areaCode.innerHTML = `<span class="selector">#area-${area}</span> {\n  <span class="property">grid-area</span>: <span class="value">${area}</span>;\n}`;
+        }
+
+        const selfAlignItem = document.getElementById('self-align-item');
+        const selfAlignCode = document.getElementById('self-align-code');
+        function changeSelfAlign(justify, align) {
+            selfAlignItem.style.justifySelf = justify;
+            selfAlignItem.style.alignSelf = align;
+            if (align === 'stretch') {
+                selfAlignItem.classList.remove('h-24');
+            } else {
+                selfAlignItem.classList.add('h-24');
+            }
+            if (justify === 'stretch') {
+                 selfAlignItem.classList.remove('w-24');
+            } else {
+                selfAlignItem.classList.add('w-24');
+            }
+            selfAlignCode.innerHTML = `<span class="selector">.item-rebelde</span> {\n  <span class="property">justify-self</span>: <span class="value">${justify}</span>;\n  <span class="property">align-self</span>: <span class="value">${align}</span>;\n}`;
+        }
+
+        showSlide(currentSlide);</script>
+</body>
+</html>
