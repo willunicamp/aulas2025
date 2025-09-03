@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Comandos Git</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #d9534f; /* Um tom de vermelho/laranja */
+            border-bottom: 2px solid #f4f4f4;
+            padding-bottom: 10px;
+        }
+        dt {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #0275d8; /* Um tom de azul */
+            margin-top: 20px;
+        }
+        dd {
+            margin-left: 20px;
+            padding-left: 15px;
+            border-left: 3px solid #eee;
+        }
+        code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            background-color: #eef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Principais Comandos do Git</h1>
+        <p>Uma referência rápida para os comandos mais utilizados no dia a dia com o Git.</p>
+
+        <dl>
+            <dt>git config</dt>
+            <dd>
+                <p>Configura valores específicos para o seu ambiente Git. É o primeiro comando que você deve executar após instalar o Git para configurar seu nome de usuário e e-mail.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Configura o nome de usuário globalmente
+git config --global user.name "Seu Nome"
+
+# Configura o e-mail globalmente
+git config --global user.email "seu.email@exemplo.com"</code></pre>
+            </dd>
+
+            <dt>git init</dt>
+            <dd>
+                <p>Inicia um novo repositório Git em um diretório existente. Isso cria uma subpasta oculta <code>.git</code> que contém todos os arquivos necessários para o controle de versão.</p>
+                <h4>Exemplo de Uso:</h4>
+                <pre><code># Navegue até a pasta do seu projeto e execute
+git init</code></pre>
+            </dd>
+
+            <dt>git clone</dt>
+            <dd>
+                <p>Cria uma cópia local de um repositório remoto existente. Este comando baixa todo o histórico do projeto e o prepara para trabalho local.</p>
+                <h4>Exemplo de Uso:</h4>
+                <pre><code># Clona um repositório a partir de uma URL
+git clone https://github.com/usuario/repositorio.git</code></pre>
+            </dd>
+
+            <dt>git status</dt>
+            <dd>
+                <p>Mostra o estado atual do seu diretório de trabalho e da área de preparação (staging area). Ele informa quais arquivos foram modificados, quais estão na staging area e quais não estão sendo rastreados pelo Git.</p>
+                <h4>Exemplo de Uso:</h4>
+                <pre><code>git status</code></pre>
+            </dd>
+
+            <dt>git add</dt>
+            <dd>
+                <p>Adiciona alterações do diretório de trabalho para a área de preparação (staging area). É o passo intermediário antes de confirmar (commitar) as alterações.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Adiciona um arquivo específico
+git add nome_do_arquivo.txt
+
+# Adiciona todos os arquivos modificados e novos
+git add .</code></pre>
+            </dd>
+
+            <dt>git commit</dt>
+            <dd>
+                <p>Salva um "snapshot" das alterações que estão na staging area para o histórico do projeto. Cada commit tem um ID único e uma mensagem descritiva.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Abre o editor de texto para escrever uma mensagem de commit
+git commit
+
+# Commita com uma mensagem diretamente na linha de comando
+git commit -m "Adiciona funcionalidade de login"</code></pre>
+            </dd>
+
+            <dt>git pull</dt>
+            <dd>
+                <p>Busca e mescla (merge) as alterações de um repositório remoto para o seu branch local. É uma combinação dos comandos <code>git fetch</code> e <code>git merge</code>.</p>
+                <h4>Exemplo de Uso:</h4>
+                <pre><code># Atualiza o branch local com as alterações do branch remoto 'main'
+git pull origin main</code></pre>
+            </dd>
+
+            <dt>git push</dt>
+            <dd>
+                <p>Envia os commits do seu branch local para o repositório remoto correspondente. Isso atualiza o repositório remoto com as alterações que você fez localmente.</p>
+                <h4>Exemplo de Uso:</h4>
+                <pre><code># Envia os commits para o branch remoto 'main'
+git push origin main</code></pre>
+            </dd>
+
+            <dt>git branch</dt>
+            <dd>
+                <p>Lista, cria ou deleta branches. Branches são "linhas do tempo" independentes no seu projeto, usadas para desenvolver funcionalidades isoladamente.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Lista todos os branches locais
+git branch
+
+# Cria um novo branch chamado 'nova-feature'
+git branch nova-feature
+
+# Deleta um branch
+git branch -d nome-do-branch</code></pre>
+            </dd>
+            
+            <dt>git checkout</dt>
+            <dd>
+                <p>Muda de um branch para outro. Também pode ser usado para restaurar arquivos do diretório de trabalho.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Muda para o branch 'nova-feature'
+git checkout nova-feature
+
+# Cria e já muda para um novo branch
+git checkout -b outra-feature</code></pre>
+            </dd>
+
+            <dt>git merge</dt>
+            <dd>
+                <p>Une o histórico de um branch independente ao seu branch atual. Por exemplo, para incorporar as mudanças de um branch de 'feature' no branch 'main'.</p>
+                <h4>Exemplo de Uso:</h4>
+                <pre><code># Primeiro, mude para o branch que receberá as alterações
+git checkout main
+
+# Agora, faça o merge do branch 'nova-feature' no 'main'
+git merge nova-feature</code></pre>
+            </dd>
+            
+            <dt>git log</dt>
+            <dd>
+                <p>Exibe o histórico de commits do branch atual, mostrando o autor, data e mensagem de cada commit.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Mostra o log completo
+git log
+
+# Mostra o log de forma mais concisa, com uma linha por commit
+git log --oneline
+
+# Mostra o log com um gráfico das ramificações
+git log --oneline --graph --all</code></pre>
+            </dd>
+
+            <dt>git remote</dt>
+            <dd>
+                <p>Gerencia as conexões com repositórios remotos. Você pode listar, adicionar ou remover repositórios remotos.</p>
+                <h4>Exemplos de Uso:</h4>
+                <pre><code># Lista os repositórios remotos configurados (geralmente 'origin')
+git remote -v
+
+# Adiciona um novo repositório remoto
+git remote add origin https://github.com/usuario/novo-repo.git</code></pre>
+            </dd>
+
+        </dl>
+    </div>
+
+</body>
+</html>
