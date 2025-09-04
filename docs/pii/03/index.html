@@ -1,0 +1,588 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Interativa - Diagrama de Gantt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta de Cores - Modus Themes (b.light) */
+        :root {
+            --bg: #fbfbfb;
+            --text: #000000;
+            --blue: #0000ff;
+            --purple: #800080;
+            --green: #005e00;
+            --cyan: #005f5f;
+            --red: #a60000;
+            --gray-1: #f0f0f0;
+            --gray-2: #e0e0e0;
+            --gray-3: #cccccc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        #presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            padding: 4rem 5rem;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            position: absolute;
+        }
+
+            .slide.active {
+                display: flex;
+                opacity: 1;
+                z-index: 1;
+            }
+
+        .slide-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--blue);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .slide-subtitle {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--purple);
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .slide-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            text-align: center;
+        }
+
+            .slide-content ul {
+                list-style-type: disc;
+                padding-left: 2rem;
+                text-align: left;
+            }
+
+            .slide-content li {
+                margin-bottom: 1rem;
+            }
+
+        .highlight {
+            color: var(--purple);
+            font-weight: 600;
+        }
+
+        #slide-counter {
+            position: absolute;
+            bottom: 2.5rem;
+            right: 2.5rem;
+            font-size: 1rem;
+            color: var(--gray-3);
+            z-index: 10;
+        }
+
+        #navigation {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .nav-button {
+            background-color: var(--blue);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+            .nav-button:hover {
+                background-color: var(--purple);
+                transform: translateY(-2px);
+            }
+
+            .nav-button:disabled {
+                background-color: var(--gray-3);
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        #fullscreen-button {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background-color: transparent;
+            border: 2px solid var(--gray-3);
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+            #fullscreen-button:hover {
+                border-color: var(--blue);
+            }
+
+        /* Estilos para o WBS */
+        .wbs-container {
+            background: white;
+            border: 1px solid var(--gray-2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+            .wbs-container ul {
+                list-style: none;
+                padding-left: 1.5rem;
+            }
+
+        .wbs-item {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <h1 class="slide-title" style="font-size: 4rem;">Diagrama de Gantt</h1>
+            <h2 class="slide-subtitle">Visualizando o Tempo do Projeto</h2>
+            <p class="slide-content mt-8 text-xl">Uma aula interativa sobre planejamento, cronogramas e dependências.</p>
+        </div>
+
+        <!-- Slide 2: O que é? -->
+        <div class="slide">
+            <h1 class="slide-title">O que é um Diagrama de Gantt?</h1>
+            <div class="slide-content text-2xl">
+                <p>É uma ferramenta visual que mostra as <span class="highlight">tarefas</span> de um projeto ao longo do <span class="highlight">tempo</span>.</p>
+                <p class="mt-8">Pense nele como o <strong class="text-blue-600">calendário ou a agenda do seu projeto</strong>, mostrando o que precisa ser feito e quando.</p>
+                <svg width="700" height="300" viewBox="0 0 700 300" class="mt-8 rounded-lg shadow-lg bg-white border border-[var(--gray-2)]">
+                    <!-- Eixo do Tempo -->
+                    <line x1="50" y1="250" x2="650" y2="250" stroke="var(--gray-3)" stroke-width="2" />
+                    <!-- Ticks do tempo -->
+                    <g stroke="var(--gray-3)" stroke-width="1" font-size="14" font-family="Inter, sans-serif" fill="var(--text)">
+                        <line x1="50" y1="250" x2="50" y2="260" />
+                        <text x="40" y="280">Início</text>
+                        <line x1="150" y1="250" x2="150" y2="260" />
+                        <text x="135" y="280">Sem 1</text>
+                        <line x1="250" y1="250" x2="250" y2="260" />
+                        <text x="235" y="280">Sem 2</text>
+                        <line x1="350" y1="250" x2="350" y2="260" />
+                        <text x="335" y="280">Sem 3</text>
+                        <line x1="450" y1="250" x2="450" y2="260" />
+                        <text x="435" y="280">Sem 4</text>
+                        <line x1="550" y1="250" x2="550" y2="260" />
+                        <text x="535" y="280">Sem 5</text>
+                        <line x1="650" y1="250" x2="650" y2="260" />
+                        <text x="640" y="280">Fim</text>
+                    </g>
+                    <!-- Barras de Tarefa -->
+                    <g font-size="16" font-family="Inter, sans-serif" fill="white">
+                        <rect x="50" y="50" width="200" height="40" rx="5" fill="var(--purple)" />
+                        <text x="60" y="75">Tarefa A: Planejamento</text>
+                        <rect x="250" y="110" width="300" height="40" rx="5" fill="var(--blue)" />
+                        <text x="260" y="135">Tarefa B: Desenvolvimento</text>
+                        <rect x="550" y="170" width="100" height="40" rx="5" fill="var(--green)" />
+                        <text x="560" y="195">Tarefa C: Testes</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Slide 3: Componentes Chave -->
+        <div class="slide">
+            <h1 class="slide-title">Componentes Chave</h1>
+            <div class="grid grid-cols-2 gap-8 max-w-4xl text-left">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-2 text-blue-600">1. Lista de Tarefas</h3>
+                    <p>Todas as atividades que precisam ser concluídas. Elas formam a espinha dorsal do diagrama.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-2 text-blue-600">2. Linha do Tempo</h3>
+                    <p>O horizonte de tempo do projeto (dias, semanas, meses), mostrando o início e o fim de cada tarefa.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-2 text-blue-600">3. Barras de Tarefa</h3>
+                    <p>Representações visuais da duração de cada tarefa, mostrando quando ela começa e termina.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="font-bold text-xl mb-2 text-blue-600">4. Dependências</h3>
+                    <p>Linhas que conectam tarefas, mostrando que uma tarefa não pode começar antes que outra termine.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Da WBS para o Gantt -->
+        <div class="slide">
+            <h1 class="slide-title">Da WBS para o Gantt</h1>
+            <p class="slide-subtitle">A WBS (EAP) é o ponto de partida perfeito!</p>
+            <div class="flex items-center justify-center gap-8">
+                <div class="wbs-container">
+                    <h3 class="font-bold text-lg mb-4 text-center">WBS / EAP</h3>
+                    <ul class="wbs-item">
+                        <li>1.1 Planejamento</li>
+                        <li>1.2 Backend</li>
+                        <li>1.3 Frontend</li>
+                    </ul>
+                </div>
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <path d="M10 50 L90 50" stroke="var(--purple)" stroke-width="3" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M90 50 L75 40" stroke="var(--purple)" stroke-width="3" />
+                    <path d="M90 50 L75 60" stroke="var(--purple)" stroke-width="3" />
+                </svg>
+                <div class="wbs-container">
+                    <h3 class="font-bold text-lg mb-4 text-center">Lista de Tarefas do Gantt</h3>
+                    <ul class="wbs-item">
+                        <li>- Planejamento</li>
+                        <li>- Backend</li>
+                        <li>- Frontend</li>
+                    </ul>
+                </div>
+            </div>
+            <p class="slide-content mt-8">Os <span class="highlight">pacotes de trabalho</span> da sua WBS se transformam diretamente na <span class="highlight">lista de tarefas</span> do seu Diagrama de Gantt.</p>
+        </div>
+
+        <!-- Slide 5: Case Study Intro -->
+        <div class="slide">
+            <h1 class="slide-title">Nosso Projeto Exemplo</h1>
+            <h2 class="slide-subtitle">App "Doce Pedaço"</h2>
+            <div class="flex items-center gap-8">
+                <img src="logo.png" class="rounded-lg shadow-lg" alt="Logo do App Doce Pedaço">
+                <p class="slide-content text-left max-w-lg">
+                    Vamos criar um Diagrama de Gantt para um software simples de controle de bolos caseiros.
+                    <br><br>
+                    <strong>Objetivo:</strong> Ajudar confeiteiros a gerenciar receitas, controlar o estoque de ingredientes e registrar vendas.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: WBS do "Doce Pedaço" -->
+        <div class="slide">
+            <h1 class="slide-title">WBS do "Doce Pedaço"</h1>
+            <div class="wbs-container">
+                <ul class="wbs-item text-left">
+                    <li><strong>1.0 App Doce Pedaço</strong></li>
+                    <li>
+                        <ul>
+                            <li><strong>1.1 Planejamento e Design</strong></li>
+                            <li>
+                                <ul>
+                                    <li>1.1.1 Definição de Requisitos</li>
+                                    <li>1.1.2 Design de UI/UX (Protótipos)</li>
+                                </ul>
+                            </li>
+                            <li><strong>1.2 Desenvolvimento Backend</strong></li>
+                            <li>
+                                <ul>
+                                    <li>1.2.1 Configuração do Banco de Dados</li>
+                                    <li>1.2.2 API de Receitas</li>
+                                    <li>1.2.3 API de Controle de Estoque</li>
+                                </ul>
+                            </li>
+                            <li><strong>1.3 Desenvolvimento Frontend</strong></li>
+                            <li>
+                                <ul>
+                                    <li>1.3.1 Tela de Cadastro de Receitas</li>
+                                    <li>1.3.2 Tela de Visualização de Estoque</li>
+                                    <li>1.3.3 Tela de Registro de Vendas</li>
+                                </ul>
+                            </li>
+                            <li><strong>1.4 Testes e Lançamento</strong></li>
+                            <li>
+                                <ul>
+                                    <li>1.4.1 Testes de Integração</li>
+                                    <li>1.4.2 Lançamento (Deploy)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7: Interactive Gantt Creation -->
+        <div class="slide">
+            <h1 class="slide-title">Construindo o Gantt: Passo a Passo</h1>
+            <p class="slide-subtitle">Use as setas (ou clique em Avançar) para revelar cada etapa</p>
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-6xl text-left">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <!-- Step 1 -->
+                    <div id="step1-box" class="border border-gray-200 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Passo 1: Listar as Tarefas</h3>
+                        <ul id="step1-list" class="opacity-0 transition-opacity duration-500 mt-3 text-xs font-mono">
+                            <!-- Tarefas serão inseridas aqui via JS -->
+                        </ul>
+                    </div>
+                    <!-- Step 2 -->
+                    <div id="step2-box" class="border border-gray-200 p-4 rounded-lg opacity-0 transition-opacity duration-500">
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Passo 2: Estimar Prazos</h3>
+                        <p class="text-sm">As barras aparecem no gráfico, mostrando a duração de cada tarefa.</p>
+                    </div>
+                    <!-- Step 3 -->
+                    <div id="step3-box" class="border border-gray-200 p-4 rounded-lg opacity-0 transition-opacity duration-500">
+                        <h3 class="font-bold text-lg mb-2 text-purple-700">Passo 3: Definir Dependências</h3>
+                        <p class="text-sm">As setas conectam as tarefas, mostrando a ordem de execução.</p>
+                    </div>
+                </div>
+                <!-- NOVO: Container para as imagens e a lista -->
+                <div id="interactive-content-container" class="w-full mt-8 border border-gray-200 rounded-lg p-4 min-h-[400px] flex items-center justify-center relative">
+                    <div id="interactive-list-wrapper" class="w-full h-full">
+                        <!-- A lista de tarefas do Passo 1 será movida para cá -->
+                    </div>
+                    <!-- Placeholder para Passo 2 -->
+                    <img id="gantt-image-step2" src="gantt-sem.png" alt="Diagrama de Gantt - Passo 2" class="hidden absolute max-w-full max-h-full transition-opacity duration-500 opacity-0">
+                    <!-- Placeholder para Passo 3 -->
+                    <img id="gantt-image-step3" src="gantt-com.png" alt="Diagrama de Gantt - Passo 3" class="hidden absolute max-w-full max-h-full transition-opacity duration-500 opacity-0">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: The Final Gantt Chart -->
+        <div class="slide">
+            <h1 class="slide-title">Diagrama de Gantt Final: "Doce Pedaço"</h1>
+            <div id="gantt-chart-container" class="w-full h-full flex items-center justify-center">
+                <img src="gantt-com.png" alt="Diagrama de Gantt Final" class="max-w-full max-h-full rounded-lg shadow-lg">
+            </div>
+        </div>
+
+        <!-- Slide 9: Vantagens -->
+        <div class="slide">
+            <h1 class="slide-title">Por que usar Gantt?</h1>
+            <div class="slide-content text-left max-w-3xl">
+                <ul>
+                    <li>✅ <span class="highlight">Clareza Visual:</span> Todos na equipe veem o panorama completo do projeto de forma rápida e intuitiva.</li>
+                    <li>✅ <span class="highlight">Melhora a Comunicação:</span> Facilita a discussão sobre prazos e responsabilidades.</li>
+                    <li>✅ <span class="highlight">Acompanhamento do Progresso:</span> É fácil ver se o projeto está adiantado, no prazo ou atrasado.</li>
+                    <li>✅ <span class="highlight">Gerenciamento de Recursos:</span> Ajuda a prever quando pessoas e recursos estarão ocupados ou livres.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- NOVO Slide 10: Ferramentas -->
+        <div class="slide">
+            <h1 class="slide-title">Ferramenta Sugerida</h1>
+            <h2 class="slide-subtitle">Para criar seus próprios diagramas</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg text-center">
+                <h3 class="text-3xl font-bold text-blue-600">OnlineGantt.com</h3>
+                <p class="mt-4 text-xl">Uma ferramenta online, gratuita e simples para começar.</p>
+                <a href="https://www.onlinegantt.com/" target="_blank" class="mt-6 inline-block" style="background-color: var(--green); color: white; font-weight: bold; padding: 0.75rem 1.5rem; border-radius: 8px; transition: background-color 0.3s;">
+                    Visitar o Site
+                </a>
+            </div>
+        </div>
+
+        <!-- Slide 11: Conclusão -->
+        <div class="slide">
+            <img src="logo.png" class="rounded-lg shadow-lg" alt="Logo do App Doce Pedaço">
+            <h1 class="slide-title">Perguntas?</h1>
+            <h2 class="slide-subtitle">Agora é hora de aplicar nos seus projetos!</h2>
+        </div>
+
+
+        <!-- Navegação e Fullscreen -->
+        <div id="navigation">
+            <div id="prev-button" class="nav-button">◀ Voltar</div>
+            <div id="next-button" class="nav-button">Avançar ▶</div>
+        </div>
+        <div id="slide-counter"></div>
+        <button id="fullscreen-button">
+            <svg width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+        </button>
+
+    </div>
+
+    <script>let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const fullscreenButton = document.getElementById('fullscreen-button');
+        const slideCounter = document.getElementById('slide-counter');
+        const interactiveSlideIndex = 6;
+        let interactiveStep = 0;
+
+        function showSlide(newIndex, oldIndex = -1) {
+            if (oldIndex === interactiveSlideIndex && newIndex !== interactiveSlideIndex) {
+                resetInteractiveSlide();
+            }
+
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === newIndex);
+            });
+
+            if (newIndex === interactiveSlideIndex && oldIndex !== newIndex) {
+                resetInteractiveSlide();
+            }
+
+            slideCounter.textContent = `${newIndex + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            const oldSlide = currentSlide;
+            if (currentSlide === interactiveSlideIndex && interactiveStep < 3) {
+                interactiveStep++;
+                runInteractiveStep(interactiveStep);
+            } else {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                showSlide(currentSlide, oldSlide);
+            }
+        }
+
+        function prevSlide() {
+            const oldSlide = currentSlide;
+            if (currentSlide === interactiveSlideIndex && interactiveStep > 0) {
+                 undoInteractiveStep(interactiveStep);
+                 interactiveStep--;
+            } else {
+                 currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                 showSlide(currentSlide, oldSlide);
+            }
+        }
+
+        const projectTasks = [
+            { id: '1.1.1', name: 'Definição de Requisitos', start: 1, duration: 3, dep: null, type: 'planning' },
+            { id: '1.1.2', name: 'Design de UI/UX', start: 4, duration: 5, dep: '1.1.1', type: 'planning' },
+            { id: '1.2.1', name: 'Config. Banco de Dados', start: 9, duration: 2, dep: '1.1.2', type: 'backend' },
+            { id: '1.2.2', name: 'API de Receitas', start: 11, duration: 6, dep: '1.2.1', type: 'backend' },
+            { id: '1.2.3', name: 'API de Controle de Estoque', start: 11, duration: 4, dep: '1.2.1', type: 'backend' },
+            { id: '1.3.1', name: 'Tela Cadastro de Receitas', start: 17, duration: 5, dep: '1.2.2', type: 'frontend' },
+            { id: '1.3.2', name: 'Tela Visão de Estoque', start: 15, duration: 4, dep: '1.2.3', type: 'frontend' },
+            { id: '1.3.3', name: 'Tela Registro de Vendas', start: 19, duration: 4, dep: '1.3.2', type: 'frontend' },
+            { id: '1.4.1', name: 'Testes de Integração', start: 23, duration: 4, dep: ['1.3.1', '1.3.3'], type: 'release' },
+            { id: '1.4.2', name: 'Lançamento (Deploy)', start: 27, duration: 2, dep: '1.4.1', type: 'release' }
+        ];
+
+        // Elementos do slide interativo
+        const step1Box = document.getElementById('step1-box');
+        const step2Box = document.getElementById('step2-box');
+        const step3Box = document.getElementById('step3-box');
+        const interactiveListWrapper = document.getElementById('interactive-list-wrapper');
+        const ganttImageStep2 = document.getElementById('gantt-image-step2');
+        const ganttImageStep3 = document.getElementById('gantt-image-step3');
+
+        function runInteractiveStep(step) {
+            switch(step) {
+                case 1:
+                    interactiveListWrapper.innerHTML = `<ul class="text-sm font-mono">${projectTasks.map(task => `<li>${task.id} - ${task.name}</li>`).join('')}</ul>`;
+                    step1Box.querySelector('ul').innerHTML = 'Conteúdo movido para o quadro principal.';
+                    break;
+                case 2:
+                    step2Box.style.opacity = 1;
+                    interactiveListWrapper.style.opacity = 0;
+                    ganttImageStep2.classList.remove('hidden');
+                    setTimeout(() => ganttImageStep2.style.opacity = 1, 50);
+                    break;
+                case 3:
+                    step3Box.style.opacity = 1;
+                    ganttImageStep2.style.opacity = 0;
+                    setTimeout(() => {
+                        ganttImageStep2.classList.add('hidden');
+                        ganttImageStep3.classList.remove('hidden');
+                        setTimeout(() => ganttImageStep3.style.opacity = 1, 50);
+                    }, 500);
+                    break;
+            }
+        }
+
+        function undoInteractiveStep(step) {
+             switch(step) {
+                case 1:
+                    interactiveListWrapper.innerHTML = '';
+                    break;
+                case 2:
+                    step2Box.style.opacity = 0;
+                    ganttImageStep2.style.opacity = 0;
+                    setTimeout(() => {
+                        ganttImageStep2.classList.add('hidden');
+                        interactiveListWrapper.style.opacity = 1;
+                    }, 500);
+                    break;
+                case 3:
+                    step3Box.style.opacity = 0;
+                    ganttImageStep3.style.opacity = 0;
+                     setTimeout(() => {
+                        ganttImageStep3.classList.add('hidden');
+                        ganttImageStep2.classList.remove('hidden');
+                        setTimeout(() => ganttImageStep2.style.opacity = 1, 50);
+                    }, 500);
+                    break;
+            }
+        }
+
+        function resetInteractiveSlide() {
+            interactiveStep = 0;
+            step1Box.querySelector('ul').innerHTML = '';
+            interactiveListWrapper.innerHTML = '';
+            interactiveListWrapper.style.opacity = 1;
+
+            step2Box.style.opacity = 0;
+            step3Box.style.opacity = 0;
+
+            ganttImageStep2.classList.add('hidden');
+            ganttImageStep2.style.opacity = 0;
+            ganttImageStep3.classList.add('hidden');
+            ganttImageStep3.style.opacity = 0;
+        }
+
+        function initialize() {
+            showSlide(currentSlide);
+        }
+
+        prevButton.addEventListener('click', prevSlide);
+        nextButton.addEventListener('click', nextSlide);
+
+        fullscreenButton.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            else if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        initialize();</script>
+</body>
+</html>
+
