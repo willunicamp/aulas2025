@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio Final - Landing Page com Bootstrap</title>
+    <!-- Incluindo o CSS do Bootstrap via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .challenge-box {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 0.75rem;
+            padding: 2.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+        }
+        .inline-code {
+            background-color: #e9ecef;
+            color: #d63384;
+            padding: 0.1em 0.4em;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .doc-note {
+            background-color: #e7f1ff;
+            border-left: 5px solid #0d6efd;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <header class="text-center mb-5">
+            <h1 class="display-4 fw-bold">Desafio Final: Landing Page Completa</h1>
+            <p class="lead text-muted">Hora de aplicar tudo que aprendemos e ir além!</p>
+        </header>
+
+        <div class="challenge-box">
+            <h2 class="display-6 fw-bold border-bottom pb-3 mb-4" style="color: #6f42c1;">🍕 Desafio: Landing Page da Pizzaria "PizzaTech"</h2>
+            <p class="fs-5 mb-4"><strong>Objetivo:</strong> Construir uma landing page moderna e responsiva para uma pizzaria fictícia. Este desafio vai exigir que você combine os componentes que vimos em aula com outros que você mesmo irá pesquisar na documentação oficial do Bootstrap.</p>
+
+            <div class="doc-note">
+                <h5 class="fw-bold">🚨 Consulte a Documentação!</h5>
+                <p>Parte deste desafio é aprender a "se virar". Para componentes como a <code class="inline-code">Navbar</code>, <code class="inline-code">Carousel</code> ou <code class="inline-code">Footer</code>, você precisará consultar a <a href="https://getbootstrap.com/docs/5.3/" target="_blank">documentação oficial do Bootstrap</a>. Procure os componentes na barra lateral, copie os exemplos e adapte-os!</p>
+            </div>
+
+            <h4 class="fw-bold mt-5">Estrutura da Página:</h4>
+            <ol class="list-group list-group-numbered mt-3">
+                
+                <li class="list-group-item">
+                    <strong>Barra de Navegação (Navbar):</strong>
+                    <ul class="mt-2">
+                        <li>Crie uma <code class="inline-code">.navbar</code> fixa no topo (<code class="inline-code">.fixed-top</code>).</li>
+                        <li>Deve ser responsiva, com um botão "hambúrguer" para telas pequenas.</li>
+                        <li>Adicione o nome "PizzaTech" como <code class="inline-code">.navbar-brand</code> e links para "Cardápio", "Sobre" e "Contato".</li>
+                        <li><strong>Importante:</strong> Os links devem navegar para as seções correspondentes na mesma página. Use, por exemplo, <code class="inline-code">href="#cardapio"</code> no link e adicione o atributo <code class="inline-code">id="cardapio"</code> na seção do cardápio.</li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item">
+                    <strong>Seção de Destaque (Carousel):</strong>
+                    <ul class="mt-2">
+                        <li>Logo abaixo da navbar, adicione um <code class="inline-code">.carousel</code> (slideshow) que ocupe a largura total.</li>
+                        <li>Crie 3 slides. Cada um deve ter uma imagem de fundo (procure na internet por imagens de alta resolução, idealmente 1920x1080 pixels) e um texto centralizado com um título (<code class="inline-code">&lt;h1&gt;</code>) e um botão de ação (<code class="inline-code">.btn</code>).</li>
+                        <li>Pesquise por "Carousel" na documentação para ver como adicionar legendas (<code class="inline-code">.carousel-caption</code>).</li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item">
+                    <strong>Seção "As Mais Pedidas" (Cardápio):</strong>
+                    <ul class="mt-2">
+                        <li>Crie a seção com <code class="inline-code">id="cardapio"</code> e use um <code class="inline-code">.container</code> com um título e margens (<code class="inline-code">.my-5</code>).</li>
+                        <li>Crie uma <code class="inline-code">.row</code> para exibir as pizzas em destaque.</li>
+                        <li><strong>Layout Responsivo:</strong> Cada pizza deve ser um card ocupando 12 colunas em telas pequenas, 4 colunas em telas médias, e 3 colunas em telas grandes (<code class="inline-code">.col-12 .col-md-4 .col-lg-3</code>).</li>
+                        <li>Use a classe <code class="inline-code">.g-4</code> na <code class="inline-code">.row</code> para dar espaçamento.</li>
+                        <li><strong>Dica:</strong> Com 3 colunas em telas grandes, o ideal é ter 4 pizzas por linha. Adicione mais uma pizza ao seu cardápio!</li>
+                        <li>Dentro de cada <code class="inline-code">.card</code>, adicione uma imagem (procure imagens de pizzas com aproximadamente 500x350 pixels), nome, descrição, preço e um <code class="inline-code">.badge</code> (ex: "Nova 🔥", "Vegana 🌱").</li>
+                    </ul>
+                </li>
+
+                 <li class="list-group-item">
+                    <strong>Seção "Sobre Nós" (Grid de duas colunas):</strong>
+                    <ul class="mt-2">
+                        <li>Crie uma nova seção com <code class="inline-code">id="sobre"</code> e uma <code class="inline-code">.row</code> para dividir o conteúdo.</li>
+                        <li>Na primeira coluna (<code class="inline-code">.col-md-6</code>), coloque uma imagem da pizzaria (procure uma imagem com aproximadamente 800x600 pixels) com as classes <code class="inline-code">.img-fluid .rounded</code>.</li>
+                        <li>Na segunda coluna (<code class="inline-code">.col-md-6</code>), adicione um título e um parágrafo descrevendo a história da "PizzaTech". Use classes de alinhamento de flexbox (<code class="inline-code">.d-flex .flex-column .justify-content-center</code>) para alinhar o texto verticalmente.</li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item">
+                    <strong>Seção de Contato:</strong>
+                     <ul class="mt-2">
+                        <li>Crie a seção final com <code class="inline-code">id="contato"</code> e use um <code class="inline-code">.container</code>.</li>
+                        <li>Use uma <code class="inline-code">.row</code> para dividir o conteúdo.</li>
+                        <li>Na primeira coluna (<code class="inline-code">.col-md-6</code>), adicione informações de contato como um título "Venha nos visitar!", o endereço, telefone e e-mail.</li>
+                        <li>Na segunda coluna (<code class="inline-code">.col-md-6</code>), adicione um placeholder para um mapa. Pode ser uma imagem de um mapa ou um <code class="inline-code">&lt;div&gt;</code> com uma borda e altura definida para simular o espaço do mapa.</li>
+                    </ul>
+                </li>
+
+                <li class="list-group-item">
+                    <strong>Rodapé (Footer):</strong>
+                    <ul class="mt-2">
+                        <li>Crie um <code class="inline-code">&lt;footer&gt;</code> com um <code class="inline-code">.container</code>.</li>
+                        <li>Use uma <code class="inline-code">.row</code> com colunas para dividir o conteúdo: uma para o logo, uma para links de navegação e outra para redes sociais.</li>
+                        <li>Adicione uma linha final (<code class="inline-code">.border-top</code>) com o texto de copyright centralizado (<code class="inline-code">.text-center</code>).</li>
+                    </ul>
+                </li>
+
+            </ol>
+        </div>
+
+    </div>
+
+    <!-- Incluindo o JavaScript do Bootstrap (necessário para componentes como Navbar e Carousel) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
