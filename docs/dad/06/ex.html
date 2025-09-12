@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>Exercício - Implementando o UPDATE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .step-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0; /* slate-200 */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        .code-block {
+            background-color: #1e293b; /* slate-900 */
+            color: #cbd5e1; /* slate-300 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        @media print {
+            body {
+                background-color: #ffffff;
+                font-size: 9.5pt;
+            }
+            .container {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+            }
+            .step-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+                padding: 0.8rem !important;
+            }
+            .step-card h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            .print-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.8rem !important;
+            }
+             .print-grid > * {
+                margin-bottom: 0 !important;
+            }
+            .print-grid .col-span-2 {
+                grid-column: span 2;
+            }
+            .code-block {
+                padding: 0.5rem !important;
+                font-size: 0.75em !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <div id="panel-e" style="display: block;">
+            
+            <div class="text-center text-slate-600 mb-4">
+                <p class="font-semibold text-lg">Prof. William Paiva - COTIL - UNICAMP</p>
+            </div>
+            
+            <h2 class="text-3xl font-bold text-slate-800 mb-2 text-center">Exercício: Implementando o UPDATE</h2>
+            <p class="text-md text-slate-500 mb-6 text-center"><strong>Objetivo:</strong> Aplicar os conceitos de <code>UPDATE</code> para permitir a edição de Raças e Classes existentes.</p>
+            
+            <div class="print-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="step-card md:col-span-2"><h3 class="text-xl font-semibold text-slate-700 mb-3">Instruções Gerais</h3><ul class="list-disc list-inside space-y-2 text-slate-600 text-sm"><li>Este exercício deve ser implementado para as telas de <strong>Raças</strong> e <strong>Classes</strong>. Os passos abaixo descrevem a lógica para um formulário, que deve ser replicada para o outro.</li><li>O objetivo é refatorar os formulários, que hoje apenas inserem dados, para que também possam carregar, exibir e atualizar dados existentes.</li><li>Utilize os conceitos de variável de controle (flag), evento <code>SelectedIndexChanged</code> e o comando SQL <code>UPDATE</code> vistos na Aula 06.</li></ul></div>
+                
+                <div class="step-card"><h3 class="text-xl font-semibold text-slate-700 mb-3">Passo 1: Adapte a Interface</h3><p class="text-slate-600">Adicione um controle <code>ListBox</code> ao seu formulário de Raças (e Classes). Este <code>ListBox</code> será usado para exibir todos os registros já cadastrados no banco de dados.</p></div>
+                
+                <div class="step-card"><h3 class="text-xl font-semibold text-slate-700 mb-3">Passo 2: Implemente a Leitura (Read)</h3><p class="text-slate-600">Crie um método <code>CarregarRacas()</code> (e <code>CarregarClasses()</code>). Este método deve:
+                    <ul class="list-decimal pl-5 mt-2 text-sm">
+                        <li>Limpar o <code>ListBox</code>.</li>
+                        <li>Executar um <code>SELECT</code> para buscar todos os registros da tabela.</li>
+                        <li>Popular o <code>ListBox</code> com os dados, utilizando uma classe auxiliar (ex: <code>RacaListBoxItem</code>) e sobrescrevendo o método <code>ToString()</code>.</li>
+                        <li>Chame este método no evento <code>Load</code> do formulário.</li>
+                    </ul>
+                </p></div>
+
+                <div class="step-card"><h3 class="text-xl font-semibold text-slate-700 mb-3">Passo 3: Habilite a Edição</h3><p class="text-slate-600">Implemente o evento <code>SelectedIndexChanged</code> do <code>ListBox</code>. Dentro deste evento, você deve:
+                    <ul class="list-decimal pl-5 mt-2 text-sm">
+                        <li>Obter o objeto selecionado na lista (ex: <code>RacaListBoxItem</code>).</li>
+                        <li>Usar os dados do objeto para preencher os campos do formulário (<code>TextBox</code>, <code>NumericUpDown</code>, etc.).</li>
+                        <li>Armazenar o <strong>ID</strong> do item selecionado em uma variável de controle (ex: <code>idRacaSelecionada</code>).</li>
+                    </ul>
+                </p></div>
+
+                <div class="step-card"><h3 class="text-xl font-semibold text-slate-700 mb-3">Passo 4: Botão Inteligente</h3><p class="text-slate-600">Refatore o seu botão <code>btnSalvar_Click</code>. Ele deve agora verificar a variável de controle:
+                    <ul class="list-decimal pl-5 mt-2 text-sm">
+                        <li>Se o ID for 0, ele deve chamar um método para <strong>inserir</strong> um novo registro (a lógica que você já tinha).</li>
+                        <li>Se o ID for maior que 0, ele deve chamar um novo método para <strong>atualizar</strong> o registro existente.</li>
+                    </ul>
+                </p></div>
+
+                <div class="step-card md:col-span-2"><h3 class="text-xl font-semibold text-slate-700 mb-3">Passo 5: Implemente o UPDATE</h3><p class="text-slate-600">Crie o método para atualizar (ex: <code>AtualizarRaca()</code>). Este método deve:
+                    <ul class="list-decimal pl-5 mt-2 text-sm">
+                        <li>Montar uma string com o comando SQL <code>UPDATE</code>, utilizando a cláusula <code>WHERE id = @id</code>.</li>
+                        <li>Adicionar todos os valores dos campos como parâmetros, <strong>incluindo o ID</strong> que está na sua variável de controle.</li>
+                        <li>Executar o comando com <code>ExecuteNonQuery()</code>.</li>
+                        <li>Após a execução, limpar os campos, recarregar o <code>ListBox</code> e exibir uma <code>MessageBox</code> de sucesso.</li>
+                    </ul>
+                </p></div>
+                 <div class="step-card md:col-span-2"><h3 class="text-xl font-semibold text-slate-700 mb-3">Dica de Ouro (Extra)</h3><p class="text-slate-600">Adicione um botão "Novo" ou "Limpar" ao seu formulário. A única função dele será chamar um método <code>LimparCampos()</code>, que limpa todos os <code>TextBoxes</code> e, o mais importante, reseta sua variável de controle (<code>idRacaSelecionada = 0;</code>). Isso permite que o usuário cancele uma edição e volte ao modo de criação.</p></div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+

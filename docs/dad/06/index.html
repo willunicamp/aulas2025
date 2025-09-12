@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 06 - CRUD: UPDATE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #f1f5f9; /* slate-100 */
+            --primary-text: #1e293b; /* slate-800 */
+            --accent-color: #f59e0b; /* amber-500 */
+            --code-bg: #1d2021; /* Gruvbox bg */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #presentation-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .slide {
+            flex-grow: 1;
+            padding: 2rem 4rem;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-text);
+        }
+        .slide h2 {
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--primary-text);
+        }
+        .slide p {
+            font-size: 1.25rem;
+            color: #475569; /* slate-600 */
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        .slide ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            max-width: 700px;
+            width: 100%;
+        }
+        .slide ul li {
+            background: rgba(255,255,255,0.5);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            border-left: 5px solid var(--accent-color);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: flex-start;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+         .slide ul li:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        /* Estilos para a lista numerada customizada */
+        .slide ol {
+            list-style: none;
+            counter-reset: custom-counter;
+            text-align: left;
+            max-width: 800px;
+            width: 100%;
+        }
+        .slide ol li {
+            counter-increment: custom-counter;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            background: white;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            font-size: 1.1rem;
+        }
+        .slide ol li::before {
+            content: counter(custom-counter);
+            background-color: var(--primary-text);
+            color: var(--primary-bg);
+            font-weight: 700;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-text);
+            color: var(--primary-bg);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .nav-button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+        #prev-slide { left: 20px; }
+        #next-slide { right: 20px; }
+        #fullscreen-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-text);
+            color: var(--primary-bg);
+            border:none;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        #slide-counter {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-text);
+            color: var(--primary-bg);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            z-index: 1000;
+        }
+        .slide-content-left {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: right;
+            align-items: flex-end;
+            text-align: left;
+            padding-right: 2rem;
+            width: 50%;
+        }
+        .slide-content-right {
+            flex-shrink: 0;
+            width: 50%;
+            display: flex;
+            justify-content: left;
+            align-items: flex-start;
+        }
+        .code-container {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1.5rem 1.5rem 1.5rem 4.5em; /* Padding left for line numbers */
+            width: 100%;
+            max-width: 900px;
+        }
+        .code-block {
+            color: #fbf1c7; /* Gruvbox fg */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre;
+            text-align: left;
+            overflow-x: auto;
+        }
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 1.5rem; /* Match padding */
+            width: 3.5em; /* Space for numbers */
+            text-align: right;
+            color: #928374; /* Gruvbox gray */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            user-select: none;
+        }
+
+        /* Gruvbox Syntax Highlighting */
+        .cg-keyword { color: #fb4934; } /* red */
+        .cg-type { color: #fabd2f; } /* yellow */
+        .cg-string { color: #b8bb26; } /* green */
+        .cg-comment { color: #928374; font-style: italic; } /* gray */
+        .cg-method { color: #83a598; } /* aqua */
+        .cg-variable { color: #fbf1c7; } /* default fg */
+        .cg-number { color: #d3869b; } /* purple */
+        .cg-class { color: #fabd2f; } /* yellow */
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+
+        <!-- Slide 1: Abertura -->
+        <div class="slide active">
+            <p class="text-xl font-semibold" style="color:var(--accent-color);">Aula 06</p>
+            <h1 class="mb-4">CRUD: A vez do UPDATE</h1>
+            <p class="text-2xl text-slate-500">Aprendendo a atualizar dados existentes no nosso "Gerenciador de Heróis".</p>
+             <p class="absolute bottom-10 text-lg font-semibold">Prof. William Paiva - COTIL - UNICAMP</p>
+        </div>
+
+        <!-- Slide 2: Revisão Rápida -->
+        <div class="slide" style="flex-direction: row;">
+            <div class="slide-content-left">
+                <h2>Onde Paramos?</h2>
+                <ul>
+                    <li>
+                        <span class="mr-4 flex-shrink-0">✅</span>
+                        <div>Já sabemos <strong>CADASTRAR (Create)</strong> um novo herói no banco de dados.</div>
+                    </li>
+                    <li>
+                        <span class="mr-4 flex-shrink-0">✅</span>
+                        <div>Já sabemos <strong>LER (Read)</strong> as Classes, Raças e Heróis para popular nossos controles.</div>
+                    </li>
+                    <li>
+                        <span class="mr-4 flex-shrink-0">✅</span>
+                        <div>Nossa tela principal já consegue inserir e listar os heróis criados.</div>
+                    </li>
+                </ul>
+                <p class="mt-8">Nosso sistema já tem uma base sólida. Agora, vamos adicionar mais poder a ele!</p>
+            </div>
+            <div class="slide-content-right">
+                <img src="herois.png" alt="Interface do Gerenciador de Heróis" class="rounded-lg shadow-2xl">
+            </div>
+        </div>
+
+        <!-- Slide 3: O Problema de Hoje -->
+        <div class="slide">
+            <h2>O Herói Evoluiu! E agora?</h2>
+            <p class="mb-8">Imagine a seguinte situação: seu herói lutou bravamente, completou uma missão e... <span class="highlight">subiu de nível!</span></p>
+            <div class="flex space-x-8">
+                <div class="bg-white p-6 rounded-lg shadow-xl text-left transform hover:scale-105 transition-transform">
+                    <h3 class="font-bold text-xl mb-2">Problema Atual:</h3>
+                    <p class="text-base text-slate-600">Como alteramos o nível do herói de 5 para 6 no nosso sistema? E se precisarmos corrigir um erro de digitação na sua descrição?</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-xl text-left transform hover:scale-105 transition-transform">
+                     <h3 class="font-bold text-xl mb-2">Solução Inviável:</h3>
+                    <p class="text-base text-slate-600">A única forma hoje seria <span class="text-red-600 font-semibold">apagar</span> o herói e <span class="text-green-600 font-semibold">criá-lo novamente</span>. Isso não é nada prático!</p>
+                </div>
+            </div>
+            <p class="mt-12 text-2xl">Precisamos de uma forma de <span class="highlight">ATUALIZAR</span> os dados existentes.</p>
+        </div>
+        
+        <!-- Slide 4: A Lógica do UPDATE -->
+        <div class="slide">
+            <h2>O Plano de Batalha para o UPDATE</h2>
+            <p class="mb-8">A lógica para atualizar um registro segue um fluxo bem intuitivo. Já temos quase tudo pronto!</p>
+            <ol>
+                <li>
+                    <div><span class="font-bold text-slate-800">Selecionar:</span> O usuário clica em um herói no <code>ListBox</code>. <span class="text-green-600 font-semibold">(Já fizemos!)</span></div>
+                </li>
+                <li>
+                    <div><span class="font-bold text-slate-800">Carregar:</span> O programa preenche os campos do formulário com os dados do herói selecionado. <span class="text-green-600 font-semibold">(Já fizemos!)</span></div>
+                </li>
+                <li>
+                    <div><span class="font-bold text-slate-800">Modificar:</span> O usuário altera os dados nos campos (<code>TextBox</code>, <code>ComboBox</code>, etc).</div>
+                </li>
+                <li>
+                    <div><span class="font-bold text-slate-800">Salvar:</span> O usuário clica em um botão "Salvar".</div>
+                </li>
+                <li>
+                    <div><span class="font-bold text-slate-800">Executar:</span> O programa envia o comando SQL <code>UPDATE</code> para o banco de dados com as novas informações.</div>
+                </li>
+            </ol>
+        </div>
+
+        <!-- Slide 5: Preparando o Terreno -->
+        <div class="slide">
+             <h2>Preparando o Terreno: Um Botão Inteligente</h2>
+             <p class="mb-6">Nossa interface já está 90% pronta. O grande truque é fazer nosso botão "Salvar" ter dupla função.</p>
+             <p class="text-slate-600 max-w-4xl">Ele precisa saber se estamos criando um <strong>novo herói</strong> ou editando um <strong>herói existente</strong>.</p>
+             <div class="mt-8 bg-white p-8 rounded-lg shadow-lg text-left max-w-3xl w-full">
+                <h3 class="font-bold text-xl mb-4">Como o botão vai saber a diferença?</h3>
+                <p class="text-slate-700">Vamos usar uma <strong>variável de controle</strong> (ou "flag") no nosso formulário. Será um simples número inteiro.</p>
+                <div class="code-container mt-4">
+                    <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-type">int</span> <span class="cg-variable">idHeroiSelecionado</span> = <span class="cg-number">0</span>;
+
+<span class="cg-comment">// A lógica será:</span>
+<span class="cg-comment">// Se idHeroiSelecionado == 0  =>  É um herói novo (INSERT)</span>
+<span class="cg-comment">// Se idHeroiSelecionado > 0   =>  É um herói existente (UPDATE)</span></pre>
+                </div>
+                 <p class="mt-4 text-slate-700">Quando o usuário clicar em um herói na lista, vamos guardar o <strong>ID</strong> dele nessa variável. Assim, o botão "Salvar" saberá exatamente o que fazer!</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: O Evento Chave: SelectedIndexChanged -->
+        <div class="slide" style="flex-direction: row;">
+            <div class="slide-content-left">
+                <h2>Capturando a Seleção do Usuário</h2>
+                <p class="text-slate-600 mb-6">Toda a nossa lógica de "carregar para editar" começa quando o usuário clica em um herói no <code>ListBox</code>.</p>
+                <p class="text-slate-600 mb-6">Para isso, usamos o evento <span class="highlight">SelectedIndexChanged</span> do controle <code>lstHerois</code>.</p>
+                <p class="text-slate-600">Este evento é disparado <strong>automaticamente</strong> sempre que o item selecionado na lista muda.</p>
+                <div class="mt-8 bg-white p-6 rounded-lg shadow-md">
+                    <p class="text-lg text-slate-800"><strong>Nosso objetivo dentro deste evento:</strong> Pegar o herói selecionado e usar seus dados para preencher todos os campos do formulário.</p>
+                </div>
+            </div>
+            <div class="slide-content-right">
+                <img src="selected.png" alt="Evento SelectedIndexChanged" class="rounded-lg shadow-xl">
+            </div>
+        </div>
+
+        <!-- Slide 7: Passo 1 - Obtendo o Objeto Herói -->
+        <div class="slide">
+            <h2>Passo 1: Obtendo o Herói Selecionado</h2>
+            <p class="mb-6">Dentro do evento, a primeira coisa a fazer é pegar o item que foi selecionado. Como guardamos objetos <code>HeroiListBoxItem</code> na lista, precisamos "desembrulhá-lo".</p>
+            <div class="code-container">
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">lstHerois_SelectedIndexChanged</span>(<span class="cg-type">object</span> <span class="cg-variable">sender</span>, <span class="cg-type">EventArgs</span> <span class="cg-variable">e</span>)
+{
+    <span class="cg-comment">// Pega o item selecionado, que é do tipo 'object'...</span>
+    <span class="cg-type">object</span> <span class="cg-variable">selectedObject</span> = <span class="cg-variable">lstHerois</span>.<span class="cg-method">SelectedItem</span>;
+ 
+    <span class="cg-comment">// ... e faz um "cast" para o nosso tipo específico: HeroiListBoxItem.</span>
+    <span class="cg-type">HeroiListBoxItem</span> <span class="cg-variable">heroiSelecionado</span> = (<span class="cg-type">HeroiListBoxItem</span>)<span class="cg-variable">selectedObject</span>;
+ 
+    <span class="cg-comment">// Agora temos acesso a todas as propriedades do herói!</span>
+    <span class="cg-comment">// heroiSelecionado.Id</span>
+    <span class="cg-comment">// heroiSelecionado.Nome</span>
+    <span class="cg-comment">// heroiSelecionado.Nivel ... etc</span>
+}</pre>
+            </div>
+        </div>
+
+        <!-- Slide 8: Passo 2 - Preenchendo Campos Simples -->
+        <div class="slide">
+            <h2>Passo 2: Preenchendo os Campos de Texto</h2>
+            <p class="mb-6">Com o objeto <code>heroiSelecionado</code> em mãos, preencher os campos de texto e o <code>NumericUpDown</code> é direto.</p>
+             <div class="code-container">
+                <pre class="code-block"><span class="cg-comment">// ... dentro do SelectedIndexChanged, após pegar o heroiSelecionado ...</span>
+ 
+<span class="cg-comment">// Preenche os campos de texto e numéricos</span>
+<span class="cg-variable">txtNome</span>.<span class="cg-property">Text</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Nome</span>;
+<span class="cg-variable">txtDescricao</span>.<span class="cg-property">Text</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Descricao</span>;
+<span class="cg-variable">numNivel</span>.<span class="cg-property">Value</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Nivel</span>;</pre>
+            </div>
+            <p class="mt-8">Isso faz com que a interface reflita imediatamente os dados do herói que o usuário clicou.</p>
+        </div>
+        
+        <!-- Slide 9: Passo 3 - O Desafio dos ComboBoxes -->
+        <div class="slide">
+            <h2>Passo 3: Selecionando nos ComboBoxes (com LINQ)</h2>
+            <p class="mb-6">Para os <code>ComboBoxes</code>, não podemos simplesmente atribuir o texto. Precisamos encontrar o <strong>objeto</strong> (<code>ClasseComboBoxItem</code> ou <code>RacaComboBoxItem</code>) que corresponde ao ID do nosso herói.</p>
+            <div class="code-container">
+                <pre class="code-block"><span class="cg-comment">// ... continuando no mesmo método ...</span>
+ 
+<span class="cg-comment">// Usa LINQ para encontrar a Classe correta na lista do ComboBox</span>
+<span class="cg-keyword">var</span> <span class="cg-variable">classeParaSelecionar</span> = <span class="cg-variable">cmbClasse</span>.<span class="cg-property">Items</span>
+                                 .<span class="cg-method">Cast</span>&lt;<span class="cg-type">ClasseComboBoxItem</span>&gt;()
+                                 .<span class="cg-method">FirstOrDefault</span>(<span class="cg-variable">item</span> => <span class="cg-variable">item</span>.<span class="cg-property">Value</span> == <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">IdClasse</span>);
+ 
+<span class="cg-comment">// Define o objeto encontrado como o item selecionado</span>
+<span class="cg-variable">cmbClasse</span>.<span class="cg-property">SelectedItem</span> = <span class="cg-variable">classeParaSelecionar</span>;
+ 
+<span class="cg-comment">// Repete o processo para a Raça</span>
+<span class="cg-keyword">var</span> <span class="cg-variable">racaParaSelecionar</span> = <span class="cg-variable">cmbRaca</span>.<span class="cg-property">Items</span>
+                               .<span class="cg-method">Cast</span>&lt;<span class="cg-type">RacaComboBoxItem</span>&gt;()
+                               .<span class="cg-method">FirstOrDefault</span>(<span class="cg-variable">item</span> => <span class="cg-variable">item</span>.<span class="cg-property">Id</span> == <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">IdRaca</span>);
+ 
+<span class="cg-variable">cmbRaca</span>.<span class="cg-property">SelectedItem</span> = <span class="cg-variable">racaParaSelecionar</span>;</pre>
+            </div>
+        </div>
+
+        <!-- Slide 10: Passo 4 - Ativando o "Modo Edição" -->
+        <div class="slide">
+            <h2>Passo 4: Armazenando o ID para o UPDATE</h2>
+            <p class="mb-6">Este é o passo final e crucial. Agora que carregamos os dados, precisamos "avisar" ao botão Salvar que estamos editando. Fazemos isso guardando o ID do herói na nossa variável de controle.</p>
+            <div class="code-container">
+                <pre class="code-block"><span class="cg-comment">// ... no final do método SelectedIndexChanged ...</span>
+ 
+<span class="cg-comment">// Armazena o ID do herói que está sendo editado</span>
+<span class="cg-keyword">this</span>.<span class="cg-variable">idHeroiSelecionado</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Id</span>;</pre>
+            </div>
+            <p class="mt-8">Agora, quando o usuário clicar em "Salvar", a variável <span class="highlight">idHeroiSelecionado</span> terá um valor maior que zero, e saberemos que devemos executar um <code>UPDATE</code> em vez de um <code>INSERT</code>.</p>
+        </div>
+
+        <!-- Slide 11: Código Completo e Sugestão de Melhoria -->
+        <div class="slide">
+            <h2>Código Completo e Melhorias</h2>
+            <p class="mb-6">Juntando tudo, o método fica assim. Note a adição de uma verificação para evitar erros caso nada seja selecionado.</p>
+            <div class="code-container">
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">lstHerois_SelectedIndexChanged</span>(<span class="cg-type">object</span> <span class="cg-variable">sender</span>, <span class="cg-type">EventArgs</span> <span class="cg-variable">e</span>)
+{
+    <span class="cg-comment">// SUGESTÃO: Verificar se algo foi realmente selecionado</span>
+    <span class="cg-keyword">if</span> (<span class="cg-variable">lstHerois</span>.<span class="cg-property">SelectedItem</span> != <span class="cg-keyword">null</span>)
+    {
+        <span class="cg-type">HeroiListBoxItem</span> <span class="cg-variable">heroiSelecionado</span> = (<span class="cg-type">HeroiListBoxItem</span>)<span class="cg-variable">lstHerois</span>.<span class="cg-property">SelectedItem</span>;
+ 
+        <span class="cg-comment">// Preenche os campos</span>
+        <span class="cg-variable">txtNome</span>.<span class="cg-property">Text</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Nome</span>;
+        <span class="cg-variable">txtDescricao</span>.<span class="cg-property">Text</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Descricao</span>;
+        <span class="cg-variable">numNivel</span>.<span class="cg-property">Value</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Nivel</span>;
+ 
+        <span class="cg-comment">// Seleciona os ComboBoxes</span>
+        <span class="cg-keyword">var</span> <span class="cg-variable">classe</span> = <span class="cg-variable">cmbClasse</span>.<span class="cg-property">Items</span>.<span class="cg-method">Cast</span>&lt;<span class="cg-type">ClasseComboBoxItem</span>&gt;().<span class="cg-method">FirstOrDefault</span>(<span class="cg-variable">i</span> => <span class="cg-variable">i</span>.<span class="cg-property">Value</span> == <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">IdClasse</span>);
+        <span class="cg-variable">cmbClasse</span>.<span class="cg-property">SelectedItem</span> = <span class="cg-variable">classe</span>;
+ 
+        <span class="cg-keyword">var</span> <span class="cg-variable">raca</span> = <span class="cg-variable">cmbRaca</span>.<span class="cg-property">Items</span>.<span class="cg-method">Cast</span>&lt;<span class="cg-type">RacaComboBoxItem</span>&gt;().<span class="cg-method">FirstOrDefault</span>(<span class="cg-variable">i</span> => <span class="cg-variable">i</span>.<span class="cg-property">Id</span> == <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">IdRaca</span>);
+        <span class="cg-variable">cmbRaca</span>.<span class="cg-property">SelectedItem</span> = <span class="cg-variable">raca</span>;
+ 
+        <span class="cg-comment">// Guarda o ID para o UPDATE</span>
+        <span class="cg-keyword">this</span>.<span class="cg-variable">idHeroiSelecionado</span> = <span class="cg-variable">heroiSelecionado</span>.<span class="cg-property">Id</span>;
+    }
+}</pre>
+            </div>
+        </div>
+
+        <!-- Slide 12: A Ferramenta da Atualização: UPDATE -->
+        <div class="slide">
+            <h2>O Comando SQL UPDATE</h2>
+            <p class="mb-6">O comando <code>UPDATE</code> é a estrela desta aula. Sua sintaxe é direta, mas exige muita atenção em uma parte específica: a cláusula <code>WHERE</code>.</p>
+            <div class="code-container">
+<pre class="code-block"><span class="cg-keyword">UPDATE</span> <span class="cg-variable">heroi</span> <span class="cg-keyword">SET</span>
+    <span class="cg-variable">nome</span> = @<span class="cg-variable">nome</span>,
+    <span class="cg-variable">nivel</span> = @<span class="cg-variable">nivel</span>,
+    <span class="cg-variable">descricao</span> = @<span class="cg-variable">descricao</span>,
+    <span class="cg-variable">id_raca</span> = @<span class="cg-variable">id_raca</span>,
+    <span class="cg-variable">id_classe</span> = @<span class="cg-variable">id_classe</span>
+<span class="cg-keyword">WHERE</span>
+    <span class="cg-variable">id</span> = @<span class="cg-variable">id</span>;
+</pre>
+            </div>
+            <p class="mt-8 text-red-600 font-semibold text-lg max-w-4xl">⚠️ <strong>Atenção Máxima:</strong> Se você esquecer a cláusula <code>WHERE</code>, o comando <code>UPDATE</code> atualizará <strong>TODOS OS HERÓIS</strong> do seu banco de dados com os mesmos dados. Sempre especifique o <code>id</code>!</p>
+        </div>
+
+        <!-- Slide 13: Refatorando o Botão Salvar -->
+        <div class="slide">
+            <h2>O Botão "Salvar" Inteligente</h2>
+            <p class="mb-6">Agora vamos modificar o <code>btnSalvar_Click</code>. Ele não terá mais a lógica do SQL. Em vez disso, ele vai usar nossa variável <code>idHeroiSelecionado</code> para decidir qual método chamar.</p>
+             <div class="code-container">
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">btnSalvar_Click</span>(<span class="cg-type">object</span> <span class="cg-variable">sender</span>, <span class="cg-type">EventArgs</span> <span class="cg-variable">e</span>)
+{
+    <span class="cg-comment">// ... (aqui viria o código para pegar os dados da tela) ...</span>
+ 
+    <span class="cg-keyword">if</span> (<span class="cg-variable">idHeroiSelecionado</span> == <span class="cg-number">0</span>)
+    {
+        <span class="cg-comment">// Se o ID é 0, significa que não há herói selecionado.</span>
+        <span class="cg-comment">// Então, estamos criando um novo herói.</span>
+        <span class="cg-method">InserirHeroi</span>(); <span class="cg-comment">// Vamos criar este método</span>
+    }
+    <span class="cg-keyword">else</span>
+    {
+        <span class="cg-comment">// Se o ID é > 0, estamos editando um herói existente.</span>
+        <span class="cg-method">AtualizarHeroi</span>(); <span class="cg-comment">// Vamos criar este método</span>
+    }
+}</pre>
+            </div>
+            <p class="mt-8">Essa técnica de separar a lógica em métodos (<code>InserirHeroi</code>, <code>AtualizarHeroi</code>) se chama <strong>refatoração</strong> e deixa nosso código muito mais limpo e organizado.</p>
+        </div>
+
+        <!-- Slide 14: Implementando o Método AtualizarHeroi() -->
+        <div class="slide">
+            <h2>Implementando o <code>AtualizarHeroi()</code></h2>
+            <p class="mb-4">Este novo método conterá a lógica específica do <code>UPDATE</code>. É muito parecido com o <code>INSERT</code>, mas com a adição crucial do parâmetro <code>@id</code>.</p>
+            <div class="code-container">
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">AtualizarHeroi</span>()
+{
+    <span class="cg-comment">// Pega os dados da tela (mesma lógica do INSERT)</span>
+    <span class="cg-type">string</span> <span class="cg-variable">nome</span> = <span class="cg-variable">txtNome</span>.<span class="cg-property">Text</span>;
+    <span class="cg-comment">// ... etc ...</span>
+ 
+    <span class="cg-type">string</span> <span class="cg-variable">sql</span> = <span class="cg-string">"UPDATE heroi SET nome=@nome, ... WHERE id=@id"</span>;
+ 
+    <span class="cg-keyword">using</span> (<span class="cg-type">MySqlConnection</span> <span class="cg-variable">conn</span> = <span class="cg-keyword">new</span> <span class="cg-method">MySqlConnection</span>(<span class="cg-variable">connectionString</span>))
+    {
+        <span class="cg-comment">// ... abre conexão ...</span>
+        <span class="cg-keyword">using</span> (<span class="cg-type">MySqlCommand</span> <span class="cg-variable">cmd</span> = <span class="cg-keyword">new</span> <span class="cg-method">MySqlCommand</span>(<span class="cg-variable">sql</span>, <span class="cg-variable">conn</span>))
+        {
+            <span class="cg-comment">// Adiciona todos os parâmetros dos campos</span>
+            <span class="cg-variable">cmd</span>.<span class="cg-property">Parameters</span>.<span class="cg-method">AddWithValue</span>(<span class="cg-string">"@nome"</span>, <span class="cg-variable">nome</span>);
+            <span class="cg-comment">// ... etc ...</span>
+ 
+            <span class="cg-comment">// ADICIONA O PARÂMETRO DO ID!</span>
+            <span class="cg-variable">cmd</span>.<span class="cg-property">Parameters</span>.<span class="cg-method">AddWithValue</span>(<span class="cg-string">"@id"</span>, <span class="cg-keyword">this</span>.<span class="cg-variable">idHeroiSelecionado</span>);
+ 
+            <span class="cg-variable">cmd</span>.<span class="cg-method">ExecuteNonQuery</span>();
+ 
+            <span class="cg-comment">// Limpa o formulário, recarrega a lista e avisa o usuário</span>
+            <span class="cg-method">LimparCampos</span>();
+            <span class="cg-method">CarregarHerois</span>();
+            <span class="cg-type">MessageBox</span>.<span class="cg-method">Show</span>(<span class="cg-string">"Herói atualizado com sucesso!"</span>);
+        }
+    }
+}</pre>
+            </div>
+        </div>
+
+        <!-- Slide 15: O Método LimparCampos() -->
+        <div class="slide">
+            <h2>Organizando com <code>LimparCampos()</code></h2>
+            <p class="mb-6">Para evitar código repetido, podemos criar um método que limpa todos os campos do formulário e reseta a nossa variável de controle. Isso será útil tanto para <code>INSERT</code> quanto para <code>UPDATE</code>.</p>
+            <div class="code-container">
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">LimparCampos</span>()
+{
+    <span class="cg-comment">// Limpa os TextBoxes e NumericUpDown</span>
+    <span class="cg-variable">txtNome</span>.<span class="cg-method">Clear</span>();
+    <span class="cg-variable">txtDescricao</span>.<span class="cg-method">Clear</span>();
+    <span class="cg-variable">numNivel</span>.<span class="cg-property">Value</span> = <span class="cg-number">1</span>;
+ 
+    <span class="cg-comment">// Desseleciona os ComboBoxes</span>
+    <span class="cg-variable">cmbClasse</span>.<span class="cg-property">SelectedIndex</span> = -<span class="cg-number">1</span>;
+    <span class="cg-variable">cmbRaca</span>.<span class="cg-property">SelectedIndex</span> = -<span class="cg-number">1</span>;
+ 
+    <span class="cg-comment">// Reseta nossa variável de controle para o modo "Inserção"</span>
+    <span class="cg-keyword">this</span>.<span class="cg-variable">idHeroiSelecionado</span> = <span class="cg-number">0</span>;
+}</pre>
+            </div>
+             <p class="mt-8">Você pode adicionar um botão "Novo" na tela que simplesmente chama este método <code>LimparCampos()</code>, permitindo que o usuário cancele uma edição e comece um novo cadastro.</p>
+        </div>
+
+
+        <!-- Slide 16: Missão Cumprida! -->
+        <div class="slide">
+            <h2>Missão Cumprida e Próximos Passos</h2>
+            <p class="mb-8">Parabéns! Agora nosso sistema está muito mais completo e profissional.</p>
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-4xl text-left">
+                <h3 class="font-bold text-2xl mb-4">O que aprendemos hoje:</h3>
+                <ul class="list-disc pl-6 text-xl text-slate-700 space-y-2">
+                    <li>Como usar o evento <code>SelectedIndexChanged</code> para carregar dados.</li>
+                    <li>Como usar uma variável de controle para alternar entre os modos de Inserção e Edição.</li>
+                    <li>A sintaxe e a importância do comando SQL <code>UPDATE</code> com a cláusula <code>WHERE</code>.</li>
+                    <li>Como refatorar nosso código para deixá-lo mais limpo e organizado.</li>
+                </ul>
+                <h3 class="font-bold text-2xl mt-8 mb-4">Desafio para a Próxima Aula:</h3>
+                <p class="text-xl text-slate-700">Implementar a última operação do CRUD: o <span class="highlight">DELETE</span>! Adicionem um botão "Excluir" ao formulário e tentem criar a lógica para remover o herói selecionado do banco de dados.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <button id="prev-slide" class="nav-button">&#10094;</button>
+    <button id="next-slide" class="nav-button">&#10095;</button>
+    <div id="slide-counter">1 / 16</div>
+    <button id="fullscreen-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    </button>
+    
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevButton = document.getElementById('prev-slide');
+        const nextButton = document.getElementById('next-slide');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const slideCounter = document.getElementById('slide-counter');
+        let currentSlide = 0;
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            currentSlide = index;
+            slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+            prevButton.style.display = currentSlide === 0 ? 'none' : 'flex';
+            nextButton.style.display = currentSlide === slides.length - 1 ? 'none' : 'flex';
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        nextButton.addEventListener('click', nextSlide);
+        prevButton.addEventListener('click', prevSlide);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        function addLineNumbers() {
+            const codeContainers = document.querySelectorAll('.code-container');
+            codeContainers.forEach(container => {
+                if (container.dataset.numbered) return;
+
+                const pre = container.querySelector('pre');
+                const lines = pre.innerHTML.split('\n');
+                
+                // Remove trailing empty line if it exists
+                if (lines[lines.length - 1].trim() === '') {
+                    lines.pop();
+                }
+
+                if (lines.length > 0) {
+                    const numbersDiv = document.createElement('div');
+                    numbersDiv.className = 'line-numbers';
+                    numbersDiv.innerHTML = Array.from({ length: lines.length }, (_, i) => i + 1).join('<br>');
+                    container.insertBefore(numbersDiv, pre);
+                }
+                container.dataset.numbered = 'true';
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', addLineNumbers);
+        showSlide(0);
+    </script>
+</body>
+</html>
+
