@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 07: Bootstrap - Componentes Interativos</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Fira+Code&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --main-bg: #f8f9fa;
+            --slide-bg: #ffffff;
+            --text-color: #212529;
+            --link-color: #0d6efd;
+            --heading-color: #343a40;
+            --border-color: #dee2e6;
+            --header-height: 60px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-color);
+            padding-top: var(--header-height); /* Espaço para o header fixo */
+        }
+
+        .presentation-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .slide {
+            padding: 4rem;
+            min-height: 100vh;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            scroll-margin-top: var(--header-height); /* Garante que o scroll pare abaixo do header */
+        }
+
+        .slide:last-child {
+            border-bottom: none;
+        }
+
+        .slide h1, .slide h2, .slide h3 {
+            color: var(--heading-color);
+            font-weight: 900;
+        }
+        
+        .slide h1 { font-size: 3.5rem; }
+        .slide h2 {
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--link-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .code-snippet {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+        }
+
+        .inline-code {
+            background-color: #e9ecef;
+            color: #d63384;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .doc-note {
+            background-color: #e7f1ff;
+            border-left: 5px solid #0d6efd;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .mission-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1001;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center; /* Alinha o contador e botões verticalmente */
+        }
+
+        .slide-counter-display {
+            padding: 0.5rem 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .nav-buttons .btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Estilos para impressão */
+        @media print {
+            body {
+                font-size: 12pt;
+                padding-top: 0;
+            }
+            .presentation-header, .nav-buttons {
+                display: none;
+            }
+            .slide {
+                min-height: auto;
+                padding: 2rem 1rem;
+                page-break-after: always;
+                border-bottom: 1px solid #ccc;
+                scroll-margin-top: 0;
+            }
+            .slide h1, .slide h2 { font-size: 24pt; }
+            .code-snippet {
+                background-color: #eee !important;
+                color: #000 !important;
+                border: 1px solid #ccc;
+                white-space: pre-wrap;
+            }
+        }
+        
+        /* Estilos para Mobile */
+        @media (max-width: 768px) {
+            .slide { padding: 2rem; }
+            .slide h1 { font-size: 2.5rem; }
+            .slide h2 { font-size: 2rem; }
+            .nav-buttons {
+                display: none; /* Esconde os botões de navegação em telas menores */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Fixo -->
+    <header class="presentation-header">
+        <h5 class="mb-0 fw-bold">Bootstrap 5.3: Componentes Interativos</h5>
+    </header>
+
+    <!-- Conteúdo Principal com Slides -->
+    <main>
+
+        <!-- Slide 1: Introdução -->
+        <section id="slide1" class="slide">
+            <div>
+                <h1 class="display-3 fw-bolder">Bootstrap: Componentes Interativos</h1>
+                <p class="lead fs-2 text-muted mt-3">Aula 07</p>
+                <p class="fs-4 mt-4">Prof. Wiliam Paiva - COTIL - UNICAMP</p>
+                <hr class="my-5">
+                <p class="fs-4"><strong>Agenda de hoje:</strong></p>
+                <ul class="fs-4">
+                    <li>Entender como o JavaScript "mágico" do Bootstrap funciona.</li>
+                    <li>Construir, passo a passo, uma página de inscrição de evento.</li>
+                    <li>Aplicar componentes como Alerts, Modals, Forms, Navbars, Tooltips e Accordions.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 2: Nosso Projeto -->
+        <section id="slide2" class="slide bg-light">
+            <div>
+                <h2>Nosso Projeto da Aula: Página de Inscrição</h2>
+                <p class="lead fs-4">Ao longo desta aula, vamos construir uma página completa. A cada componente novo que aprendermos, vamos aplicá-lo ao nosso projeto.</p>
+                <p class="fs-4 mt-4"><strong>O Objetivo:</strong> Criar uma página para inscrição em um evento de tecnologia.</p>
+                <div class="mission-box mt-4">
+                    <h4 class="fw-bold">Passo 1: A Estrutura Inicial</h4>
+                    <p>Copie e cole o código abaixo em um novo arquivo <code class="inline-code">evento.html</code>. Esta será a base do nosso projeto.</p>
+                </div>
+                <div class="code-snippet">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Inscrição para Evento de Tech&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- A NAVBAR VIRÁ AQUI --&gt;
+
+    &lt;div class="container mt-5"&gt;
+        
+        &lt;!-- OS ALERTAS DE FEEDBACK VIRÃO AQUI --&gt;
+
+        &lt;div class="row"&gt;
+            &lt;div class="col-lg-8"&gt;
+                &lt;!-- O FORMULÁRIO PRINCIPAL VIRÁ AQUI --&gt;
+                &lt;h1&gt;Página de Inscrição&lt;/h1&gt;
+
+            &lt;/div&gt;
+            &lt;div class="col-lg-4"&gt;
+                &lt;!-- A SEÇÃO DE FAQ (ACCORDION) VIRÁ AQUI --&gt;
+                &lt;h3&gt;Dúvidas?&lt;/h3&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- O MODAL DE TERMOS VIRÁ AQUI --&gt;
+
+
+    &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        // O CÓDIGO DE INICIALIZAÇÃO JS VIRÁ AQUI
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 3: O Papel do JS -->
+        <section id="slide3" class="slide">
+            <div>
+                <h2>A Magia do JavaScript no Bootstrap</h2>
+                <p class="lead fs-4">Até agora, só usamos o CSS do Bootstrap. Mas como componentes como Modals e Alertas ganham vida?</p>
+                <p class="fs-4 mt-4">A resposta está no arquivo <code class="inline-code">bootstrap.bundle.min.js</code>. Ele contém todo o código JavaScript necessário para dar interatividade aos componentes.</p>
+                
+                <div class="alert alert-success mt-4 fs-5">
+                    <h5 class="alert-heading fw-bold">Preciso saber JavaScript para usar isso?</h5>
+                    <p><strong>Não!</strong> Você não precisa escrever uma linha de JavaScript para usar os componentes interativos. O Bootstrap foi projetado para que você possa controlar tudo diretamente do seu HTML.</p>
+                    <p class="mb-0">Nesta aula, vamos entender os conceitos por trás disso para que você saiba *como* a mágica acontece.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: O que é o DOM? -->
+        <section id="slide4" class="slide">
+            <div>
+                <h2>O que é o DOM? (Uma explicação simples)</h2>
+                <p class="lead fs-4">Para o JavaScript funcionar, ele precisa "ver" seu HTML de uma forma organizada.</p>
+                <p class="fs-4 mt-4">Imagine seu código HTML como uma árvore genealógica. O <code class="inline-code">&lt;html&gt;</code> é o ancestral principal. O <code class="inline-code">&lt;body&gt;</code> e o <code class="inline-code">&lt;head&gt;</code> são seus filhos. O <code class="inline-code">&lt;div&gt;</code> dentro do body é um neto, e assim por diante.</p>
+                <p class="fs-4 mt-4">Essa "árvore" de elementos é chamada de <strong>DOM (Document Object Model)</strong>. O JavaScript do Bootstrap sabe como navegar por essa árvore para encontrar, modificar, esconder ou mostrar elementos, criando a interatividade que vemos.</p>
+                <div class="text-center mt-4">
+                    <svg width="100%" height="300" viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg" class="img-fluid" style="max-width: 600px;">
+                        <style>
+                            .dom-node { fill: #e7f1ff; stroke: #0d6efd; stroke-width: 2; }
+                            .dom-text { font-family: 'Fira Code', monospace; fill: #212529; text-anchor: middle; dominant-baseline: middle; font-size: 1.2rem;}
+                            .dom-connector { stroke: #6c757d; stroke-width: 2; fill: none; }
+                        </style>
+                        <g>
+                            <rect x="250" y="10" width="100" height="50" rx="8" class="dom-node"></rect>
+                            <text x="300" y="35" class="dom-text">&lt;html&gt;</text>
+                        </g>
+                        <g>
+                            <rect x="100" y="100" width="100" height="50" rx="8" class="dom-node"></rect>
+                            <text x="150" y="125" class="dom-text">&lt;head&gt;</text>
+                        </g>
+                        <g>
+                            <rect x="400" y="100" width="100" height="50" rx="8" class="dom-node"></rect>
+                            <text x="450" y="125" class="dom-text">&lt;body&gt;</text>
+                        </g>
+                        <g>
+                            <rect x="325" y="190" width="100" height="50" rx="8" class="dom-node"></rect>
+                            <text x="375" y="215" class="dom-text">&lt;h1&gt;</text>
+                        </g>
+                        <g>
+                            <rect x="475" y="190" width="100" height="50" rx="8" class="dom-node"></rect>
+                            <text x="525" y="215" class="dom-text">&lt;a&gt;</text>
+                        </g>
+                        <path class="dom-connector" d="M 300 60 V 80 H 150 V 100"></path>
+                        <path class="dom-connector" d="M 300 60 V 80 H 450 V 100"></path>
+                        <path class="dom-connector" d="M 450 150 V 170 H 375 V 190"></path>
+                        <path class="dom-connector" d="M 450 150 V 170 H 525 V 190"></path>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Atributos "data-bs-*" -->
+        <section id="slide5" class="slide">
+            <div>
+                <h2>A Chave Mestra: Atributos <code class="inline-code">data-bs-*</code></h2>
+                <p class="lead fs-4">Como dizemos ao JavaScript do Bootstrap o que fazer, sem escrever JavaScript?</p>
+                <p class="fs-4 mt-4">Nós usamos <strong>atributos de dados</strong> no HTML. Eles são como etiquetas especiais que o JavaScript do Bootstrap procura no DOM.</p>
+                <p class="fs-4 mt-4">O padrão é sempre <code class="inline-code">data-bs-*</code>. Por exemplo:</p>
+                <div class="code-snippet">
+<pre><code>&lt;!-- Este atributo "diz" ao JS: "Quando este botão for clicado,
+     procure e abra o Modal com o ID 'meuModal'" --&gt;
+
+&lt;button data-bs-toggle="modal" data-bs-target="#meuModal"&gt;
+  Abrir Modal
+&lt;/button&gt;</code></pre>
+                </div>
+                <p class="fs-4 mt-4">Esses atributos são as "instruções" que passamos do nosso HTML para o JavaScript do Bootstrap. Simples assim!</p>
+            </div>
+        </section>
+        
+        <!-- Slide 6: Alertas Dispensáveis -->
+        <section id="slide6" class="slide">
+            <div>
+                <h2>Alertas Dispensáveis (Dismissible)</h2>
+                <p class="lead fs-4">Vamos ao primeiro exemplo prático: um alerta que o usuário pode fechar.</p>
+                <p class="fs-4 mt-4">Precisamos de 3 coisas no nosso HTML:</p>
+                <ol class="fs-5">
+                    <li>A classe <code class="inline-code">.alert-dismissible</code> no alerta para adicionar espaçamento para o botão de fechar.</li>
+                    <li>Um <code class="inline-code">&lt;button&gt;</code> dentro do alerta com a classe <code class="inline-code">.btn-close</code>.</li>
+                    <li>O atributo mágico <code class="inline-code">data-bs-dismiss="alert"</code> no botão. Esta é a instrução para o JS!</li>
+                </ol>
+                <div class="code-snippet">
+<pre><code>&lt;div class="alert alert-warning alert-dismissible fade show" role="alert"&gt;
+  <strong>Atenção!</strong> Seus dados serão atualizados.
+  &lt;button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"&gt;&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <p class="fs-4 mt-4"><strong>Resultado:</strong></p>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Atenção!</strong> Seus dados serão atualizados.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 7: Exercício Alertas -->
+        <section id="slide7" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 2: Feedback ao Usuário</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Vamos adicionar mensagens de feedback na nossa página de evento. No seu arquivo <code class="inline-code">evento.html</code>, substitua o comentário <code class="inline-code">&lt;!-- OS ALERTAS... --&gt;</code> por dois alertas que possam ser fechados:</p>
+                    <hr>
+                    <ol>
+                        <li>Um alerta de <strong>sucesso</strong> (<code class="inline-code">.alert-success</code>) com a mensagem "Inscrição realizada com sucesso!".</li>
+                        <li>Um alerta de <strong>perigo</strong> (<code class="inline-code">.alert-danger</code>) com a mensagem "Erro: Preencha todos os campos obrigatórios.".</li>
+                    </ol>
+                    <p class="mt-3 fw-bold">Por enquanto, eles ficarão visíveis. Mais tarde, com JavaScript, poderíamos exibi-los apenas após o envio do formulário.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: O que são Modals? -->
+        <section id="slide8" class="slide">
+            <div>
+                <h2>Modals: Janelas Sobrepostas</h2>
+                <p class="lead fs-4">Modals são janelas de diálogo que aparecem sobre o conteúdo da página, exigindo a atenção do usuário.</p>
+                <p class="fs-4 mt-4"><strong>Quando usar um Modal?</strong></p>
+                <ul class="fs-4">
+                    <li>Para exibir informações importantes sem sair da página.</li>
+                    <li>Para formulários curtos (como login ou inscrição).</li>
+                    <li>Para confirmações de ações críticas (ex: "Você tem certeza que quer excluir este item?").</li>
+                    <li>Para exibir conteúdo maior, como imagens ou vídeos.</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Slide 9: Estrutura do Modal -->
+        <section id="slide9" class="slide">
+            <div>
+                <h2>A Estrutura de um Modal</h2>
+                <p class="lead fs-4">Um Modal é composto por duas partes principais no HTML:</p>
+                
+                <div class="row mt-4 g-4">
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title fw-bold">1. O Gatilho (Trigger)</h4>
+                                <p>Geralmente um botão que o usuário clica para abrir o modal. Ele usa <code class="inline-code">data-bs-toggle="modal"</code> para se identificar e <code class="inline-code">data-bs-target="#idDoModal"</code> para "mirar" no modal certo.</p>
+                                <div class="code-snippet">
+<pre><code>&lt;button type="button" class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#exemploModal"&gt;
+  Abrir Modal
+&lt;/button&gt;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h4 class="card-title fw-bold">2. O Conteúdo do Modal</h4>
+                                <p>O HTML da janela que será exibida. Ele precisa ter o <code class="inline-code">id</code> correspondente ao `target` do gatilho. Geralmente é colocado no final do <code class="inline-code">&lt;body&gt;</code>.</p>
+                                <div class="code-snippet">
+<pre><code>&lt;div class="modal fade" id="exemploModal"&gt;
+  &lt;!-- Conteúdo do Modal aqui --&gt;
+&lt;/div&gt;</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Exemplo de Modal -->
+        <section id="slide10" class="slide">
+            <div>
+                <h2>Exemplo Completo de Modal</h2>
+                <p class="lead fs-4">Vamos ver o código completo do conteúdo do modal e um exemplo funcional.</p>
+                <div class="code-snippet">
+<pre><code>&lt;!-- O código do Modal (geralmente no fim do &lt;body&gt;) --&gt;
+&lt;div class="modal fade" id="exemploModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true"&gt;
+  &lt;div class="modal-dialog"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;h5 class="modal-title" id="tituloModal"&gt;Título do Modal&lt;/h5&gt;
+        &lt;button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"&gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        O conteúdo do seu modal vai aqui.
+      &lt;/div&gt;
+      &lt;div class="modal-footer"&gt;
+        &lt;button type="button" class="btn btn-secondary" data-bs-dismiss="modal"&gt;Fechar&lt;/button&gt;
+        &lt;button type="button" class="btn btn-primary"&gt;Salvar mudanças&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <p class="fs-4 mt-4"><strong>Experimente:</strong></p>
+                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#exemploModal">
+                  Clique para Abrir o Modal
+                </button>
+                 <div class="doc-note mt-4">
+                    <h5 class="fw-bold">Para Saber Mais</h5>
+                    <p>Modals podem ser centralizados, ter tamanhos diferentes e muito mais. Consulte a <a href="https://getbootstrap.com/docs/5.3/components/modal/" target="_blank">documentação de Modals</a> para ver todas as opções.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 11: Exercício Modal -->
+        <section id="slide11" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 3: Termos de Serviço</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Vamos adicionar um modal com os termos de serviço do evento.</p>
+                    <hr>
+                    <ol>
+                        <li>No seu arquivo <code class="inline-code">evento.html</code>, substitua o comentário <code class="inline-code">&lt;!-- O MODAL... --&gt;</code> pelo código completo de um modal. Dê a ele o ID <code class="inline-code">termosModal</code>.</li>
+                        <li>No <strong>corpo do modal</strong>, adicione um texto longo sobre os termos do evento.</li>
+                        <li>No <strong>rodapé do modal</strong>, deixe apenas um botão "Entendi" que fecha o modal.</li>
+                        <li>Perto do checkbox do formulário (que faremos a seguir), adicione o <strong>gatilho</strong>: um link com o texto "Leia os termos de serviço" que abre o modal que você acabou de criar.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Introdução a Forms -->
+        <section id="slide12" class="slide">
+            <div>
+                <h2>Formulários com Bootstrap</h2>
+                <p class="lead fs-4">Formulários são uma das partes mais importantes e complexas de qualquer aplicação web. Bootstrap nos dá um conjunto poderoso de classes para estilizá-los de forma rápida e consistente.</p>
+            </div>
+        </section>
+
+        <!-- Slide 13: Controles Básicos -->
+        <section id="slide13" class="slide">
+            <div>
+                <h2>Controles de Formulário Básicos</h2>
+                <p class="fs-4">A classe mais fundamental é a <code class="inline-code">.form-control</code>, aplicada a inputs de texto, email, etc. Envolvemos cada campo em um <code class="inline-code">&lt;div&gt;</code> com <code class="inline-code">.mb-3</code> para espaçamento.</p>
+                <div class="code-snippet">
+<pre><code>&lt;div class="mb-3"&gt;
+  &lt;label for="exemploInput" class="form-label"&gt;Endereço de Email&lt;/label&gt;
+  &lt;input type="email" class="form-control" id="exemploInput" placeholder="nome@exemplo.com"&gt;
+&lt;/div&gt;
+&lt;div class="mb-3"&gt;
+  &lt;label for="exemploTextarea" class="form-label"&gt;Sua Mensagem&lt;/label&gt;
+  &lt;textarea class="form-control" id="exemploTextarea" rows="3"&gt;&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <p class="fs-4 mt-4"><strong>Resultado:</strong></p>
+                <div class="mb-3">
+                  <label for="exemploInputRendered" class="form-label">Endereço de Email</label>
+                  <input type="email" class="form-control" id="exemploInputRendered" placeholder="nome@exemplo.com">
+                </div>
+                <div class="mb-3">
+                  <label for="exemploTextareaRendered" class="form-label">Sua Mensagem</label>
+                  <textarea class="form-control" id="exemploTextareaRendered" rows="3"></textarea>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 14: Selects e Checks -->
+        <section id="slide14" class="slide">
+            <div>
+                <h2>Selects, Checks e Radios</h2>
+                <p class="fs-4">Para menus suspensos, usamos <code class="inline-code">.form-select</code>. Para caixas de seleção e botões de rádio, usamos a estrutura <code class="inline-code">.form-check</code>, <code class="inline-code">.form-check-input</code> e <code class="inline-code">.form-check-label</code>.</p>
+                <div class="code-snippet">
+<pre><code>&lt;!-- Select --&gt;
+&lt;select class="form-select"&gt;
+  &lt;option selected&gt;Escolha uma opção&lt;/option&gt;
+  &lt;option value="1"&gt;Opção 1&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- Checkbox --&gt;
+&lt;div class="form-check mt-3"&gt;
+  &lt;input class="form-check-input" type="checkbox" id="checkExemplo"&gt;
+  &lt;label class="form-check-label" for="checkExemplo"&gt;Aceito os termos&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <p class="fs-4 mt-4"><strong>Resultado:</strong></p>
+                <select class="form-select">
+                  <option selected>Escolha uma opção</option>
+                  <option value="1">Opção 1</option>
+                </select>
+                <div class="form-check mt-3">
+                  <input class="form-check-input" type="checkbox" id="checkExemploRendered">
+                  <label class="form-check-label" for="checkExemploRendered">Aceito os termos</label>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Slide 15: Validação com JS -->
+        <section id="slide15" class="slide">
+            <div>
+                 <h2>Validação Real (com JavaScript)</h2>
+                <p class="lead fs-4">Para uma experiência de usuário melhor, a validação deve acontecer <strong>após</strong> o usuário tentar enviar o formulário.</p>
+                <p class="fs-4 mt-4">Para isso, usamos a classe <code class="inline-code">.needs-validation</code> no formulário e o atributo <code class="inline-code">novalidate</code>. Depois, adicionamos um pequeno script (que você pode copiar e colar) para ativar a lógica.</p>
+                <div class="code-snippet">
+<pre><code>&lt;!-- No seu formulário --&gt;
+&lt;form class="row g-3 needs-validation" novalidate&gt;
+  &lt;div class="col-md-6"&gt;
+    &lt;label for="validationCustom01" class="form-label"&gt;Nome&lt;/label&gt;
+    &lt;input type="text" class="form-control" id="validationCustom01" required&gt;
+    &lt;div class="valid-feedback"&gt;
+      Tudo certo!
+    &lt;/div&gt;
+    &lt;div class="invalid-feedback"&gt;
+      Por favor, insira seu nome.
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- ... outros campos ... --&gt;
+&lt;/form&gt;
+
+&lt;!-- No seu &lt;script&gt; no final da página --&gt;
+&lt;script&gt;
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+&lt;/script&gt;
+</code></pre>
+                </div>
+                 <div class="alert alert-info mt-4"><strong>O que esse script faz?</strong> Ele encontra todos os formulários com a classe <code class="inline-code">.needs-validation</code>. Quando o usuário clica em "enviar", o script verifica se tudo está preenchido corretamente. Se não estiver, ele impede o envio e adiciona a classe <code class="inline-code">.was-validated</code> para mostrar os erros.</div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Exercício Forms -->
+        <section id="slide16" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 4: O Formulário de Inscrição</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Esta é a parte principal! Substitua o comentário <code class="inline-code">&lt;!-- O FORMULÁRIO... --&gt;</code> pelo formulário de inscrição completo.</p>
+                    <hr>
+                    <p class="fw-bold">Requisitos:</p>
+                    <ol>
+                        <li>Um título <code class="inline-code">&lt;h2&gt;</code> "Faça sua Inscrição".</li>
+                        <li>O formulário deve usar a classe <code class="inline-code">.needs-validation</code> e o atributo <code class="inline-code">novalidate</code>.</li>
+                        <li>Use o <strong>Grid</strong> para criar um layout com duas colunas para "Nome" e "Sobrenome".</li>
+                        <li><strong>Campos:</strong> "Email", "Tipo de Ingresso" (<code class="inline-code">.form-select</code>), e um <code class="inline-code">.form-check</code> para "Aceito os termos de serviço". Todos devem ser obrigatórios (<code class="inline-code">required</code>).</li>
+                        <li>Adicione as mensagens de <code class="inline-code">.invalid-feedback</code> para cada campo.</li>
+                        <li>Finalize com um botão de "Inscrever-se" do tipo <code class="inline-code">submit</code>.</li>
+                        <li>Copie o <strong>script de validação</strong> que vimos e cole dentro da tag <code class="inline-code">&lt;script&gt;</code> vazia do seu arquivo.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 17: Navbars -->
+        <section id="slide17" class="slide">
+            <div>
+                <h2>O Coração da Navegação: Navbars</h2>
+                <p class="lead fs-4">A Navbar é um dos componentes mais essenciais de um site, sendo totalmente responsiva. Ela "colapsa" em telas menores, transformando os links em um menu "hambúrguer".</p>
+                <div class="code-snippet">
+<pre><code>&lt;nav class="navbar navbar-expand-lg bg-dark navbar-dark"&gt;
+  &lt;div class="container-fluid"&gt;
+    &lt;a class="navbar-brand" href="#"&gt;Meu Site&lt;/a&gt;
+    &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#conteudoNavbar"&gt;
+      &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="collapse navbar-collapse" id="conteudoNavbar"&gt;
+      &lt;ul class="navbar-nav me-auto mb-2 mb-lg-0"&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link active" href="#"&gt;Início&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link" href="#"&gt;Sobre&lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+                </div>
+                <p class="fs-4 mt-4"><strong>Resultado:</strong></p>
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark rounded">
+                  <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Meu Site</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#conteudoNavbarExemplo">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="conteudoNavbarExemplo">
+                      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                          <a class="nav-link active" href="#">Início</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">Sobre</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+            </div>
+        </section>
+        
+        <!-- Slide 18: Anatomia da Navbar -->
+        <section id="slide18" class="slide">
+             <div>
+                <h2>Anatomia de uma Navbar</h2>
+                <ul class="list-group list-group-flush fs-5">
+                    <li class="list-group-item"><code class="inline-code">.navbar-expand-lg</code>: Diz em qual breakpoint (lg = large) a navbar deve expandir. Abaixo disso, ela colapsa.</li>
+                    <li class="list-group-item"><code class="inline-code">.navbar-brand</code>: Para o logo ou nome do site.</li>
+                    <li class="list-group-item"><code class="inline-code">.navbar-toggler</code>: O botão "hambúrguer" que aparece em telas pequenas.</li>
+                    <li class="list-group-item"><code class="inline-code">data-bs-target="#id"</code>: Aponta para o ID do conteúdo que deve ser expandido/colapsado.</li>
+                    <li class="list-group-item"><code class="inline-code">.collapse .navbar-collapse</code>: O contêiner dos links que será escondido/mostrado.</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- Slide 19: Exercício Navbar -->
+        <section id="slide19" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 5: A Barra de Navegação</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Vamos dar uma cara profissional à nossa página com uma Navbar.</p>
+                    <hr>
+                    <ol>
+                        <li>Substitua o comentário <code class="inline-code">&lt;!-- A NAVBAR... --&gt;</code> por uma Navbar completa.</li>
+                        <li>Use uma cor escura, como <code class="inline-code">.navbar-dark</code> e <code class="inline-code">.bg-dark</code>.</li>
+                        <li>Como "brand", coloque "Tech Conference".</li>
+                        <li>Adicione links para "Inscrição" e "FAQ". Eles devem apontar para os IDs das seções correspondentes na página (ex: <code class="inline-code">href="#faq"</code>).</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 20: Ativando JS para Tooltips e Popovers -->
+        <section id="slide20" class="slide">
+            <div>
+                <h2>Ativando Componentes via JS (O único passo!)</h2>
+                <p class="lead fs-4">Por razões de performance, Tooltips e Popovers são os únicos componentes que precisam ser "ligados" manualmente com um pequeno trecho de JavaScript.</p>
+                <div class="code-snippet">
+<pre><code>// Este código procura todos os elementos com data-bs-toggle="tooltip"
+// e os inicializa.
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+// Este faz o mesmo para os Popovers.
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+</code></pre>
+                </div>
+                <div class="alert alert-warning mt-4"><strong>Importante:</strong> Este código deve ser colocado dentro da sua tag <code class="inline-code">&lt;script&gt;</code> para que funcione.</div>
+            </div>
+        </section>
+
+        <!-- Slide 21: Tooltips e Popovers -->
+        <section id="slide21" class="slide">
+            <div>
+                <h2>Tooltips e Popovers: O Código</h2>
+                <p class="lead fs-4">Tooltips são para dicas rápidas. Popovers permitem mais conteúdo, com título e corpo.</p>
+                <div class="row g-4 mt-3">
+                    <div class="col-lg-6">
+                        <h5>Tooltip</h5>
+                        <div class="code-snippet">
+<pre><code>&lt;button type="button" class="btn btn-secondary"
+  data-bs-toggle="tooltip"
+  data-bs-placement="top"
+  data-bs-title="Isso é um tooltip!"&gt;
+  Passe o mouse aqui
+&lt;/button&gt;</code></pre>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Isso é um tooltip!">Passe o mouse aqui</button>
+                    </div>
+                    <div class="col-lg-6">
+                        <h5>Popover</h5>
+                        <div class="code-snippet">
+<pre><code>&lt;button type="button" class="btn btn-danger"
+  data-bs-toggle="popover"
+  data-bs-title="Título do Popover"
+  data-bs-content="E aqui está o conteúdo."&gt;
+  Clique aqui
+&lt;/button&gt;</code></pre>
+                        </div>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="popover" title="Título do Popover" data-bs-content="E aqui está o conteúdo.">Clique aqui</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 22: Exercício Tooltips/Popovers -->
+        <section id="slide22" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 6: Dicas Visuais</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Vamos adicionar pequenas ajudas visuais ao nosso formulário.</p>
+                    <hr>
+                    <ol>
+                        <li>Primeiro, copie o código de inicialização de <strong>Tooltips e Popovers</strong> para a tag <code class="inline-code">&lt;script&gt;</code> do seu arquivo, junto com o script de validação.</li>
+                        <li>No botão "Inscrever-se", adicione um <strong>Tooltip</strong> na posição "top" com o texto "Clique para finalizar sua inscrição".</li>
+                        <li>Ao lado do campo "Tipo de Ingresso", adicione um pequeno ícone de ajuda (ex: <code class="inline-code">&lt;i class="bi bi-question-circle"&gt;&lt;/i&gt;</code>) e faça com que ele mostre um <strong>Popover</strong> quando clicado, explicando a diferença entre os ingressos.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 23: Accordions -->
+        <section id="slide23" class="slide">
+            <div>
+                <h2>Conteúdo Retrátil: Accordion</h2>
+                <p class="lead fs-4">O componente Accordion (ou "sanfona") é perfeito para seções de <strong>FAQ (Perguntas Frequentes)</strong>. Ele permite expandir e colapsar blocos de conteúdo.</p>
+                
+                <div class="accordion mt-4" id="accordionExemploAninhado">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCodigo">
+                        O Código do Accordion
+                      </button>
+                    </h2>
+                    <div id="collapseCodigo" class="accordion-collapse collapse show" data-bs-parent="#accordionExemploAninhado">
+                      <div class="accordion-body">
+                        <div class="code-snippet mb-0">
+<pre><code>&lt;div class="accordion" id="accordionExemplo"&gt;
+  &lt;div class="accordion-item"&gt;
+    &lt;h2 class="accordion-header"&gt;
+      &lt;button class="accordion-button" ...&gt;
+        Pergunta #1
+      &lt;/button&gt;
+    &lt;/h2&gt;
+    &lt;div id="collapseUm" class="accordion-collapse collapse show" data-bs-parent="#accordionExemplo"&gt;
+      &lt;div class="accordion-body"&gt;
+        Resposta #1.
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDica">
+                        Dica Importante: O Atributo data-bs-parent
+                      </button>
+                    </h2>
+                    <div id="collapseDica" class="accordion-collapse collapse" data-bs-parent="#accordionExemploAninhado">
+                      <div class="accordion-body">
+                        <div class="doc-note mt-0">O atributo <code class="inline-code">data-bs-parent="#idDoAccordion"</code> garante que apenas um item do accordion fique aberto por vez. Se removê-lo, o usuário poderá abrir vários.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Slide 24: Exercício Accordion -->
+        <section id="slide24" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo Final: FAQ</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Para finalizar, vamos adicionar a seção de perguntas frequentes na coluna da direita.</p>
+                    <hr>
+                    <ol>
+                        <li>Substitua o comentário <code class="inline-code">&lt;!-- A SEÇÃO DE FAQ... --&gt;</code> por um <strong>Accordion</strong>.</li>
+                        <li>Dê à div principal do formulário um ID, como <code class="inline-code">inscricao</code>, e à div principal do accordion um ID como <code class="inline-code">faq</code>, para que os links da Navbar funcionem.</li>
+                        <li>Crie pelo menos 3 perguntas e respostas, como "O evento é online?", "Haverá certificado?", "Qual o preço do ingresso?".</li>
+                    </ol>
+                    <p class="fw-bold mt-3">Parabéns! Você construiu uma página completa usando múltiplos componentes interativos do Bootstrap!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 25: Resumo -->
+        <section id="slide25" class="slide">
+            <div>
+                <h2>Resumo da Aula</h2>
+                <p class="lead fs-4">O que dominamos hoje:</p>
+                <div class="row g-4 mt-4">
+                     <div class="col-lg-12">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h4 class="card-title fw-bold">Construção Orientada a Projeto</h4>
+                                <p>Aplicamos nosso conhecimento de forma prática, construindo uma página de inscrição do zero e vendo como os componentes se encaixam para formar um todo coeso.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h4 class="card-title fw-bold">Interatividade via HTML</h4>
+                                <p>Aprendemos a usar <strong>Alertas</strong>, <strong>Modals</strong>, <strong>Navbars</strong>, <strong>Tooltips</strong>, <strong>Popovers</strong> e <strong>Accordions</strong>, controlando tudo com atributos <code class="inline-code">data-bs-*</code>.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg-6">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h4 class="card-title fw-bold">Formulários Robustos</h4>
+                                <p>Vimos como construir <strong>Formulários</strong> complexos, com diferentes tipos de input, layout responsivo e validação visual para o usuário.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 26: Próximos Passos -->
+        <section id="slide26" class="slide">
+            <div>
+                 <h1>Estudo e Próxima Avaliação</h1>
+                <p class="lead fs-4">Este foi o último conteúdo novo antes da nossa próxima avaliação.</p>
+                
+                <div class="doc-note mt-5">
+                    <h4 class="fw-bold">Roteiro de Estudos</h4>
+                    <p class="fs-5">Para se preparar, revise todos os componentes e conceitos que vimos nestas aulas. A melhor forma de estudar é praticando. Tente recriar layouts de sites que você gosta usando Bootstrap.</p>
+                    <p class="fs-5">Lembre-se sempre de consultar a <a href="https://getbootstrap.com/docs/5.3/getting-started/introduction/" target="_blank">documentação oficial do Bootstrap</a>. Ela é sua principal ferramenta de consulta.</p>
+                    <p class="fs-5 mb-0 fw-bold">Bons estudos e boa sorte na avaliação!</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Botões de Navegação -->
+    <div class="nav-buttons">
+        <span id="slide-counter" class="slide-counter-display"></span>
+        <button class="btn btn-light" id="prev-btn" title="Slide Anterior (←)">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <button class="btn btn-light" id="next-btn" title="Próximo Slide (→)">
+            <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+
+    <!-- Modal de Exemplo -->
+    <div class="modal fade" id="exemploModal" tabindex="-1" aria-labelledby="tituloModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tituloModal">Título do Modal</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            O conteúdo do seu modal vai aqui. Pode ser texto, imagens, um formulário ou qualquer outro elemento HTML que você precisar.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button type="button" class="btn btn-primary">Salvar mudanças</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+
+            function updateNav() {
+                if (slideCounter) {
+                    slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+                }
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+
+            function goToSlide(index) {
+                // Garante que o índice esteja dentro dos limites
+                if (index < 0) {
+                    index = 0;
+                }
+                if (index >= slides.length) {
+                    index = slides.length - 1;
+                }
+                
+                currentSlide = index;
+
+                // Novo método de scroll: mais preciso que o scrollIntoView
+                const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'), 10) || 60;
+                const targetPosition = slides[currentSlide].offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+
+                updateNav();
+            }
+
+            // Eventos para os botões
+            prevBtn.addEventListener('click', () => {
+                goToSlide(currentSlide - 1);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                goToSlide(currentSlide + 1);
+            });
+
+            // Eventos para as setas do teclado e espaço
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.code === 'Space') {
+                    e.preventDefault();
+                    goToSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goToSlide(currentSlide - 1);
+                }
+            });
+            
+            // INICIALIZAÇÃO DOS COMPONENTES JS
+            // ------------------------------------
+            // Ativa todos os Tooltips da página
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+            // Ativa todos os Popovers da página
+            const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+            const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+
+            // Validação de formulários
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+
+
+            // Inicia a navegação
+            updateNav();
+        });
+    </script>
+</body>
+</html>
+
