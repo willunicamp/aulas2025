@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 07 - CRUD: DELETE e Imagens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #f8fafc; /* slate-50 */
+            --primary-text: #0f172a; /* slate-900 */
+            --secondary-text: #475569; /* slate-600 */
+            --accent-color: #f59e0b; /* amber-500 */
+            --code-bg: #1d2021; /* Gruvbox bg */
+            --header-height: 60px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+        }
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: calc(var(--header-height) + 2rem) 1rem 4rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .slide:last-child {
+            border-bottom: none;
+        }
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .nav-controls {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+        }
+        .nav-button {
+            background-color: var(--primary-text);
+            color: var(--primary-bg);
+            width: 50px;
+            height: 50px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .nav-button:hover {
+            background-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        
+        /* Custom Boxes */
+        .doc-note {
+            background-color: #e0f2fe; /* sky-100 */
+            border-left: 4px solid #0ea5e9; /* sky-500 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .mission-box {
+            background-color: #fefce8; /* yellow-50 */
+            border: 1px solid var(--accent-color);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+        }
+        
+        /* Code Snippet */
+        .code-snippet {
+            position: relative;
+            background-color: var(--code-bg);
+            border-radius: 0.5rem;
+            padding: 1.5rem 1rem 1.5rem 4em;
+            font-family: 'Fira Code', monospace;
+        }
+        .code-block {
+            color: #fbf1c7;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 1.5rem;
+            width: 3.5em;
+            text-align: right;
+            color: #928374;
+            user-select: none;
+        }
+        .cg-keyword { color: #fb4934; }
+        .cg-type { color: #fabd2f; }
+        .cg-string { color: #b8bb26; }
+        .cg-comment { color: #928374; font-style: italic; }
+        .cg-method { color: #83a598; }
+        .cg-variable { color: #fbf1c7; }
+        .cg-number { color: #d3869b; }
+        .cg-property { color: #8ec07c; }
+
+        @media (max-width: 768px) {
+            .nav-controls {
+                display: none;
+            }
+        }
+        @media print {
+            body { background-color: white; }
+            .no-print, .fixed-header, .nav-controls { display: none !important; }
+            main { margin: 0; padding: 0; }
+            .slide {
+                min-height: 0;
+                padding: 2rem 0;
+                page-break-inside: avoid;
+            }
+             .print-header { display: block !important; margin-bottom: 2rem; }
+        }
+        .print-header { display: none; }
+    </style>
+</head>
+<body class="p-0 m-0">
+
+    <header class="fixed-header flex items-center justify-center px-4">
+        <h1 class="text-xl font-bold text-slate-700">Aula 07 - CRUD: DELETE e Imagens no Banco</h1>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4">
+        
+        <div class="print-header">
+            <h1 class="text-3xl font-extrabold text-center">Aula 07 - CRUD: DELETE e Imagens</h1>
+            <p class="text-center text-lg text-slate-600">Prof. William Paiva - COTIL - UNICAMP</p>
+        </div>
+
+        <section class="slide">
+            <div class="text-center">
+                <p class="text-lg font-semibold" style="color:var(--accent-color);">Aula 07</p>
+                <h1 class="text-5xl font-extrabold tracking-tight mt-2">Fechando o Ciclo com o DELETE</h1>
+                <p class="mt-4 text-xl text-slate-600 max-w-3xl mx-auto">Aprendendo a remover heróis do nosso sistema de forma segura, finalizando todas as operações do CRUD.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">O Ciclo CRUD Quase Completo!</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Nas últimas aulas, construímos as operações fundamentais do nosso sistema. Vamos revisar o que já dominamos:</p>
+            <div class="space-y-4 w-full">
+                <div class="doc-note flex items-start space-x-4"><span class="text-2xl mt-1">✅</span><div><strong class="text-lg">CREATE:</strong> Já conseguimos cadastrar novos heróis no banco de dados.</div></div>
+                <div class="doc-note flex items-start space-x-4"><span class="text-2xl mt-1">✅</span><div><strong class="text-lg">READ:</strong> Já conseguimos ler e exibir os heróis, raças e classes na tela.</div></div>
+                <div class="doc-note flex items-start space-x-4"><span class="text-2xl mt-1">✅</span><div><strong class="text-lg">UPDATE:</strong> Já conseguimos editar e atualizar um herói existente.</div></div>
+                <div class="mission-box flex items-start space-x-4"><span class="text-2xl mt-1">❓</span><div><strong class="text-lg">DELETE:</strong> Falta apenas a capacidade de <span class="font-bold" style="color:var(--accent-color)">remover</span> um herói, o foco da aula de hoje.</div></div>
+            </div>
+        </section>
+        
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">A Lógica para Excluir um Herói</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">A lógica para exclusão é a mais direta de todas as operações do CRUD e aproveita muito do que já construímos.</p>
+            <ol class="list-decimal pl-5 space-y-3 text-secondary-text text-lg w-full">
+                <li>O usuário clica em um herói no <code>ListBox</code> para carregá-lo no formulário. <span class="text-green-600 font-semibold">(Já temos!)</span></li>
+                <li>O usuário clica em um novo botão "Excluir".</li>
+                <li>O sistema pede uma confirmação para evitar exclusões acidentais. <span class="font-bold" style="color:var(--accent-color)">(Passo crucial!)</span></li>
+                <li>Se confirmado, o programa envia o comando SQL <code>DELETE</code> para o banco de dados.</li>
+                <li>O sistema limpa o formulário e recarrega a lista de heróis para refletir a mudança.</li>
+            </ol>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Passo 1: Preparando a Interface</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">O primeiro passo é adicionar um botão "Excluir" ao nosso formulário <code>frmHerois</code>. Posicione-o ao lado dos botões "Novo" e "Salvar".</p>
+            <div class="doc-note">
+                <img src="herois.png" alt="Interface com o novo botão Excluir" class="rounded-lg shadow-lg mb-4">
+                <p class="text-center text-base">Dê a ele um nome apropriado, como <code>btnExcluir</code>. Depois, dê um duplo clique para criar seu evento <code>btnExcluir_Click</code> no código.</p>
+            </div>
+        </section>
+        
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Passo 2: O Comando SQL DELETE</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">O comando <code>DELETE</code> é simples, mas, assim como o <code>UPDATE</code>, a cláusula <code>WHERE</code> é a parte mais importante para garantir a segurança da operação.</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2</div>
+                <pre class="code-block"><span class="cg-comment">-- Remove um registro específico da tabela 'heroi'</span>
+<span class="cg-keyword">DELETE FROM</span> <span class="cg-variable">heroi</span> <span class="cg-keyword">WHERE</span> <span class="cg-variable">id</span> = @<span class="cg-variable">id</span>;</pre>
+            </div>
+            <div class="doc-note mt-6 border-l-4 border-red-500 bg-red-50">
+                <strong class="text-red-600">PERIGO:</strong> Se você executar um comando <code>DELETE FROM heroi</code> sem a cláusula <code>WHERE</code>, você apagará <strong>TODA A TABELA</strong>! A condição `WHERE` é obrigatória.
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Passo 3: O Código do Botão Excluir</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Vamos montar a lógica do nosso botão, começando com as verificações de segurança antes de chamar o método que realmente acessa o banco de dados.</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20</div>
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">btnExcluir_Click</span>(<span class="cg-type">object</span> <span class="cg-variable">sender</span>, <span class="cg-type">EventArgs</span> <span class="cg-variable">e</span>)
+{
+    <span class="cg-comment">// 1. Verifica se realmente há um herói selecionado para excluir</span>
+    <span class="cg-keyword">if</span> (<span class="cg-variable">idHeroiSelecionado</span> == <span class="cg-number">0</span>)
+    {
+        <span class="cg-type">MessageBox</span>.<span class="cg-method">Show</span>(<span class="cg-string">"Selecione um herói na lista para excluir."</span>, <span class="cg-string">"Atenção"</span>);
+        <span class="cg-keyword">return</span>;
+    }
+
+    <span class="cg-comment">// 2. Pede confirmação ao usuário</span>
+    <span class="cg-type">DialogResult</span> <span class="cg-variable">resultado</span> = <span class="cg-type">MessageBox</span>.<span class="cg-method">Show</span>(
+        <span class="cg-string">"Tem certeza que deseja excluir o herói selecionado?"</span>,
+        <span class="cg-string">"Confirmação de Exclusão"</span>,
+        <span class="cg-type">MessageBoxButtons</span>.<span class="cg-property">YesNo</span>,
+        <span class="cg-type">MessageBoxIcon</span>.<span class="cg-property">Warning</span>
+    );
+
+    <span class="cg-comment">// 3. Se o usuário clicar em "Sim", prossegue com a exclusão</span>
+    <span class="cg-keyword">if</span> (<span class="cg-variable">resultado</span> == <span class="cg-type">DialogResult</span>.<span class="cg-property">Yes</span>)
+    {
+        <span class="cg-method">ExcluirHeroi</span>(); <span class="cg-comment">// Chama o método que faz a mágica</span>
+    }
+}</pre>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Passo 4: O Método ExcluirHeroi()</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Este método encapsula a lógica de acesso ao banco de dados para a exclusão, garantindo que o código fique organizado e reutilizável.</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24</div>
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">ExcluirHeroi</span>()
+{
+    <span class="cg-keyword">try</span>
+    {
+        <span class="cg-type">string</span> <span class="cg-variable">sql</span> = <span class="cg-string">"DELETE FROM heroi WHERE id = @id"</span>;
+
+        <span class="cg-keyword">using</span> (<span class="cg-type">MySqlConnection</span> <span class="cg-variable">conn</span> = <span class="cg-keyword">new</span> <span class="cg-method">MySqlConnection</span>(<span class="cg-variable">connectionString</span>))
+        {
+            <span class="cg-variable">conn</span>.<span class="cg-method">Open</span>();
+            <span class="cg-keyword">using</span> (<span class="cg-type">MySqlCommand</span> <span class="cg-variable">cmd</span> = <span class="cg-keyword">new</span> <span class="cg-method">MySqlCommand</span>(<span class="cg-variable">sql</span>, <span class="cg-variable">conn</span>))
+            {
+                <span class="cg-comment">// Passa o ID do herói selecionado como parâmetro</span>
+                <span class="cg-variable">cmd</span>.<span class="cg-property">Parameters</span>.<span class="cg-method">AddWithValue</span>(<span class="cg-string">"@id"</span>, <span class="cg-variable">idHeroiSelecionado</span>);
+
+                <span class="cg-variable">cmd</span>.<span class="cg-method">ExecuteNonQuery</span>();
+            }
+        }
+
+        <span class="cg-type">MessageBox</span>.<span class="cg-method">Show</span>(<span class="cg-string">"Herói excluído com sucesso!"</span>);
+        <span class="cg-method">LimparCampos</span>();
+        <span class="cg-method">CarregarHerois</span>();
+    }
+    <span class="cg-keyword">catch</span> (<span class="cg-type">Exception</span> <span class="cg-variable">ex</span>)
+    {
+        <span class="cg-type">MessageBox</span>.<span class="cg-method">Show</span>(<span class="cg-string">"Erro ao excluir herói: "</span> + <span class="cg-variable">ex</span>.<span class="cg-property">Message</span>);
+    }
+}</pre>
+            </div>
+        </section>
+
+        <section class="slide">
+             <h2 class="text-3xl font-bold w-full">CRUD Completo!</h2>
+             <p class="text-lg text-secondary-text my-6 w-full">Parabéns! Com a implementação do <code>DELETE</code>, nosso "Gerenciador de Heróis" agora domina todas as operações fundamentais do CRUD.</p>
+             <div class="mission-box w-full">
+                 <h3 class="!mt-0">O que aprendemos hoje:</h3>
+                 <ul class="list-disc pl-6 text-lg text-secondary-text space-y-2 mt-4">
+                     <li>A importância da operação <code>DELETE</code> para a manutenção dos dados.</li>
+                     <li>Como usar <code>MessageBox</code> com botões Yes/No para confirmação do usuário.</li>
+                     <li>A sintaxe e o uso seguro do comando SQL <code>DELETE FROM ... WHERE ...</code>.</li>
+                     <li>Como encapsular a lógica de exclusão em um método limpo e seguro.</li>
+                 </ul>
+                 <h3 class="!mt-8">Projeto Final:</h3>
+                 <p class="text-lg text-secondary-text">Agora que dominamos o CRUD, estamos prontos para aplicar este conhecimento para finalizar as telas de <strong>Raças e Classes</strong> e começar a pensar nos <strong>Relatórios</strong>!</p>
+             </div>
+        </section>
+
+        <!-- CONTEÚDO BÔNUS COMEÇA AQUI -->
+
+        <section class="slide">
+            <div class="text-center">
+                <p class="text-lg font-semibold" style="color:var(--accent-color);">Conteúdo Bônus</p>
+                <h1 class="text-5xl font-extrabold tracking-tight mt-2">Avatares de Heróis</h1>
+                <p class="mt-4 text-xl text-slate-600 max-w-3xl mx-auto">Vamos levar nosso sistema para o próximo nível adicionando uma imagem de perfil para cada herói, salva diretamente no banco de dados.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Bônus - Passo 1: Preparando o Banco</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Para armazenar imagens, que são dados binários, precisamos de um tipo de coluna especial. No MySQL, o tipo ideal é o <code>BLOB</code> (Binary Large Object).</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2</div>
+                <pre class="code-block"><span class="cg-comment">-- Altera a tabela 'heroi' para adicionar a nova coluna</span>
+<span class="cg-keyword">ALTER TABLE</span> <span class="cg-variable">heroi</span> <span class="cg-keyword">ADD COLUMN</span> <span class="cg-variable">avatar</span> <span class="cg-type">MEDIUMBLOB</span>;</pre>
+            </div>
+            <div class="doc-note mt-6">
+                <strong>O que é <code>BLOB</code>?</strong> É um tipo de dado usado para armazenar grandes quantidades de dados binários, como imagens, áudios ou até mesmo pequenos arquivos. <code>MEDIUMBLOB</code> consegue armazenar até 16MB, o que é mais que suficiente para avatares.
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Bônus - Passo 2: Adaptando a Interface</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Vamos adicionar os controles necessários ao <code>frmHerois</code> para gerenciar o avatar.</p>
+            <div class="doc-note">
+                 <img src="imagem.png" alt="Interface com PictureBox e botões" class="rounded-lg shadow-lg mb-4">
+                <ul class="list-decimal pl-5 text-left text-base">
+                    <li>Adicione um <code>PictureBox</code> para exibir a imagem. Dê o nome de <code>picAvatar</code>.</li>
+                    <li>Adicione um <code>Button</code> "Selecionar Imagem..." para abrir o seletor de arquivos. Dê o nome de <code>btnSelecionarImagem</code>.</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Bônus - Passo 3: Carregando a Imagem</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Este é o código para o botão "Selecionar Imagem...". Ele usa o componente <code>OpenFileDialog</code> para permitir que o usuário escolha um arquivo de imagem.</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11</div>
+                <pre class="code-block"><span class="cg-keyword">private</span> <span class="cg-keyword">void</span> <span class="cg-method">btnSelecionarImagem_Click</span>(<span class="cg-type">object</span> <span class="cg-variable">sender</span>, <span class="cg-type">EventArgs</span> <span class="cg-variable">e</span>)
+{
+    <span class="cg-keyword">using</span> (<span class="cg-type">OpenFileDialog</span> <span class="cg-variable">ofd</span> = <span class="cg-keyword">new</span> <span class="cg-method">OpenFileDialog</span>())
+    {
+        <span class="cg-variable">ofd</span>.<span class="cg-property">Filter</span> = <span class="cg-string">"Imagens|*.jpg;*.jpeg;*.png;*.gif"</span>;
+        <span class="cg-keyword">if</span> (<span class="cg-variable">ofd</span>.<span class="cg-method">ShowDialog</span>() == <span class="cg-type">DialogResult</span>.<span class="cg-property">OK</span>)
+        {
+            <span class="cg-comment">// Carrega a imagem selecionada no PictureBox</span>
+            <span class="cg-variable">picAvatar</span>.<span class="cg-property">Image</span> = <span class="cg-type">Image</span>.<span class="cg-method">FromFile</span>(<span class="cg-variable">ofd</span>.<span class="cg-property">FileName</span>);
+        }
+    }
+}</pre>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Bônus - Passo 4: Salvando a Imagem no Banco</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">Para salvar, precisamos converter a imagem em um array de bytes (<code>byte[]</code>). Fazemos isso com a ajuda de um <code>MemoryStream</code>.</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14</div>
+                <pre class="code-block"><span class="cg-comment">// Dentro do seu método de INSERT ou UPDATE</span>
+<span class="cg-comment">// Primeiro, converta a imagem para byte[]</span>
+<span class="cg-type">byte</span>[] <span class="cg-variable">avatarBytes</span>;
+<span class="cg-keyword">using</span> (<span class="cg-type">MemoryStream</span> <span class="cg-variable">ms</span> = <span class="cg-keyword">new</span> <span class="cg-method">MemoryStream</span>())
+{
+    <span class="cg-variable">picAvatar</span>.<span class="cg-property">Image</span>.<span class="cg-method">Save</span>(<span class="cg-variable">ms</span>, <span class="cg-variable">picAvatar</span>.<span class="cg-property">Image</span>.<span class="cg-property">RawFormat</span>);
+    <span class="cg-variable">avatarBytes</span> = <span class="cg-variable">ms</span>.<span class="cg-method">ToArray</span>();
+}
+
+<span class="cg-comment">// Depois, adicione como parâmetro no seu MySqlCommand</span>
+<span class="cg-type">MySqlCommand</span> <span class="cg-variable">cmd</span> = <span class="cg-keyword">new</span> <span class="cg-method">MySqlCommand</span>(<span class="cg-variable">sql</span>, <span class="cg-variable">conn</span>);
+<span class="cg-comment">// ... outros parâmetros ...</span>
+<span class="cg-variable">cmd</span>.<span class="cg-property">Parameters</span>.<span class="cg-method">AddWithValue</span>(<span class="cg-string">"@avatar"</span>, <span class="cg-variable">avatarBytes</span>);
+<span class="cg-variable">cmd</span>.<span class="cg-method">ExecuteNonQuery</span>();</pre>
+            </div>
+             <p class="text-base mt-4 text-secondary-text">Lembre-se de adicionar `avatar = @avatar` no seu comando SQL de `UPDATE` e `INSERT`!</p>
+        </section>
+        
+        <section class="slide">
+            <h2 class="text-3xl font-bold w-full">Bônus - Passo 5: Lendo e Exibindo a Imagem</h2>
+            <p class="text-lg text-secondary-text my-6 w-full">O processo inverso: lemos o array de bytes do banco e o convertemos de volta em uma imagem para exibir no <code>PictureBox</code>.</p>
+            <div class="code-snippet">
+                <div class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16</div>
+                <pre class="code-block"><span class="cg-comment">// Dentro do seu método CarregarHerois() ou SelectedIndexChanged</span>
+<span class="cg-comment">// Primeiro, adicione a coluna 'avatar' no seu SELECT</span>
+<span class="cg-type">string</span> <span class="cg-variable">sql</span> = <span class="cg-string">"SELECT id, nome, avatar FROM heroi"</span>;
+
+<span class="cg-comment">// ... dentro do loop do MySqlDataReader ...</span>
+<span class="cg-keyword">while</span> (<span class="cg-variable">leitor</span>.<span class="cg-method">Read</span>())
+{
+    <span class="cg-comment">// ... pega id, nome, etc ...</span>
+    
+    <span class="cg-comment">// Verifica se a coluna 'avatar' não é nula no banco</span>
+    <span class="cg-keyword">if</span> (!<span class="cg-variable">leitor</span>.<span class="cg-method">IsDBNull</span>(<span class="cg-variable">leitor</span>.<span class="cg-method">GetOrdinal</span>(<span class="cg-string">"avatar"</span>)))
+    {
+        <span class="cg-type">byte</span>[] <span class="cg-variable">avatarBytes</span> = (<span class="cg-type">byte</span>[])<span class="cg-variable">leitor</span>[<span class="cg-string">"avatar"</span>];
+        <span class="cg-keyword">using</span> (<span class="cg-type">MemoryStream</span> <span class="cg-variable">ms</span> = <span class="cg-keyword">new</span> <span class="cg-method">MemoryStream</span>(<span class="cg-variable">avatarBytes</span>))
+        {
+            <span class="cg-variable">picAvatar</span>.<span class="cg-property">Image</span> = <span class="cg-type">Image</span>.<span class="cg-method">FromStream</span>(<span class="cg-variable">ms</span>);
+        }
+    }
+}</pre>
+            </div>
+        </section>
+
+        <section class="slide">
+             <h2 class="text-3xl font-bold w-full">Missão Bônus Cumprida!</h2>
+             <p class="text-lg text-secondary-text my-6 w-full">Com este conhecimento, nosso aplicativo ficou muito mais visual e completo!</p>
+             <div class="mission-box w-full">
+                 <h3 class="!mt-0">O que aprendemos no bônus:</h3>
+                 <ul class="list-disc pl-6 text-lg text-secondary-text space-y-2 mt-4">
+                     <li>O que é um tipo de dado <code>BLOB</code> e como usá-lo no MySQL.</li>
+                     <li>Como usar o <code>OpenFileDialog</code> para selecionar arquivos.</li>
+                     <li>A conversão entre <code>Image</code> e <code>byte[]</code> usando <code>MemoryStream</code>.</li>
+                     <li>Como salvar e carregar dados binários de um banco de dados.</li>
+                 </ul>
+             </div>
+        </section>
+
+    </main>
+
+    <div class="nav-controls flex items-center space-x-4">
+        <button id="prev-btn" class="nav-button" title="Slide Anterior (←)">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <div id="slide-counter" class="text-lg font-semibold bg-white px-4 py-2 rounded-full shadow-md">1 / 15</div>
+        <button id="next-btn" class="nav-button" title="Próximo Slide (→)">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevButton = document.getElementById('prev-btn');
+            const nextButton = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const slideIndex = Array.from(slides).indexOf(entry.target);
+                        currentSlide = slideIndex;
+                        slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            slides.forEach(slide => observer.observe(slide));
+
+            function scrollToSlide(index) {
+                if (index >= 0 && index < slides.length) {
+                    slides[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            nextButton.addEventListener('click', () => scrollToSlide(currentSlide + 1));
+            prevButton.addEventListener('click', () => scrollToSlide(currentSlide - 1));
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault();
+                    scrollToSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    scrollToSlide(currentSlide - 1);
+                }
+            });
+            
+            // Line numbers for code blocks
+            const codeSnippets = document.querySelectorAll('.code-snippet');
+            codeSnippets.forEach(snippet => {
+                const pre = snippet.querySelector('pre');
+                const lines = pre.innerHTML.split('\n');
+                if (lines[lines.length - 1].trim() === '') lines.pop();
+                
+                if (lines.length > 0) {
+                    const numbersDiv = document.createElement('div');
+                    numbersDiv.className = 'line-numbers';
+                    numbersDiv.innerHTML = Array.from({ length: lines.length }, (_, i) => i + 1).join('<br>');
+                    snippet.insertBefore(numbersDiv, pre);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
