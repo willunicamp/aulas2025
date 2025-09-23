@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+
+
+
+        <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -8,236 +11,158 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Estilo para garantir que a página ocupe toda a tela, sem margens */
+        /* --- ESTILOS GERAIS --- */
         body, html {
             margin: 0;
             padding: 0;
-            overflow: hidden; /* Evita barras de rolagem */
-            height: 100%;
+            width: 100%;
+            min-height: 100vh; /* Garante que o corpo ocupe pelo menos a altura da tela */
             font-family: 'Roboto Mono', monospace;
             background-color: #eef2f7; /* Tom de branco levemente azulado */
-        }
-
-        /* O canvas ocupará toda a área visível */
-        #interactiveCanvas {
-            display: block;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* Título posicionado sobre o canvas */
-        .overlay-title {
-            position: absolute;
-            top: 5%;
-            left: 50%;
-            transform: translateX(-50%);
             color: #4a5568; /* Cor de texto escura e suave */
-            font-size: 2.5em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- CONTAINER PRINCIPAL --- */
+        .container {
+            width: 100%;
+            max-width: 1200px; /* Limita a largura máxima em telas grandes */
+            padding: 2rem 1rem; /* Espaçamento interno (vertical, horizontal) */
+            box-sizing: border-box;
+        }
+
+        /* --- TÍTULO --- */
+        .main-title {
+            color: #4a5568;
+            font-size: 2.5rem;
             font-weight: 700;
             text-align: center;
+            margin-bottom: 3rem;
             text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
-            pointer-events: none; /* Permite que cliques "atravessem" o título e cheguem ao canvas */
         }
 
-        /* Ajuste de fonte para telas menores */
-        @media (max-width: 768px) {
-            .overlay-title {
-                font-size: 1.8em;
-                width: 90%;
+        /* --- LISTA DE LINKS --- */
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* Espaçamento entre os itens da lista */
+        }
+
+        /* --- ESTILO DOS ITENS DA LISTA --- */
+        .list-item-link {
+            display: block; /* Para ocupar a largura total */
+            padding: 1.25rem 1.5rem;
+            background-color: #ffffff; /* Fundo branco para os itens */
+            color: #4a5568; /* Cor do texto original */
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            text-align: left; /* Alinhar texto à esquerda */
+            border: 1px solid #e2e8f0; /* Borda sutil */
+            border-radius: 8px; /* Bordas arredondadas */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+
+        .list-item-link:hover, .list-item-link:focus {
+            transform: translateY(-3px); /* Efeito de "levantar" mais sutil */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            background-color: #f7fafc; /* Leve mudança de cor no hover */
+            outline: none; /* Remove a borda de foco padrão */
+        }
+        
+        /* --- MEDIA QUERIES PARA RESPONSIVIDADE --- */
+
+        /* Telas de Tablet (até 1024px) */
+        @media (max-width: 1024px) {
+            .main-title {
+                font-size: 2.2rem;
             }
         }
+        
+        /* Telas de Celular (até 768px) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            .main-title {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+            .list-item-link {
+                padding: 1rem 1.25rem;
+                font-size: 1rem;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <!-- Título da página que fica por cima do canvas -->
-    <h1 class="overlay-title">Prof. William Paiva - 2025 - COTIL</h1>
-
-    <!-- O elemento canvas onde tudo será desenhado -->
-    <canvas id="interactiveCanvas"></canvas>
+    
+    <div class="container">
+        <h1 class="main-title">Prof. William Paiva - 2025 - COTIL</h1>
+        
+        <!-- O container para a lista de links que será gerada via JS -->
+        <div id="link-list" class="link-list"></div>
+    </div>
 
     <script>
-        // --- CONFIGURAÇÃO INICIAL ---
-        const canvas = document.getElementById('interactiveCanvas');
-        const ctx = canvas.getContext('2d');
+        // Seleciona o container da lista
+        const listContainer = document.getElementById('link-list');
 
-        // A configuração das turmas foi movida para cá para evitar erros de carregamento de arquivos locais.
-        const classes = [
-            { "text": "Aula 04 - CSMA/CA",   "link": "./04/" },
-            { "text": "Aula 05 - Cabeamento",   "link": "./05/" },
-        ];
+        /**
+         * Gera os elementos HTML dos links e os insere na página.
+         * @param {Array} classesData - Um array de objetos, cada um contendo 'text' e 'link'.
+         */
+        function generateLinks(classesData) {
+            // Limpa o container caso haja algum conteúdo de fallback
+            listContainer.innerHTML = ''; 
+            
+            classesData.forEach(cls => {
+                // Cria um elemento de link (<a>)
+                const linkItem = document.createElement('a');
+                
+                // Define os atributos e o conteúdo do link
+                linkItem.href = cls.link;
+                linkItem.textContent = cls.text;
+                linkItem.className = 'list-item-link'; // Aplica a classe de estilo
 
-        let buttons = [];
-        let mouse = { x: undefined, y: undefined };
-
-        // --- FUNÇÃO AUXILIAR PARA DESENHAR RETÂNGULOS ARREDONDADOS ---
-        function drawRoundedRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
-
-        // --- FUNÇÃO PARA QUEBRAR O TEXTO EM LINHAS ---
-        function getWrappedLines(ctx, text, maxWidth) {
-            const words = text.split('-');
-            if (words.length <= 1) return [text];
-
-            const lines = [];
-            let currentLine = words[0];
-
-            for (let i = 1; i < words.length; i++) {
-                const word = words[i];
-                const testLine = currentLine + "-" + word;
-                const width = ctx.measureText(testLine).width;
-
-                if (width < maxWidth) {
-                    currentLine = testLine;
-                } else {
-                    lines.push(currentLine);
-                    currentLine = word;
-                }
-            }
-            lines.push(currentLine);
-            return lines;
-        }
-
-        // --- CLASSE PARA OS BOTÕES ---
-        class Button {
-            constructor(x, y, width, height, text, link) {
-                this.x = x; this.y = y;
-                this.width = width; this.height = height;
-                this.text = text; this.link = link;
-                this.scale = 1; this.targetScale = 1;
-                this.shadowBlur = 15; this.targetShadowBlur = 15;
-                this.textColor = '#4a5568';
-            }
-
-            update() {
-                this.scale += (this.targetScale - this.scale) * 0.1;
-                this.shadowBlur += (this.targetShadowBlur - this.shadowBlur) * 0.1;
-            }
-
-            draw() {
-                this.update();
-                const scaledWidth = this.width * this.scale;
-                const scaledHeight = this.height * this.scale;
-                const scaledX = this.x - (scaledWidth - this.width) / 2;
-                const scaledY = this.y - (scaledHeight - this.height) / 2;
-
-                ctx.save();
-                ctx.shadowColor = 'rgba(163, 177, 198, 0.6)';
-                ctx.shadowBlur = this.shadowBlur;
-                ctx.shadowOffsetX = 5;
-                ctx.shadowOffsetY = 5;
-
-                const gradient = ctx.createLinearGradient(scaledX, scaledY, scaledX, scaledY + scaledHeight);
-                gradient.addColorStop(0, '#fdfdff');
-                gradient.addColorStop(1, '#e8edf3');
-                ctx.fillStyle = gradient;
-
-                drawRoundedRect(ctx, scaledX, scaledY, scaledWidth, scaledHeight, 20);
-                ctx.fill();
-                ctx.restore();
-
-                ctx.fillStyle = this.textColor;
-                ctx.font = 'bold 16px "Roboto Mono"';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-
-                const lineHeight = 20;
-                const padding = 20;
-                const lines = getWrappedLines(ctx, this.text, this.width - padding);
-                const totalTextHeight = lines.length * lineHeight;
-                let startY = (this.y + this.height / 2) - (totalTextHeight / 2) + (lineHeight / 2);
-
-                lines.forEach(line => {
-                    ctx.fillText(line, this.x + this.width / 2, startY);
-                    startY += lineHeight;
-                });
-            }
-
-            isMouseOver(mouseX, mouseY) {
-                return mouseX > this.x && mouseX < this.x + this.width &&
-                    mouseY > this.y && mouseY < this.y + this.height;
-            }
-        }
-
-        // --- FUNÇÕES DE CONTROLE ---
-        function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            buttons = [];
-            if (classes.length === 0) return;
-
-            const isMobile = canvas.width < 768;
-            const columns = isMobile ? 2 : 4;
-            const rows = Math.ceil(classes.length / columns);
-            const cardWidth = 200; const cardHeight = 80;
-            const gapX = 40; const gapY = 40;
-            const totalGridWidth = (columns * cardWidth) + ((columns - 1) * gapX);
-            const totalGridHeight = (rows * cardHeight) + ((rows - 1) * gapY);
-            const startX = (canvas.width - totalGridWidth) / 2;
-            const startY = (canvas.height - totalGridHeight) / 2 + 50;
-
-            let classIndex = 0;
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < columns; c++) {
-                    if (classIndex < classes.length) {
-                        const x = startX + c * (cardWidth + gapX);
-                        const y = startY + r * (cardHeight + gapY);
-                        const classInfo = classes[classIndex];
-                        buttons.push(new Button(x, y, cardWidth, cardHeight, classInfo.text, classInfo.link));
-                        classIndex++;
-                    }
-                }
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#eef2f7';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            buttons.forEach(button => button.draw());
-            requestAnimationFrame(animate);
-        }
-
-        // --- EVENT LISTENERS ---
-        window.addEventListener('mousemove', (event) => {
-            mouse.x = event.clientX; mouse.y = event.clientY;
-            let isOverAnyButton = false;
-            buttons.forEach(button => {
-                if (button.isMouseOver(mouse.x, mouse.y)) {
-                    button.targetScale = 1.05;
-                    button.targetShadowBlur = 25;
-                    isOverAnyButton = true;
-                } else {
-                    button.targetScale = 1;
-                    button.targetShadowBlur = 15;
-                }
+                // Adiciona o item criado ao container da lista
+                listContainer.appendChild(linkItem);
             });
-            document.body.style.cursor = isOverAnyButton ? 'pointer' : 'default';
-        });
+        }
 
-        window.addEventListener('click', (event) => {
-            buttons.forEach(button => {
-                if (button.isMouseOver(event.clientX, event.clientY)) {
-                    window.location.href = button.link;
+        /**
+         * Carrega os dados das disciplinas do arquivo JSON externo.
+         */
+        async function loadClasses() {
+            try {
+                // Faz a requisição para o arquivo JSON
+                const response = await fetch('links.json');
+                
+                // Verifica se a requisição foi bem-sucedida
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição: ${response.status}`);
                 }
-            });
-        });
+                
+                // Converte a resposta para JSON
+                const classes = await response.json();
+                
+                // Chama a função para criar os links com os dados carregados
+                generateLinks(classes);
+                
+            } catch (error) {
+                // Em caso de erro, exibe uma mensagem no console e na página
+                console.error("Falha ao carregar o arquivo links.json:", error);
+                listContainer.innerHTML = '<p style="text-align: center;">Não foi possível carregar a lista de disciplinas.</p>';
+            }
+        }
 
-        window.addEventListener('resize', init);
-
-        // --- INICIALIZAÇÃO ---
-        init();
-        animate();
+        // Inicia o processo de carregamento dos dados assim que a página carregar
+        document.addEventListener('DOMContentLoaded', loadClasses);
     </script>
 </body>
 </html>
+
