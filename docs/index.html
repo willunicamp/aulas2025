@@ -135,27 +135,28 @@
         }
 
         /**
-         * Carrega os dados das disciplinas.
+         * Carrega os dados das disciplinas do arquivo JSON externo.
          */
-            async function loadClasses() {
+        async function loadClasses() {
             try {
-                // Faz a requisio para o arquivo JSON
+                // Faz a requisição para o arquivo JSON
                 const response = await fetch('links.json');
                 
-                // Verifica se a requisio foi bem-sucedida
+                // Verifica se a requisição foi bem-sucedida
                 if (!response.ok) {
-                    throw new Error(`Erro na requisio: ${response.status}`);
+                    throw new Error(`Erro na requisição: ${response.status}`);
                 }
                 
                 // Converte a resposta para JSON
                 const classes = await response.json();
                 
-                // Chama a funo para criar os botes com os dados carregados
-                generateButtons(classes);
+                // Chama a função para criar os links com os dados carregados
+                generateLinks(classes);
+                
             } catch (error) {
-                // Em caso de erro, exibe uma mensagem no console e na pgina
+                // Em caso de erro, exibe uma mensagem no console e na página
                 console.error("Falha ao carregar o arquivo links.json:", error);
-                gridContainer.innerHTML = '<p style="text-align: center; grid-column: 1 / -1;">Nao foi possivel carregar a lista de disciplinas.</p>';
+                listContainer.innerHTML = '<p style="text-align: center;">Não foi possível carregar a lista de disciplinas.</p>';
             }
         }
 
