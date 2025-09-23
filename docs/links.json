@@ -1,9 +1,66 @@
 [
-    { "text": "PI-II",  "link": "./piii/" },
-    { "text": "DAW-I",  "link": "./dawi/" },
-    { "text": "DAD",    "link": "./dad/" },
-    { "text": "SORD",   "link": "./sord/" },
-    { "text": "FI",     "link": "./fi/" },
-    { "text": "PI-I",   "link": "./pii/" },
-    { "text": "LP",     "link": "./lp/" }
-]
+                {
+                    "folder": "Projeto Integrador II | PI-II",
+                    "items": [                        
+                    ]
+                },
+                {
+                    "folder": "Desenvolvimento de Aplicações Web I | DAW-I",
+                    "items": [
+                        { "text": "Aula 04 - Flexbox 2",   "link": "./dawi/04/" },
+                        { "text": "Aula 04 - Exercício",   "link": "./dawi/04/ex.html" },
+                        { "text": "Aula 05 - Grid",   "link": "./dawi/05/" },
+                        { "text": "Aula 05 - Exercício",   "link": "./dawi/05/ex.html" },
+                        { "text": "Aula 06 - Bootstrap - Componentes",   "link": "./dawi/06/" },
+                        { "text": "Aula 06 - Exercício",   "link": "./dawi/06/ex.html" },
+                        { "text": "Aula 07 - Bootstrap - Componentes interativos",   "link": "./dawi/07/" },
+                        { "text": "Aula 07 - Exercício",   "link": "./dawi/07/ex.html" }
+                    ]
+                },
+                {
+                    "folder": "Desenvolvimento de Aplicações Desktop | DAD",
+                    "items": [
+                        { "text": "Aula 05 - Exercício de Revisão",   "link": "./dad/05/ex.html" },
+                        { "text": "Aula 06 - Update",   "link": "./dad/06/index.html" },
+                        { "text": "Aula 06 - Exercício Update",   "link": "./dad/06/ex.html" },
+                        { "text": "Aula 07 - Delete",   "link": "./dad/07/index.html" }
+                    ]
+                },
+                                {
+                    "folder": "S.O. e Redes | SORD",
+                    "items": [
+                        { "text": "Aula 04 - CSMA/CA",   "link": "./sord/04/" },
+                        { "text": "Aula 05 - Cabeamento",   "link": "./sord/05/" }
+                    ]
+                },
+                {
+                    "folder": "Fundamentos de Informática | FI",
+                    "items": [
+                        { "text": "Aula 04 - Git Branch",   "link": "./fi/04/" },
+                        { "text": "Aula 05 - Pull Request",   "link": "./fi/05/" },
+                        { "text": "Aula 04 - Conflito",   "link": "./fi/06/" }
+                    ]
+                },
+                {
+                    "folder": "Projeto Integrador I | PI-I",
+                    "items": [
+                        { "text": "Aula 02 - Exemplo WBS",  "link": "./pii/02/" },
+                        { "text": "Aula 03 - Gantt",    "link": "./pii/03/" }
+                    ]
+                },
+                {
+                    "folder": "Linguagem de Programação | LP",
+                    "items": [
+                        { "text": "Aula 01 - Revisão",  "link": "./lp/01/" },
+                        { "text": "Aula 02 - Vetores",  "link": "./lp/02/" },
+                        { "text": "Aula 03 - Operações com vetores",    "link": "./lp/03/" },
+                        { "text": "Aula 03 - Bubble Sort",    "link": "./lp/03/bubble.html" },
+                        { "text": "Aula 04 - Matrizes",   "link": "./lp/04/" },
+                        { "text": "Aula 05 - Exercícios",   "link": "./lp/05/ex.html" },
+                        { "text": "Aula 06 - Struct",    "link": "./lp/06/" },
+                        { "text": "Aula 06 - Exercícios",    "link": "./lp/06/ex.html" },
+                        { "text": "Aula 07 - Vetor de Struct",    "link": "./lp/07/" },
+                        { "text": "Aula 07 - Exercícios",    "link": "./lp/07/ex.html" }
+                    ]
+                }
+            ]
