@@ -60,7 +60,16 @@
                         { "text": "Aula 06 - Struct",    "link": "./lp/06/" },
                         { "text": "Aula 06 - Exercícios",    "link": "./lp/06/ex.html" },
                         { "text": "Aula 07 - Vetor de Struct",    "link": "./lp/07/" },
-                        { "text": "Aula 07 - Exercícios",    "link": "./lp/07/ex.html" }
+                        { "text": "Aula 07 - Exercícios",    "link": "./lp/07/ex.html" },
+                        { "text": "Aula 08 - Funções",    "link": "./lp/08/" },
+                        { "text": "Aula 08 - Exercícios",    "link": "./lp/08/ex.html" },
+                        { "text": "Aula 09 - Ponteiros",    "link": "./lp/09/" },
+                        { "text": "Aula 09 - Exercícios",    "link": "./lp/09/ex.html" },
+                        { "text": "Aula 10 - Funções e Ponteiros",    "link": "./lp/10/" },
+                        { "text": "Aula 10 - Exercícios",    "link": "./lp/10/ex.html" },
+                        { "text": "Aula 11 - Modularização .h e .c",    "link": "./lp/11/" },
+                        { "text": "Aula 11 - Exercícios",    "link": "./lp/11/ex.html" },
+                        { "text": "Projeto Final",    "link": "./lp/projeto.html" }
                     ]
                 }
             ]
