@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 10: JavaScript, JSON e Páginas Dinâmicas</title>
+    <!-- MANTIDO para os exemplos de Bootstrap nos slides -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ADICIONADO para estilizar a apresentação -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            orange: '#fd7e14',
+                            'orange-dark': '#e87312',
+                        },
+                        molokai: {
+                            bg: '#272822',
+                            fg: '#F8F8F2',
+                            pink: '#F92672',
+                            green: '#A6E22E',
+                            yellow: '#E6DB74',
+                            purple: '#AE81FF',
+                            cyan: '#66D9EF',
+                            comment: '#75715E'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-snippet {
+            white-space: pre-wrap;
+        }
+        @media print {
+            header, .nav-buttons {
+                display: none;
+            }
+            main {
+                margin-top: 0 !important;
+            }
+            .slide {
+                min-height: auto;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <header class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 flex items-center justify-center z-50 shadow-sm">
+        <h1 class="text-xl font-bold text-slate-700">Aula 10 - JavaScript, JSON e Páginas Dinâmicas</h1>
+    </header>
+
+    <main class="pt-16">
+        <!-- Slide 1: Título -->
+        <section id="slide1" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h1 class="text-5xl md:text-6xl font-black text-brand-orange">Aula 10</h1>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-700 mt-2">JavaScript, JSON e Páginas Dinâmicas</h2>
+                <p class="text-xl text-slate-500 mt-4">Prof. Wiliam Paiva - COTIL - UNICAMP</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: O Problema -->
+        <section id="slide2" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">O Problema: Páginas "Estáticas"</h2>
+                <p class="text-xl mt-6 max-w-3xl">Até agora, todo o conteúdo das nossas páginas foi escrito diretamente no HTML. Isso é chamado de conteúdo <strong>"hard-coded"</strong>.</p>
+                <p class="text-xl mt-8 font-bold">Mas e se...</p>
+                <ul class="text-xl mt-4 space-y-2">
+                    <li>...você tivesse que criar uma página com 100 produtos?</li>
+                    <li>...os dados de um cardápio mudassem toda semana?</li>
+                    <li>...as notícias de um portal precisassem ser atualizadas a cada hora?</li>
+                </ul>
+                <p class="text-xl mt-8 max-w-3xl">Copiar e colar o HTML para cada item seria inviável. Precisamos de uma forma de <strong>separar os dados da apresentação</strong>.</p>
+            </div>
+        </section>
+
+        <!-- Slide 3: O que é JSON -->
+        <section id="slide3" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">A Solução: JSON</h2>
+                <p class="text-xl mt-6 max-w-3xl"><strong>JSON</strong> significa <strong>J</strong>ava<strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation. É um formato de texto leve e de fácil leitura para humanos, usado para armazenar e transportar dados.</p>
+                <p class="text-xl mt-6 max-w-3xl">Pense nele como uma "lista de compras" universal. É um arquivo de texto simples que o JavaScript (e quase qualquer outra linguagem) consegue ler e entender instantaneamente.</p>
+                <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 max-w-3xl w-full">
+<pre><code><span class="text-molokai-comment">// Exemplo de um objeto JSON simples</span>
+{
+  <span class="text-molokai-green">"nome"</span>: <span class="text-molokai-yellow">"Caneta Mágica"</span>,
+  <span class="text-molokai-green">"preco"</span>: <span class="text-molokai-purple">19.99</span>,
+  <span class="text-molokai-green">"em_estoque"</span>: <span class="text-molokai-purple">true</span>
+}
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Objetos e Arrays em JS -->
+        <section id="slide4" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Antes do JSON: Objetos e Arrays em JS</h2>
+                <p class="text-xl mt-6 max-w-3xl">Para entender JSON, primeiro precisamos lembrar de duas estruturas essenciais do próprio JavaScript:</p>
+                <div class="w-full max-w-5xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div>
+                        <h5 class="font-bold text-xl text-slate-700">Objetos (ou "Coleções")</h5>
+                        <p class="text-lg mt-1">Agrupam dados relacionados usando pares <strong>chave-valor</strong>.</p>
+                        <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 w-full">
+<pre><code><span class="text-molokai-comment">// Um objeto que descreve um livro</span>
+<span class="text-molokai-pink">const</span> livro <span class="text-molokai-pink">=</span> {
+  <span class="text-molokai-green">titulo</span>: <span class="text-molokai-yellow">"O Guia do Mochileiro"</span>,
+  <span class="text-molokai-green">autor</span>: <span class="text-molokai-yellow">"Douglas Adams"</span>,
+  <span class="text-molokai-green">paginas</span>: <span class="text-molokai-purple">208</span>
+};
+
+<span class="text-molokai-comment">// Acessando um valor:</span>
+<span class="text-molokai-cyan">console</span>.<span class="text-molokai-green">log</span>(livro.<span class="text-molokai-fg">titulo</span>);
+<span class="text-molokai-comment">// Saída: "O Guia do Mochileiro"</span>
+</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-xl text-slate-700">Arrays (ou "Listas")</h5>
+                        <p class="text-lg mt-1">Armazenam uma <strong>lista ordenada</strong> de itens.</p>
+                        <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 w-full">
+<pre><code><span class="text-molokai-comment">// Um array com uma lista de tarefas</span>
+<span class="text-molokai-pink">const</span> tarefas <span class="text-molokai-pink">=</span> [
+  <span class="text-molokai-yellow">"Estudar JavaScript"</span>,
+  <span class="text-molokai-yellow">"Fazer o exercício"</span>,
+  <span class="text-molokai-yellow">"Tomar um café"</span>
+];
+
+<span class="text-molokai-comment">// Acessando um item (pela posição):</span>
+<span class="text-molokai-cyan">console</span>.<span class="text-molokai-green">log</span>(tarefas[<span class="text-molokai-purple">0</span>]);
+<span class="text-molokai-comment">// Saída: "Estudar JavaScript"</span>
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+                 <p class="text-xl mt-8 max-w-3xl font-semibold"><strong>Conexão:</strong> JSON é basicamente a representação em texto dessas mesmas estruturas!</p>
+            </div>
+        </section>
+        
+        <!-- Slide 5: Estrutura do JSON -->
+        <section id="slide5" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">A Estrutura do JSON</h2>
+                <p class="text-xl mt-6 max-w-3xl">O JSON é construído com duas estruturas básicas:</p>
+                <ul class="text-xl mt-4 list-disc list-inside text-left max-w-3xl">
+                    <li><strong>Objetos <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">{ }</code>:</strong> Uma coleção de pares "chave":"valor". A chave é sempre um texto entre aspas duplas.</li>
+                    <li><strong>Arrays <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">[ ]</code>:</strong> Uma lista ordenada de valores.</li>
+                </ul>
+                <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 max-w-3xl w-full">
+<pre><code><span class="text-molokai-comment">// Um array de objetos</span>
+[
+  {
+    <span class="text-molokai-green">"id"</span>: <span class="text-molokai-purple">1</span>,
+    <span class="text-molokai-green">"produto"</span>: <span class="text-molokai-yellow">"Poção de Cura"</span>,
+    <span class="text-molokai-green">"ingredientes"</span>: [<span class="text-molokai-yellow">"Água Benta"</span>, <span class="text-molokai-yellow">"Erva Rara"</span>, <span class="text-molokai-yellow">"Pó de Fada"</span>]
+  },
+  {
+    <span class="text-molokai-green">"id"</span>: <span class="text-molokai-purple">2</span>,
+    <span class="text-molokai-green">"produto"</span>: <span class="text-molokai-yellow">"Amuleto da Sorte"</span>,
+    <span class="text-molokai-green">"ingredientes"</span>: [<span class="text-molokai-yellow">"Trevo de 4 Folhas"</span>, <span class="text-molokai-yellow">"Pedra da Lua"</span>]
+  }
+]
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Nosso Projeto -->
+        <section id="slide6" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Nosso Exemplo: O Grimório de Criaturas</h2>
+                <p class="text-xl mt-6 max-w-3xl">Para esta aula, vamos criar uma página que exibe uma lista de criaturas mágicas. Em vez de escrever o HTML de cada uma, vamos guardar os dados em um arquivo chamado <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">criaturas.json</code>.</p>
+                <div class="border-2 border-dashed border-brand-orange bg-orange-50 p-6 rounded-lg mt-8 w-full max-w-3xl text-left">
+                    <h5 class="text-center mb-3 font-bold text-slate-700">Arquivo: <strong>criaturas.json</strong></h5>
+                    <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-0 w-full">
+<pre><code>[
+  {
+    <span class="text-molokai-green">"nome"</span>: <span class="text-molokai-yellow">"Grifo"</span>,
+    <span class="text-molokai-green">"imagem"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x300/A77B4A/FFFFFF?text=Grifo"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Uma criatura majestosa com corpo de leão e cabeça e asas de águia."</span>,
+    <span class="text-molokai-green">"habitat"</span>: <span class="text-molokai-yellow">"Montanhas Rochosas"</span>
+  },
+  {
+    <span class="text-molokai-green">"nome"</span>: <span class="text-molokai-yellow">"Dragão Vermelho"</span>,
+    <span class="text-molokai-green">"imagem"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x300/C23B22/FFFFFF?text=Dragão"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Cuspidor de fogo, temível e acumulador de tesouros."</span>,
+    <span class="text-molokai-green">"habitat"</span>: <span class="text-molokai-yellow">"Covis Vulcânicos"</span>
+  },
+  {
+    <span class="text-molokai-green">"nome"</span>: <span class="text-molokai-yellow">"Elfo da Floresta"</span>,
+    <span class="text-molokai-green">"imagem"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x300/2E8B57/FFFFFF?text=Elfo"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Um ser ágil e sábio, protetor das matas antigas."</span>,
+    <span class="text-molokai-green">"habitat"</span>: <span class="text-molokai-yellow">"Florestas Encantadas"</span>
+  }
+]
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Como Carregar o JSON? -->
+        <section id="slide7" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Como o JavaScript lê o arquivo?</h2>
+                <h3 class="text-3xl font-bold text-slate-700 mt-2">A API <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-2xl">fetch()</code></h3>
+                <p class="text-xl mt-6 max-w-3xl">Usamos a função <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">fetch()</code> do JavaScript para fazer requisições de rede. Neste caso, vamos "requisitar" nosso arquivo local <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">criaturas.json</code>.</p>
+                <p class="text-xl mt-6 max-w-3xl">O <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">fetch()</code> é <strong>assíncrono</strong>. Isso significa que ele não trava a página enquanto espera o arquivo carregar. Ele faz o pedido e "promete" que vai nos dar uma resposta quando terminar.</p>
+                <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg my-6 max-w-3xl text-left">
+                    <p class="text-lg"><strong>Analogia:</strong> É como pedir uma pizza. Você liga (<code>fetch</code>), faz o pedido, e continua fazendo suas coisas. Você não fica parado olhando para a porta. Quando a pizza chega (a "promessa" é resolvida), você a pega e come.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 8: Entendendo Promises -->
+        <section id="slide8" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Trabalhando com a "Promessa" (Promise)</h2>
+                <p class="text-xl mt-6 max-w-3xl">Como o <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">fetch()</code> nos retorna uma promessa, usamos os métodos <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">.then()</code> e <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">.catch()</code> para lidar com o resultado.</p>
+                <div class="w-full max-w-3xl mt-8 space-y-4 text-left">
+                    <div class="p-4 border rounded-lg">
+                        <code class="inline-code text-xl bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono">.then(resposta => { ... })</code>
+                        <p class="text-lg mt-2 ml-2">"ENTÃO, quando o arquivo for encontrado, pegue a resposta..."</p>
+                    </div>
+                    <div class="p-4 border rounded-lg">
+                        <code class="inline-code text-xl bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono">.then(dados => { ... })</code>
+                        <p class="text-lg mt-2 ml-2">"...e ENTÃO, quando os dados da resposta forem processados, use os dados."</p>
+                    </div>
+                     <div class="p-4 border rounded-lg">
+                        <code class="inline-code text-xl bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono">.catch(erro => { ... })</code>
+                        <p class="text-lg mt-2 ml-2">"CASO dê algum erro no processo (ex: arquivo não encontrado), me avise."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: O Código para Carregar -->
+        <section id="slide9" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Carregando e Vendo os Dados</h2>
+                <p class="text-xl mt-6 max-w-3xl">Este é o código completo para carregar nosso arquivo JSON e exibir os dados no console do navegador.</p>
+                <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 max-w-3xl w-full">
+<pre><code><span class="text-molokai-green">fetch</span>(<span class="text-molokai-yellow">'criaturas.json'</span>)
+  .<span class="text-molokai-green">then</span>(response <span class="text-molokai-pink">=></span> response.<span class="text-molokai-green">json</span>()) <span class="text-molokai-comment">// 1. Converte a resposta em JSON</span>
+  .<span class="text-molokai-green">then</span>(data <span class="text-molokai-pink">=></span> {                   <span class="text-molokai-comment">// 2. Usa os dados convertidos</span>
+    <span class="text-molokai-cyan">console</span>.<span class="text-molokai-green">log</span>(data); <span class="text-molokai-comment">// Exibe o array de criaturas no console</span>
+  })
+  .<span class="text-molokai-green">catch</span>(error <span class="text-molokai-pink">=></span> {
+    <span class="text-molokai-cyan">console</span>.<span class="text-molokai-pink">error</span>(<span class="text-molokai-yellow">'Houve um erro ao carregar o arquivo:'</span>, error);
+  });
+</code></pre>
+                </div>
+                 <div class="border-2 border-dashed border-brand-orange bg-orange-50 p-6 rounded-lg mt-8 w-full max-w-3xl text-left">
+                    <p class="text-lg">Crie um arquivo <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">criaturas.json</code> no mesmo diretório do seu HTML. Cole o código JSON do slide 6 nele. Depois, adicione o código JavaScript acima ao seu arquivo <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">.js</code>. Abra o console do navegador e veja a mágica!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Percorrendo com forEach -->
+        <section id="slide10" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Percorrendo Dados com <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-3xl">.forEach()</code></h2>
+                <p class="text-xl mt-6 max-w-3xl">Uma vez que temos um array de dados (vindo do JSON), a forma mais moderna e legível de passar por cada item é usando o método <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">.forEach()</code>.</p>
+                <p class="text-xl mt-6 max-w-3xl">Ele executa uma função para <strong>cada elemento</strong> do array, um por um.</p>
+                <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 max-w-3xl w-full">
+<pre><code><span class="text-molokai-pink">const</span> criaturas <span class="text-molokai-pink">=</span> [
+  { <span class="text-molokai-green">nome</span>: <span class="text-molokai-yellow">"Grifo"</span> },
+  { <span class="text-molokai-green">nome</span>: <span class="text-molokai-yellow">"Dragão"</span> },
+  { <span class="text-molokai-green">nome</span>: <span class="text-molokai-yellow">"Elfo"</span> }
+];
+
+<span class="text-molokai-comment">// Para cada 'criatura' dentro do array 'criaturas'...</span>
+criaturas.<span class="text-molokai-green">forEach</span>(criatura <span class="text-molokai-pink">=></span> {
+  <span class="text-molokai-comment">// ...execute este código.</span>
+  <span class="text-molokai-cyan">console</span>.<span class="text-molokai-green">log</span>(<span class="text-molokai-yellow">`Criatura encontrada: </span><span class="text-molokai-purple">${</span>criatura.<span class="text-molokai-fg">nome</span><span class="text-molokai-purple">}</span><span class="text-molokai-yellow">`</span>);
+});
+
+<span class="text-molokai-comment">// Saída no console:</span>
+<span class="text-molokai-comment">// Criatura encontrada: Grifo</span>
+<span class="text-molokai-comment">// Criatura encontrada: Dragão</span>
+<span class="text-molokai-comment">// Criatura encontrada: Elfo</span>
+</code></pre>
+                </div>
+                <p class="text-xl mt-6 max-w-3xl">Usaremos o <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">.forEach()</code> para criar um card HTML para cada criatura do nosso arquivo JSON.</p>
+            </div>
+        </section>
+        
+        <!-- Slide 11: Transformando Dados em HTML -->
+        <section id="slide11" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Ok, temos os dados. E agora?</h2>
+                <p class="text-xl mt-6 max-w-3xl">Agora vem a parte mais legal: vamos usar o JavaScript para, dinamicamente, criar o HTML para cada criatura e injetá-lo na nossa página.</p>
+                <p class="text-xl mt-8 font-bold">O plano:</p>
+                <ol class="text-xl list-decimal list-inside mt-4 space-y-2 text-left max-w-xl">
+                    <li>Carregar os dados com <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">fetch()</code>.</li>
+                    <li>Percorrer o array de criaturas com <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">forEach</code>.</li>
+                    <li>Para cada criatura, criar uma string de texto contendo o HTML de um card do Bootstrap.</li>
+                    <li>Juntar todas essas strings.</li>
+                    <li>Colocar a string gigante de HTML dentro de um <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">&lt;div&gt;</code> na nossa página.</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Slide 12: O Código Completo -->
+        <section id="slide12" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">Juntando Tudo: O Exemplo Completo</h2>
+                <p class="text-xl mt-6 max-w-3xl">Veja como o código HTML e JavaScript interagem para criar a página dinamicamente.</p>
+                <div class="w-full max-w-6xl mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div>
+                        <h5 class="font-bold text-xl text-slate-700">HTML (index.html)</h5>
+                        <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 w-full h-full">
+<pre><code><span class="text-molokai-comment">&lt;!-- Container onde os cards serão inseridos --&gt;</span>
+&lt;<span class="text-molokai-pink">div</span> <span class="text-molokai-green">class</span>=<span class="text-molokai-yellow">"container"</span>&gt;
+    &lt;<span class="text-molokai-pink">div</span> <span class="text-molokai-green">id</span>=<span class="text-molokai-yellow">"grimorio"</span> <span class="text-molokai-green">class</span>=<span class="text-molokai-yellow">"row g-4"</span>&gt;
+        <span class="text-molokai-comment">&lt;!-- Os cards aparecerão aqui! --&gt;</span>
+    &lt;/<span class="text-molokai-pink">div</span>&gt;
+&lt;/<span class="text-molokai-pink">div</span>&gt;
+</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h5 class="font-bold text-xl text-slate-700">JavaScript (script.js)</h5>
+                        <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 w-full h-full">
+<pre><code><span class="text-molokai-green">fetch</span>(<span class="text-molokai-yellow">'criaturas.json'</span>)
+  .<span class="text-molokai-green">then</span>(res <span class="text-molokai-pink">=></span> res.<span class="text-molokai-green">json</span>())
+  .<span class="text-molokai-green">then</span>(criaturas <span class="text-molokai-pink">=></span> {
+    
+    <span class="text-molokai-pink">const</span> grimorioDiv <span class="text-molokai-pink">=</span> document.<span class="text-molokai-green">getElementById</span>(<span class="text-molokai-yellow">'grimorio'</span>);
+    <span class="text-molokai-pink">let</span> cardsHTML <span class="text-molokai-pink">=</span> <span class="text-molokai-yellow">''</span>; <span class="text-molokai-comment">// String para guardar o HTML</span>
+
+    <span class="text-molokai-comment">// Loop para cada criatura no JSON</span>
+    criaturas.<span class="text-molokai-green">forEach</span>(criatura <span class="text-molokai-pink">=></span> {
+      <span class="text-molokai-comment">// Usamos template literals (``) para montar o HTML</span>
+      cardsHTML <span class="text-molokai-pink">+=</span> <span class="text-molokai-yellow">`
+        &lt;div class="col-md-4"&gt;
+          &lt;div class="card h-100"&gt;
+            &lt;img src="</span><span class="text-molokai-purple">${</span>criatura.<span class="text-molokai-fg">imagem</span><span class="text-molokai-purple">}</span><span class="text-molokai-yellow">" class="card-img-top"&gt;
+            &lt;div class="card-body"&gt;
+              &lt;h5 class="card-title"&gt;</span><span class="text-molokai-purple">${</span>criatura.<span class="text-molokai-fg">nome</span><span class="text-molokai-purple">}</span><span class="text-molokai-yellow">&lt;/h5&gt;
+              &lt;p class="card-text"&gt;</span><span class="text-molokai-purple">${</span>criatura.<span class="text-molokai-fg">descricao</span><span class="text-molokai-purple">}</span><span class="text-molokai-yellow">&lt;/p&gt;
+            &lt;/div&gt;
+             &lt;div class="card-footer"&gt;
+                &lt;small class="text-muted"&gt;Habitat: </span><span class="text-molokai-purple">${</span>criatura.<span class="text-molokai-fg">habitat</span><span class="text-molokai-purple">}</span><span class="text-molokai-yellow">&lt;/small&gt;
+             &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      `</span>;
+    });
+
+    <span class="text-molokai-comment">// Insere a string de HTML no div</span>
+    grimorioDiv.<span class="text-molokai-green">innerHTML</span> <span class="text-molokai-pink">=</span> cardsHTML;
+  });
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 13: Exercício Final -->
+        <section id="slide13" class="slide min-h-screen w-full p-8 md:p-16 flex flex-col justify-center items-center text-center border-b border-slate-200 bg-white">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-black text-brand-orange">🚀 Desafio: Galeria Dinâmica</h2>
+                <p class="text-xl mt-6 max-w-3xl">Agora é a sua vez de criar uma página dinâmica do zero!</p>
+                <div class="bg-orange-50 border-l-4 border-orange-500 p-6 rounded-lg my-6 max-w-4xl text-left w-full">
+                    <h4 class="text-center font-bold text-2xl text-slate-800">Sua Missão: Criar uma Galeria de Filmes</h4>
+                    <p class="text-lg mt-4">Use os dados fornecidos para criar uma galeria de cards dinâmica sobre filmes de ficção científica.</p>
+                    <ol class="mt-4 space-y-4">
+                        <li>
+                            <strong class="text-lg">1. Use o Arquivo de Dados Pronto:</strong> Crie um arquivo <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">filmes.json</code> e cole o seguinte conteúdo nele:
+                            <div class="code-snippet bg-molokai-bg text-molokai-fg p-6 rounded-lg text-left font-mono my-4 w-full">
+<pre><code>[
+  {
+    <span class="text-molokai-green">"titulo"</span>: <span class="text-molokai-yellow">"Blade Runner 2049"</span>,
+    <span class="text-molokai-green">"ano"</span>: <span class="text-molokai-purple">2017</span>,
+    <span class="text-molokai-green">"diretor"</span>: <span class="text-molokai-yellow">"Denis Villeneuve"</span>,
+    <span class="text-molokai-green">"imagem_url"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x600/0c1421/FFFFFF?text=Blade+Runner+2049"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Um novo blade runner, o policial K, descobre um segredo há muito tempo enterrado que tem o potencial de mergulhar o que resta da sociedade no caos."</span>
+  },
+  {
+    <span class="text-molokai-green">"titulo"</span>: <span class="text-molokai-yellow">"A Chegada"</span>,
+    <span class="text-molokai-green">"ano"</span>: <span class="text-molokai-purple">2016</span>,
+    <span class="text-molokai-green">"diretor"</span>: <span class="text-molokai-yellow">"Denis Villeneuve"</span>,
+    <span class="text-molokai-green">"imagem_url"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x600/343a40/FFFFFF?text=A+Chegada"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Uma linguista trabalha com os militares para se comunicar com formas de vida alienígenas depois que doze naves espaciais misteriosas aparecem em todo o mundo."</span>
+  },
+  {
+    <span class="text-molokai-green">"titulo"</span>: <span class="text-molokai-yellow">"Matrix"</span>,
+    <span class="text-molokai-green">"ano"</span>: <span class="text-molokai-purple">1999</span>,
+    <span class="text-molokai-green">"diretor"</span>: <span class="text-molokai-yellow">"Lana & Lilly Wachowski"</span>,
+    <span class="text-molokai-green">"imagem_url"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x600/03c03c/000000?text=Matrix"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Um hacker de computador aprende com misteriosos rebeldes sobre a verdadeira natureza de sua realidade e seu papel na guerra contra seus controladores."</span>
+  },
+  {
+    <span class="text-molokai-green">"titulo"</span>: <span class="text-molokai-yellow">"Interestelar"</span>,
+    <span class="text-molokai-green">"ano"</span>: <span class="text-molokai-purple">2014</span>,
+    <span class="text-molokai-green">"diretor"</span>: <span class="text-molokai-yellow">"Christopher Nolan"</span>,
+    <span class="text-molokai-green">"imagem_url"</span>: <span class="text-molokai-yellow">"https://placehold.co/400x600/f0e68c/000000?text=Interestelar"</span>,
+    <span class="text-molokai-green">"descricao"</span>: <span class="text-molokai-yellow">"Uma equipe de exploradores viaja através de um buraco de minhoca no espaço na tentativa de garantir a sobrevivência da humanidade."</span>
+  }
+]
+</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-lg">2. Estrutura HTML:</strong> Crie um <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">index.html</code> com Bootstrap e um <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">&lt;div&gt;</code> container vazio que servirá como o alvo para seus cards (dê a ele um ID, ex: <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">#galeria</code>).
+                        </li>
+                        <li>
+                            <strong class="text-lg">3. Script JavaScript:</strong> Crie um arquivo <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">script.js</code> que:
+                            <ul class="list-disc list-inside mt-2 text-base space-y-1">
+                                <li>Use <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">fetch()</code> para carregar seu <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">filmes.json</code>.</li>
+                                <li>Percorra o array de dados com <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">.forEach()</code>.</li>
+                                <li>Para cada filme, crie o HTML de um card do Bootstrap (use os dados de diretor e ano também!).</li>
+                                <li>Insira os cards gerados dentro do seu <code class="inline-code bg-slate-200 text-molokai-pink px-2 py-1 rounded font-mono text-base">#galeria</code>.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="nav-buttons fixed bottom-4 right-4 z-50 flex items-center gap-2 md:flex">
+        <div id="slide-counter" class="bg-slate-700/90 text-white font-bold text-lg h-12 px-5 rounded-full flex items-center justify-center">1 / 13</div>
+        <button id="prev-btn" title="Slide Anterior (←)" class="w-12 h-12 rounded-full bg-brand-orange/90 hover:bg-brand-orange text-white text-4xl cursor-pointer flex items-center justify-center transition-colors">‹</button>
+        <button id="next-btn" title="Próximo Slide (→)" class="w-12 h-12 rounded-full bg-brand-orange/90 hover:bg-brand-orange text-white text-4xl cursor-pointer flex items-center justify-center transition-colors">›</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            const header = document.querySelector('header');
+            const headerHeight = header ? header.offsetHeight : 0;
+            let currentSlide = 0;
+
+            function updateCounter() {
+                slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+            }
+
+            function goToSlide(slideIndex) {
+                if (slideIndex >= 0 && slideIndex < slides.length) {
+                    const targetSlide = slides[slideIndex];
+                    const targetPosition = targetSlide.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    currentSlide = slideIndex;
+                    updateCounter();
+                }
+            }
+            
+            function nextSlide() {
+                goToSlide(currentSlide + 1);
+            }
+
+            function prevSlide() {
+                goToSlide(currentSlide - 1);
+            }
+
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'ArrowRight') {
+                    e.preventDefault();
+                    nextSlide();
+                } else if (e.code === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevSlide();
+                } else if (e.code === 'Space') {
+                    e.preventDefault();
+                    nextSlide();
+                }
+            });
+            
+            if (window.innerWidth < 768) {
+                document.querySelector('.nav-buttons').classList.add('hidden');
+            }
+
+            // Initial setup
+            updateCounter();
+        });
+    </script>
+</body>
+</html>
+
+

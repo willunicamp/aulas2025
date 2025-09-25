@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 09: JavaScript - A Base da Web Interativa</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Fira+Code&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --main-bg: #f8f9fa;
+            --slide-bg: #ffffff;
+            --text-color: #212529;
+            --link-color: #f7df1e; /* Amarelo do JavaScript */
+            --heading-color: #343a40;
+            --border-color: #dee2e6;
+            --header-height: 60px;
+            --js-yellow-dark: #cba92e;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-color);
+            padding-top: var(--header-height);
+        }
+
+        .presentation-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .slide {
+            padding: 4rem;
+            min-height: 100vh;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            scroll-margin-top: var(--header-height);
+        }
+
+        .slide:last-child {
+            border-bottom: none;
+        }
+
+        .slide h1, .slide h2, .slide h3 {
+            color: var(--heading-color);
+            font-weight: 900;
+        }
+        
+        .slide h1, .slide h2 {
+            color: #323330; /* Cor escura para contrastar com o amarelo */
+        }
+        
+        .slide h1 { font-size: 3.5rem; }
+        .slide h2 {
+            font-size: 2.5rem;
+            border-bottom: 3px solid var(--link-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .code-snippet {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+        }
+
+        .inline-code {
+            background-color: #e9ecef;
+            color: #d63384;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .doc-note {
+            background-color: #fff9e1;
+            border-left: 5px solid var(--link-color);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .mission-box {
+            background-color: #e6f7ff;
+            border-left: 5px solid #007bff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .example-box {
+            border: 2px dashed var(--js-yellow-dark);
+            background-color: #fff9e1;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1001;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .slide-counter-display {
+            padding: 0.5rem 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .nav-buttons .btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #ddd;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .timeline-container.left { left: 0; }
+        .timeline-container.right { left: 50%; }
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: white;
+            border: 4px solid var(--link-color);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-container.right::after { left: -16px; }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .slide { padding: 2rem; }
+            .slide h1 { font-size: 2.5rem; }
+            .slide h2 { font-size: 2rem; }
+            .nav-buttons { display: none; }
+            .timeline::after { left: 31px; }
+            .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-container.right { left: 0%; }
+            .timeline-container::after { left: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="presentation-header">
+        <h5 class="mb-0 fw-bold">Aula 09: JavaScript - A Base da Web Interativa</h5>
+    </header>
+
+    <main>
+
+        <!-- Slide 1: Título -->
+        <section id="slide1" class="slide text-center">
+            <div>
+                <h1 class="display-1 fw-bolder">JavaScript</h1>
+                <p class="lead fs-1 text-muted mt-3">A Base da Web Interativa</p>
+                <p class="fs-3 mt-5">Prof. Wiliam Paiva - COTIL - UNICAMP</p>
+            </div>
+        </section>
+
+        <!-- Slide 2: O que é JS -->
+        <section id="slide2" class="slide">
+            <div>
+                <h2>O que é JavaScript?</h2>
+                <p class="lead fs-4">Se a web fosse um corpo, teríamos a "Santíssima Trindade":</p>
+                <div class="row text-center mt-5 g-4">
+                    <div class="col-md-4">
+                        <div class="p-4 border rounded shadow-sm h-100">
+                            <h3 class="fw-bold">HTML</h3>
+                            <p class="fs-1">🦴</p>
+                            <p><strong>A Estrutura</strong><br>Define os blocos de construção, os "ossos" da página.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 border rounded shadow-sm h-100">
+                            <h3 class="fw-bold">CSS</h3>
+                            <p class="fs-1">🎨</p>
+                            <p><strong>A Aparência</strong><br>Define as cores, fontes e layout, a "pele" da página.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 border rounded shadow-sm h-100" style="border-color: var(--link-color) !important; border-width: 2px !important;">
+                            <h3 class="fw-bold">JavaScript</h3>
+                            <p class="fs-1">🧠</p>
+                            <p><strong>O Comportamento</strong><br>Define a interatividade, a lógica, o "cérebro" da página.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="fs-4 mt-5">JS é a linguagem de programação que permite criar conteúdo dinâmico, controlar mídias, animar imagens e praticamente tudo o que torna a web interativa.</p>
+            </div>
+        </section>
+
+        <!-- Slide 3: História -->
+        <section id="slide3" class="slide">
+            <div>
+                <h2>Uma Viagem no Tempo</h2>
+                <p class="lead fs-4">O JavaScript nasceu por necessidade, cresceu em meio a "guerras" e hoje domina o desenvolvimento web. Vamos ver os marcos mais importantes.</p>
+                <div class="timeline mt-5">
+                    <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>1995: O Nascimento</h3>
+                            <p>Brendan Eich cria o "Mocha" em 10 dias na Netscape. O nome muda para LiveScript e, por marketing, para JavaScript.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-container right">
+                        <div class="timeline-content">
+                            <h3>2005: A Revolução AJAX</h3>
+                            <p>O Google Maps mostra que é possível carregar dados sem atualizar a página. A web nunca mais seria a mesma.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>2006: A Era jQuery</h3>
+                            <p>"Write less, do more." O jQuery simplifica a manipulação do HTML e se torna quase um padrão da indústria.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-container right">
+                        <div class="timeline-content">
+                            <h3>2009: Node.js</h3>
+                            <p>Ryan Dahl permite que o JavaScript rode fora do navegador, no servidor, abrindo um novo universo de possibilidades.</p>
+                        </div>
+                    </div>
+                     <div class="timeline-container left">
+                        <div class="timeline-content">
+                            <h3>2010+: Frameworks Modernos</h3>
+                            <p>Angular (Google), React (Facebook) e Vue mudam a forma como construímos interfaces, popularizando a arquitetura de componentes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: jQuery vs JS Moderno -->
+        <section id="slide4" class="slide">
+            <div>
+                <h2>A Evolução na Prática: jQuery vs. JS Moderno</h2>
+                <p class="lead fs-4">O jQuery foi revolucionário por simplificar tarefas verbosas. Hoje, o JavaScript "puro" (vanilla) já incorporou muitas dessas facilidades.</p>
+                <p class="fs-5"><strong>Objetivo:</strong> Mudar o texto de um elemento e adicionar uma classe CSS.</p>
+                <div class="row mt-4 g-4">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">Com jQuery (O "jeito antigo")</h5>
+                        <div class="code-snippet">
+<pre><code>// Seleciona o elemento pelo ID e muda o HTML
+$('#titulo').html('Novo Título');
+
+// Adiciona uma classe CSS
+$('#titulo').addClass('destaque');</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">Com JavaScript Moderno</h5>
+                        <div class="code-snippet">
+<pre><code>// Seleciona o elemento pelo ID e muda o HTML
+document.getElementById('titulo').innerHTML = 'Novo Título';
+
+// Adiciona uma classe CSS
+document.getElementById('titulo').classList.add('destaque');</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="doc-note">
+                    <h4 class="fw-bold">Por que não usamos mais tanto jQuery?</h4>
+                    <p>Com a evolução dos navegadores e do próprio JavaScript (especialmente após o ES6), muitas das facilidades do jQuery se tornaram nativas. Usar JS "puro" hoje significa menos dependências e, muitas vezes, melhor performance.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: O Ecossistema Atual -->
+        <section id="slide5" class="slide">
+            <div>
+                <h2>O Ecossistema Atual: Frontend, Backend e Além</h2>
+                <p class="lead fs-4">Hoje, JavaScript é uma linguagem full-stack. Podemos usá-la em todas as camadas de uma aplicação web.</p>
+                <div class="row mt-4 text-center g-4">
+                    <div class="col-md-4">
+                        <div class="p-4 border rounded h-100">
+                            <h4 class="fw-bold">Frontend (Navegador)</h4>
+                            <p>É o domínio dos frameworks como <strong>React</strong>, <strong>Angular</strong> e <strong>Vue</strong>, que nos ajudam a construir interfaces complexas e reativas.</p>
+                            <p class="fs-2">⚛️</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 border rounded h-100">
+                            <h4 class="fw-bold">Backend (Servidor)</h4>
+                            <p>Com <strong>Node.js</strong>, podemos criar APIs, gerenciar bancos de dados e construir toda a lógica de negócio de uma aplicação.</p>
+                            <p class="fs-2">⚙️</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 border rounded h-100">
+                            <h4 class="fw-bold">"Meta-Frameworks"</h4>
+                            <p>Frameworks como <strong>Next.js</strong> (para React) e <strong>Nuxt.js</strong> (para Vue) combinam o melhor do frontend e backend para otimizar performance e SEO.</p>
+                             <p class="fs-2">🚀</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Onde o JS Vive -->
+        <section id="slide6" class="slide bg-light">
+            <div>
+                <h2>Mãos à Obra: Onde o JS Vive?</h2>
+                <p class="lead fs-4">O código JavaScript vive dentro da tag <code class="inline-code">&lt;script&gt;</code>. Podemos colocá-lo de duas formas:</p>
+                <div class="row mt-4 g-4">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">1. Script Interno</h5>
+                        <p>Diretamente no arquivo HTML. Ideal para pequenos testes ou scripts específicos da página.</p>
+                        <div class="code-snippet">
+<pre><code>&lt;body&gt;
+  &lt;!-- ... conteúdo HTML ... --&gt;
+  &lt;script&gt;
+    // Nosso código JS vai aqui!
+  &lt;/script&gt;
+&lt;/body&gt;</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                         <h5 class="fw-bold">2. Script Externo</h5>
+                        <p>Em um arquivo separado (ex: <code class="inline-code">meu-script.js</code>). É a prática recomendada para organização.</p>
+                        <div class="code-snippet">
+<pre><code>&lt;body&gt;
+  &lt;!-- ... conteúdo HTML ... --&gt;
+  &lt;script src="meu-script.js"&gt;&lt;/script&gt;
+&lt;/body&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="doc-note">
+                    <p><strong>Por que no final do <code class="inline-code">&lt;body&gt;</code>?</strong> Colocamos a tag <code class="inline-code">&lt;script&gt;</code> no final para garantir que todo o HTML seja carregado antes do JavaScript tentar manipulá-lo. Isso evita erros de "elemento não encontrado".</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 7: Console.log -->
+        <section id="slide7" class="slide">
+            <div>
+                <h2>Sua Primeira Ferramenta: O Console</h2>
+                <p class="lead fs-4">A função <code class="inline-code">console.log()</code> é a ferramenta mais importante de um desenvolvedor JS. Ela nos permite "imprimir" valores no console do navegador para depuração.</p>
+                <div class="code-snippet">
+<pre><code>console.log("Olá, mundo!"); // Imprime uma string
+let numero = 10;
+console.log(numero); // Imprime o valor da variável numero
+console.log("O valor é:", numero); // Podemos combinar textos e variáveis
+</code></pre>
+                </div>
+                <div class="example-box">
+                    <h5 class="fw-bold">Teste você mesmo!</h5>
+                    <p>Abra o console do seu navegador (geralmente com F12), vá para a aba "Console" e digite os comandos acima.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 8: Variáveis -->
+        <section id="slide8" class="slide">
+            <div>
+                <h2>Guardando Informações: Variáveis</h2>
+                <p class="lead fs-4">Variáveis são "caixas" onde guardamos informações. Em JavaScript, temos três palavras-chave para declará-las:</p>
+                <div class="row g-4 mt-3">
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded h-100">
+                            <h4 class="fw-bold"><code class="inline-code">var</code></h4>
+                            <p>A forma antiga. Evite usar em código novo. Tem um comportamento de "escopo" que pode ser confuso.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded h-100">
+                            <h4 class="fw-bold"><code class="inline-code">let</code></h4>
+                            <p>A forma moderna para variáveis que <strong>podem mudar de valor</strong>. Respeita o escopo de bloco.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded h-100">
+                            <h4 class="fw-bold"><code class="inline-code">const</code></h4>
+                            <p>Para "constantes", ou seja, variáveis que <strong>não podem mudar de valor</strong> depois de definidas. É a mais segura e recomendada.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="doc-note mt-5">
+                    <h4 class="fw-bold">Regra de Ouro</h4>
+                    <p>Use <code class="inline-code">const</code> por padrão. Se você precisar que a variável mude de valor (como em um contador), use <code class="inline-code">let</code>. Finja que <code class="inline-code">var</code> não existe.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Tipos de Dados -->
+        <section id="slide9" class="slide">
+            <div>
+                <h2>Tipos de Dados Primitivos</h2>
+                <p class="lead fs-4">JavaScript é uma linguagem de tipagem dinâmica, o que significa que uma mesma variável pode conter tipos diferentes de dados.</p>
+                <div class="code-snippet">
+<pre><code>let idade = 25;              // Number
+let nome = "Wiliam";           // String
+let estudante = true;        // Boolean
+let cor = null;              // Null (valor nulo intencional)
+let sobrenome;               // Undefined (variável declarada, mas sem valor)
+
+// Para saber o tipo de uma variável, usamos o operador typeof
+console.log(typeof nome); // Vai imprimir "string"
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Estruturas de Controle -->
+        <section id="slide10" class="slide">
+             <div>
+                <h2>Tomando Decisões: <code class="inline-code">if / else</code></h2>
+                <p class="lead fs-4">A estrutura condicional <code class="inline-code">if/else</code> permite que nosso código execute blocos diferentes dependendo de uma condição ser verdadeira ou falsa.</p>
+                <div class="code-snippet">
+<pre><code>const hora = 14;
+
+if (hora < 12) {
+  console.log("Bom dia!");
+} else if (hora < 18) {
+  console.log("Boa tarde!");
+} else {
+  console.log("Boa noite!");
+}
+// Vai imprimir "Boa tarde!"
+</code></pre>
+                </div>
+                 <div class="example-box">
+                    <h5 class="fw-bold">Teste de Maioridade</h5>
+                    <div class="mb-2">
+                        <label for="idadeInput" class="form-label">Digite sua idade:</label>
+                        <input type="number" class="form-control" id="idadeInput" value="18">
+                    </div>
+                    <button class="btn btn-dark" id="verificarIdadeBtn">Verificar</button>
+                    <p class="mt-3 fs-5" id="resultadoIdade">Resultado: </p>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Estruturas de Repetição (for) -->
+        <section id="slide11" class="slide">
+             <div>
+                <h2>Repetindo Tarefas: O Loop <code class="inline-code">for</code></h2>
+                <p class="lead fs-4">O loop <code class="inline-code">for</code> é perfeito quando sabemos exatamente quantas vezes queremos repetir uma ação.</p>
+                <div class="code-snippet">
+<pre><code>// Este loop vai executar 5 vezes (para i = 0, 1, 2, 3, 4)
+for (let i = 0; i < 5; i++) {
+  console.log("O número é: " + i);
+}
+</code></pre>
+                </div>
+                <div class="example-box">
+                    <h5 class="fw-bold">Gerador de Tabuada</h5>
+                    <div class="mb-2">
+                        <label for="tabuadaInput" class="form-label">Tabuada do número:</label>
+                        <input type="number" class="form-control" id="tabuadaInput" value="7" style="width: 100px;">
+                    </div>
+                    <button class="btn btn-dark" id="gerarTabuadaBtn">Gerar</button>
+                    <div class="mt-3 fs-5" id="resultadoTabuada"></div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Estruturas de Repetição (while) -->
+        <section id="slide12" class="slide">
+             <div>
+                <h2>Repetindo Tarefas: O Loop <code class="inline-code">while</code></h2>
+                <p class="lead fs-4">Usamos o <code class="inline-code">while</code> (enquanto) quando queremos repetir uma ação <strong>enquanto uma condição for verdadeira</strong>, mas não sabemos o número exato de iterações.</p>
+                <div class="code-snippet">
+<pre><code>let moedas = 0;
+let cara = false;
+
+while (cara === false) {
+  moedas++;
+  // Math.random() retorna um número entre 0 e 1.
+  if (Math.random() > 0.5) {
+    cara = true;
+  }
+}
+
+console.log(`Levei ${moedas} tentativas para tirar "cara".`);
+</code></pre>
+                </div>
+                <div class="doc-note">
+                    <strong>Cuidado com loops infinitos!</strong> Se a condição de um loop <code class="inline-code">while</code> nunca se tornar falsa, seu programa irá travar. Sempre garanta que algo dentro do loop possa alterar a condição.
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Estruturas de Repetição (do...while) -->
+        <section id="slide13" class="slide">
+             <div>
+                <h2>Repetindo Tarefas: O Loop <code class="inline-code">do...while</code></h2>
+                <p class="lead fs-4">O <code class="inline-code">do...while</code> é uma variação do <code class="inline-code">while</code> com uma garantia: o bloco de código <strong>sempre executa pelo menos uma vez</strong>, pois a condição é checada no final.</p>
+                <div class="code-snippet">
+<pre><code>let senha;
+
+do {
+  // A função prompt() abre uma caixa de diálogo para o usuário digitar.
+  senha = prompt("Digite a senha (é '123'):"); 
+} while (senha !== "123");
+
+alert("Senha correta! Acesso concedido.");
+</code></pre>
+                </div>
+                <div class="example-box">
+                    <h5 class="fw-bold">Teste o <code class="inline-code">do...while</code></h5>
+                    <p>O código ao lado irá pedir a senha repetidamente até que você digite "123". Note que ele pede a senha *antes* de checar se ela está correta.</p>
+                    <button class="btn btn-dark" id="testeDoWhile">Iniciar Teste de Senha</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 14: switch-case -->
+        <section id="slide14" class="slide">
+             <div>
+                <h2>Múltiplas Condições: O <code class="inline-code">switch</code></h2>
+                <p class="lead fs-4">O <code class="inline-code">switch</code> é uma alternativa mais limpa para uma cadeia de <code class="inline-code">if...else if...else</code> quando estamos comparando a mesma variável com múltiplos valores possíveis.</p>
+                <div class="code-snippet">
+<pre><code>const permissao = "admin"; // pode ser "admin", "editor" ou "leitor"
+
+switch (permissao) {
+  case "admin":
+    console.log("Acesso total.");
+    break; // O break é crucial para sair do switch
+  case "editor":
+    console.log("Pode editar conteúdo.");
+    break;
+  default: // O default é como o "else" final
+    console.log("Pode apenas visualizar.");
+}
+</code></pre>
+                </div>
+                <div class="example-box">
+                    <h5 class="fw-bold">Verificar Nível de Acesso</h5>
+                    <div class="mb-2">
+                        <label for="permissaoSelect" class="form-label">Selecione uma permissão:</label>
+                        <select id="permissaoSelect" class="form-select">
+                            <option value="admin">Administrador</option>
+                            <option value="editor">Editor</option>
+                            <option value="leitor">Leitor</option>
+                        </select>
+                    </div>
+                    <p class="mt-3 fs-5" id="resultadoPermissao">Resultado: </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 15: Exercício Prático #1 -->
+        <section id="slide15" class="slide bg-light">
+             <div>
+                <h2>Exercício Prático #1: Dominando a Lógica</h2>
+                <p class="lead fs-4">Hora de praticar! O objetivo deste exercício é resolver um problema clássico da programação usando apenas as estruturas que aprendemos e o <code class="inline-code">console.log()</code> para ver o resultado.</p>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Missão: FizzBuzz</h4>
+                    <p>Crie um script que faça o seguinte:</p>
+                    <ol>
+                        <li>Use um loop <code class="inline-code">for</code> para contar de 1 a 100.</li>
+                        <li>Dentro do loop, use <code class="inline-code">if/else</code> para checar as seguintes condições:</li>
+                        <ul>
+                            <li>Se o número for divisível por 3, imprima <strong>"Fizz"</strong> no console.</li>
+                            <li>Se o número for divisível por 5, imprima <strong>"Buzz"</strong> no console.</li>
+                            <li>Se o número for divisível por <strong>ambos</strong> 3 e 5, imprima <strong>"FizzBuzz"</strong>.</li>
+                            <li>Caso contrário, apenas imprima o número.</li>
+                        </ul>
+                    </ol>
+                    <hr>
+                    <p class="mb-0"><strong>Dica:</strong> Para saber se um número é divisível por outro, use o operador "módulo" (resto da divisão): <code class="inline-code">numero % 3 === 0</code> significa que o número é divisível por 3.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Funções -->
+        <section id="slide16" class="slide">
+             <div>
+                <h2>Organizando Código: Funções</h2>
+                <p class="lead fs-4">Funções são blocos de código nomeados que podemos criar para executar uma tarefa específica. Elas são a base da organização e da reutilização de código.</p>
+                <h4 class="mt-4 fw-bold">Por que usar funções?</h4>
+                <ul class="fs-5">
+                    <li><strong>Reutilização:</strong> Escreva uma vez, use quantas vezes quiser. (Princípio D.R.Y. - Don't Repeat Yourself).</li>
+                    <li><strong>Organização:</strong> Quebram um problema grande em partes menores e mais fáceis de entender.</li>
+                    <li><strong>Manutenção:</strong> Se precisar corrigir ou melhorar uma lógica, você só mexe em um lugar.</li>
+                </ul>
+                <div class="code-snippet">
+<pre><code>// Definindo a função
+function saudar(nome) {
+  console.log("Olá, " + nome + "! Bem-vindo(a).");
+}
+
+// Chamando (invocando) a função
+saudar("Maria");
+saudar("João");
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 17: Funções Tradicionais -->
+        <section id="slide17" class="slide">
+             <div>
+                <h2>Declarando Funções (Forma Tradicional)</h2>
+                <p class="lead fs-4">A forma mais clássica de criar uma função é com a palavra-chave <code class="inline-code">function</code>, seguida pelo nome, parâmetros e o corpo da função.</p>
+                <div class="code-snippet">
+<pre><code>// Uma função que recebe dois números e retorna a soma
+function somar(a, b) {
+  const resultado = a + b;
+  return resultado; // 'return' envia o valor de volta para quem chamou
+}
+
+// Usando a função e guardando o resultado em uma variável
+const total = somar(10, 5);
+console.log(total); // Vai imprimir 15
+</code></pre>
+                </div>
+                <div class="example-box">
+                    <h5 class="fw-bold">Mini Calculadora de Soma</h5>
+                    <div class="row g-2">
+                        <div class="col"><input type="number" id="num1" class="form-control" value="10"></div>
+                        <div class="col-auto fs-4">+</div>
+                        <div class="col"><input type="number" id="num2" class="form-control" value="5"></div>
+                        <div class="col-auto"><button class="btn btn-dark" id="somarBtn">=</button></div>
+                        <div class="col fs-4" id="resultadoSoma">?</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 18: Funções Anônimas e Arrow Functions -->
+        <section id="slide18" class="slide">
+             <div>
+                <h2>Funções Anônimas e Arrow Functions</h2>
+                <p class="lead fs-4">Em JavaScript, funções são "cidadãs de primeira classe", o que significa que podemos tratá-las como valores: guardá-las em variáveis e passá-las como argumento para outras funções.</p>
+                <div class="row g-4 mt-3">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">Expressão de Função (Anônima)</h5>
+                        <p>Aqui, criamos uma função sem nome e a atribuímos a uma constante. É muito comum para callbacks e eventos.</p>
+                        <div class="code-snippet">
+<pre><code>const multiplicar = function(a, b) {
+  return a * b;
+};
+
+console.log(multiplicar(4, 5)); // 20
+</code></pre>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">Arrow Function (ES6+)</h5>
+                        <p>Uma sintaxe mais curta e moderna para funções anônimas. É a forma preferida em código atual.</p>
+                         <div class="code-snippet">
+<pre><code>const dividir = (a, b) => {
+  return a / b;
+};
+
+// Se a função tem só uma linha, pode ser mais curta ainda:
+const subtrair = (a, b) => a - b;
+
+console.log(dividir(20, 4)); // 5
+console.log(subtrair(10, 3)); // 7
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 19: Exercício Prático #2 -->
+        <section id="slide19" class="slide bg-light">
+             <div>
+                <h2>Exercício Prático #2: Funções em Ação</h2>
+                <p class="lead fs-4">Vamos praticar a criação de funções para resolver um problema. Novamente, use o console para testar sua solução.</p>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Missão: Calculadora de Média</h4>
+                    <ol>
+                        <li>Crie uma função chamada <code class="inline-code">calcularMedia</code> que receba três parâmetros (nota1, nota2, nota3).</li>
+                        <li>Dentro da função, calcule a média aritmética das três notas.</li>
+                        <li>A função deve <strong>retornar</strong> o valor da média calculada.</li>
+                        <li>Crie outra função chamada <code class="inline-code">verificarStatus</code> que recebe uma média como parâmetro.</li>
+                        <li>Dentro desta segunda função, use <code class="inline-code">if/else</code> para retornar uma string: "Aprovado" se a média for 7 ou mais, e "Reprovado" caso contrário.</li>
+                        <li>No final, chame suas funções no console para testar. Ex: <code class="inline-code">const media = calcularMedia(8, 7, 9); console.log(verificarStatus(media));</code></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 20: DOM -->
+        <section id="slide20" class="slide">
+             <div>
+                <h2>A Ponte entre JS e HTML: O DOM</h2>
+                <p class="lead fs-4">O <strong>D</strong>ocument <strong>O</strong>bject <strong>M</strong>odel (DOM) é a representação do seu arquivo HTML como um objeto em árvore. O JavaScript pode ler e modificar essa árvore.</p>
+                 <div class="doc-note">
+                    <p>Pense assim: quando o navegador lê seu HTML, ele cria uma "versão viva" dele na memória. Essa versão é o DOM. É com essa versão viva que o JavaScript interage, e qualquer mudança no DOM é refletida visualmente na página.</p>
+                </div>
+                 <div class="text-center">
+                    <svg width="80%" viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><defs><style>.dom-box{fill:#fff;stroke:#6c757d;stroke-width:1}.dom-line{stroke:#6c757d;stroke-width:0.5}.dom-text{font-family:monospace;font-size:8px;text-anchor:middle}</style></defs><g class="dom-item" transform="translate(160, 10)"><rect x="-30" y="0" width="60" height="20" class="dom-box"/><text x="0" y="14" class="dom-text">document</text></g><g class="dom-item" transform="translate(160, 50)"><rect x="-30" y="0" width="60" height="20" class="dom-box"/><text x="0" y="14" class="dom-text">&lt;html&gt;</text></g><line x1="160" y1="30" x2="160" y2="50" class="dom-line"/><g class="dom-item" transform="translate(100, 90)"><rect x="-30" y="0" width="60" height="20" class="dom-box"/><text x="0" y="14" class="dom-text">&lt;head&gt;</text></g><g class="dom-item" transform="translate(220, 90)"><rect x="-30" y="0" width="60" height="20" class="dom-box"/><text x="0" y="14" class="dom-text">&lt;body&gt;</text></g><line x1="160" y1="70" x2="100" y2="90" class="dom-line"/><line x1="160" y1="70" x2="220" y2="90" class="dom-line"/><g class="dom-item" transform="translate(220, 130)"><rect x="-30" y="0" width="60" height="20" class="dom-box"/><text x="0" y="14" class="dom-text">&lt;h1&gt;</text></g><line x1="220" y1="110" x2="220" y2="130" class="dom-line"/><g class="dom-item" transform="translate(220, 170)"><rect x="-30" y="0" width="60" height="20" class="dom-box"/><text x="0" y="14" class="dom-text">"Meu Título"</text></g><line x1="220" y1="150" x2="220" y2="170" class="dom-line"/></svg>
+                 </div>
+            </div>
+        </section>
+        
+        <!-- Slide 21: Eventos -->
+        <section id="slide21" class="slide bg-light">
+             <div>
+                <h2>Reagindo ao Usuário: Eventos</h2>
+                <p class="lead fs-4">Eventos são ações que acontecem na página, geralmente iniciadas pelo usuário (um clique, uma tecla pressionada) ou pelo navegador (página carregada).</p>
+                <p class="fs-4">O JavaScript pode "ouvir" esses eventos e executar uma função quando eles acontecem. A forma moderna de fazer isso é com <code class="inline-code">.addEventListener()</code>.</p>
+                <div class="code-snippet">
+<pre><code>// 1. Selecionamos o elemento que vai disparar o evento
+const meuBotao = document.getElementById('meuBotao');
+
+// 2. Adicionamos um "ouvinte de evento" a ele
+// Parâmetro 1: O nome do evento que queremos ouvir (ex: 'click')
+// Parâmetro 2: A função que será executada quando o evento acontecer (callback)
+meuBotao.addEventListener('click', function() {
+  console.log("O botão foi clicado!");
+  // ... aqui vai a lógica que queremos executar
+});
+</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 22: Eventos na Prática -->
+        <section id="slide22" class="slide">
+             <div>
+                <h2>Eventos na Prática</h2>
+                <p class="lead fs-4">Vamos ver alguns eventos comuns em ação.</p>
+                <div class="example-box">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-md-6">
+                            <h5 class="fw-bold">Eventos de Mouse</h5>
+                            <div id="caixaMouse" class="p-5 bg-dark text-white text-center rounded">Passe o mouse aqui!</div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="fw-bold">Eventos de Teclado</h5>
+                            <label for="tecladoInput" class="form-label">Digite algo aqui:</label>
+                            <input type="text" class="form-control" id="tecladoInput">
+                            <p id="feedbackTeclado" class="mt-2">...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 23: Tabela de Eventos -->
+        <section id="slide23" class="slide">
+             <div>
+                <h2>Referência Rápida de Eventos</h2>
+                <p class="lead fs-4">Existem dezenas de eventos. Estes são alguns dos mais utilizados:</p>
+                <table class="table table-striped table-bordered mt-4">
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Quando é disparado?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code class="inline-code">click</code></td><td>Quando um elemento é clicado.</td></tr>
+                        <tr><td><code class="inline-code">mouseover</code></td><td>Quando o ponteiro do mouse entra na área de um elemento.</td></tr>
+                        <tr><td><code class="inline-code">mouseout</code></td><td>Quando o ponteiro do mouse sai da área de um elemento.</td></tr>
+                        <tr><td><code class="inline-code">keydown</code></td><td>Quando uma tecla é pressionada.</td></tr>
+                        <tr><td><code class="inline-code">keyup</code></td><td>Quando uma tecla é solta após ser pressionada.</td></tr>
+                        <tr><td><code class="inline-code">submit</code></td><td>Quando um formulário (<code class="inline-code">&lt;form&gt;</code>) é enviado.</td></tr>
+                        <tr><td><code class="inline-code">change</code></td><td>Quando o valor de um <code class="inline-code">&lt;input&gt;</code>, <code class="inline-code">&lt;select&gt;</code> ou <code class="inline-code">&lt;textarea&gt;</code> é alterado.</td></tr>
+                        <tr><td><code class="inline-code">load</code></td><td>Quando a página e todos os seus recursos (imagens, scripts) terminaram de carregar.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Slide 24: Manipulando o DOM -->
+        <section id="slide24" class="slide">
+             <div>
+                <h2>Manipulando o DOM: O Básico</h2>
+                <p class="lead fs-4">Para interagir com o HTML, precisamos de duas etapas: <strong>selecionar</strong> o elemento e depois <strong>modificar</strong> o elemento.</p>
+                <div class="row g-4 mt-3">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">1. Selecionar com <code class="inline-code">getElementById()</code></h5>
+                        <p>A forma mais simples de "pegar" um elemento do HTML é através do seu atributo <code class="inline-code">id</code>.</p>
+                    </div>
+                     <div class="col-lg-6">
+                        <h5 class="fw-bold">2. Modificar com <code class="inline-code">.innerHTML</code></h5>
+                        <p>Depois de selecionar um elemento, a propriedade <code class="inline-code">.innerHTML</code> nos permite ler ou alterar o conteúdo HTML dentro dele.</p>
+                    </div>
+                </div>
+                 <div class="code-snippet">
+<pre><code>&lt;!-- No seu HTML --&gt;
+&lt;h1 id="titulo-principal"&gt;Título Antigo&lt;/h1&gt;
+
+&lt;script&gt;
+  // 1. Seleciona o elemento com o id "titulo-principal" e guarda na variável
+  const titulo = document.getElementById('titulo-principal');
+
+  // 2. Altera o conteúdo HTML dentro do h1
+  titulo.innerHTML = "Meu Novo Título com JS!";
+&lt;/script&gt;
+</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 25: Projeto Prático -->
+        <section id="slide25" class="slide bg-light">
+             <div>
+                <h2>Juntando Tudo: Mini Calculadora de IMC</h2>
+                <p class="lead fs-4">Vamos criar uma pequena aplicação para praticar tudo o que vimos: variáveis, funções, eventos e manipulação do DOM.</p>
+                <div class="example-box">
+                    <h4 class="fw-bold text-center mb-3">Calculadora de IMC</h4>
+                    <div class="row g-3">
+                        <div class="col">
+                            <label for="peso" class="form-label">Peso (kg)</label>
+                            <input type="number" id="peso" class="form-control" placeholder="Ex: 70">
+                        </div>
+                        <div class="col">
+                            <label for="altura" class="form-label">Altura (m)</label>
+                            <input type="number" id="altura" class="form-control" placeholder="Ex: 1.75">
+                        </div>
+                    </div>
+                    <div class="d-grid mt-3">
+                        <button id="calcularBtn" class="btn btn-dark">Calcular</button>
+                    </div>
+                    <div id="resultadoImc" class="alert alert-info mt-4" role="alert">
+                        Seu resultado aparecerá aqui.
+                    </div>
+                </div>
+                 <div class="doc-note mt-4">
+                    <h5 class="fw-bold">Desafio</h5>
+                    <p>Tente implementar a lógica no seu próprio arquivo HTML! Você vai precisar:</p>
+                    <ol>
+                        <li>Selecionar os dois inputs, o botão e o div de resultado.</li>
+                        <li>Adicionar um evento de clique no botão com <code class="inline-code">addEventListener</code>.</li>
+                        <li>Dentro da função do evento, pegar os valores dos inputs com <code class="inline-code">.value</code>.</li>
+                        <li>Calcular o IMC: <code class="inline-code">peso / (altura * altura)</code>.</li>
+                        <li>Usar <code class="inline-code">if/else</code> para determinar a faixa do IMC (abaixo do peso, normal, etc.).</li>
+                        <li>Exibir o resultado no div com <code class="inline-code">.innerHTML</code>.</li>
+                    </ol>
+                 </div>
+            </div>
+        </section>
+        
+         <!-- Slide 26: Resumo -->
+        <section id="slide26" class="slide">
+            <div>
+                <h2>Aula Concluída!</h2>
+                <p class="lead fs-4">O que aprendemos hoje:</p>
+                <ul class="fs-4 mt-4">
+                    <li>A <strong>história e a importância</strong> do JavaScript no ecossistema web.</li>
+                    <li>As <strong>estruturas de controle e repetição</strong> (<code class="inline-code">if, for, while, switch</code>).</li>
+                    <li>Como organizar código com <strong>Funções</strong> (tradicionais e anônimas/arrow).</li>
+                    <li>O que é o <strong>DOM</strong> e como o JS o manipula.</li>
+                    <li>Como reagir a ações do usuário através de <strong>Eventos</strong> com <code class="inline-code">addEventListener</code>.</li>
+                </ul>
+                <div class="doc-note mt-5">
+                    <h4 class="fw-bold">Você deu um passo gigante!</h4>
+                    <p class="fs-5 mb-0">Esta é a base de toda a interatividade na web. Na próxima aula, vamos aprofundar em arrays, objetos e métodos de seleção de elementos mais avançados para construir aplicações ainda mais ricas.</p>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <div class="nav-buttons">
+        <span id="slide-counter" class="slide-counter-display"></span>
+        <button class="btn btn-light" id="prev-btn"><i class="bi bi-arrow-left"></i></button>
+        <button class="btn btn-light" id="next-btn"><i class="bi bi-arrow-right"></i></button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+
+            function updateNav() {
+                if (slideCounter) slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+
+            function goToSlide(index) {
+                if (index < 0 || index >= slides.length) return;
+                currentSlide = index;
+                const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'), 10);
+                const targetPosition = slides[currentSlide].offsetTop - headerHeight;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                updateNav();
+            }
+
+            prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowRight' || e.code === 'Space') {
+                    e.preventDefault();
+                    goToSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goToSlide(currentSlide - 1);
+                }
+            });
+            updateNav();
+
+            // --- Lógica dos exemplos interativos ---
+
+            // Slide 10: Idade
+            document.getElementById('verificarIdadeBtn').addEventListener('click', function() {
+                const idadeInput = document.getElementById('idadeInput');
+                const resultadoIdade = document.getElementById('resultadoIdade');
+                const idade = parseInt(idadeInput.value);
+                if (idade >= 18) {
+                    resultadoIdade.innerHTML = "Resultado: <strong>Você é maior de idade!</strong> ✅";
+                } else {
+                    resultadoIdade.innerHTML = "Resultado: <strong>Você é menor de idade.</strong> ❌";
+                }
+            });
+
+            // Slide 11: Tabuada
+            document.getElementById('gerarTabuadaBtn').addEventListener('click', function() {
+                const tabuadaInput = document.getElementById('tabuadaInput');
+                const resultadoTabuada = document.getElementById('resultadoTabuada');
+                const numero = parseInt(tabuadaInput.value);
+                let htmlResultado = `<h5>Tabuada do ${numero}:</h5><ul>`;
+                for (let i = 1; i <= 10; i++) {
+                    htmlResultado += `<li>${numero} x ${i} = ${numero * i}</li>`;
+                }
+                htmlResultado += '</ul>';
+                resultadoTabuada.innerHTML = htmlResultado;
+            });
+
+            // Slide 13: do...while
+            document.getElementById('testeDoWhile').addEventListener('click', function() {
+                let senha;
+                do {
+                  senha = prompt("Digite a senha (é '123'):"); 
+                } while (senha !== "123");
+                alert("Senha correta! Acesso concedido.");
+            });
+
+            // Slide 14: switch
+            const permissaoSelect = document.getElementById('permissaoSelect');
+            const resultadoPermissao = document.getElementById('resultadoPermissao');
+            permissaoSelect.addEventListener('change', function() {
+                const permissao = permissaoSelect.value;
+                let mensagem = '';
+                switch (permissao) {
+                  case "admin":
+                    mensagem = "Acesso total concedido.";
+                    break;
+                  case "editor":
+                    mensagem = "Permissão para editar conteúdo.";
+                    break;
+                  default:
+                    mensagem = "Permissão apenas para visualizar.";
+                }
+                resultadoPermissao.innerHTML = `Resultado: <strong>${mensagem}</strong>`;
+            });
+            permissaoSelect.dispatchEvent(new Event('change')); // Dispara o evento uma vez para inicializar
+
+            // Slide 17: Soma
+            document.getElementById('somarBtn').addEventListener('click', function(){
+                const num1 = parseFloat(document.getElementById('num1').value);
+                const num2 = parseFloat(document.getElementById('num2').value);
+                
+                function somar(a, b) {
+                    return a + b;
+                }
+
+                document.getElementById('resultadoSoma').textContent = somar(num1, num2);
+            });
+
+            // Slide 22: Eventos
+            const caixaMouse = document.getElementById('caixaMouse');
+            caixaMouse.addEventListener('mouseover', function() {
+                caixaMouse.textContent = 'Mouse EM CIMA!';
+                caixaMouse.classList.remove('bg-dark');
+                caixaMouse.classList.add('bg-success');
+            });
+            caixaMouse.addEventListener('mouseout', function() {
+                caixaMouse.textContent = 'Passe o mouse aqui!';
+                caixaMouse.classList.remove('bg-success');
+                caixaMouse.classList.add('bg-dark');
+            });
+
+            const tecladoInput = document.getElementById('tecladoInput');
+            const feedbackTeclado = document.getElementById('feedbackTeclado');
+            tecladoInput.addEventListener('keyup', function(evento) {
+                feedbackTeclado.textContent = `Você digitou: ${tecladoInput.value}`;
+            });
+
+            // Slide 25: Calculadora IMC
+            document.getElementById('calcularBtn').addEventListener('click', function() {
+                const peso = parseFloat(document.getElementById('peso').value);
+                const altura = parseFloat(document.getElementById('altura').value);
+                const resultadoDiv = document.getElementById('resultadoImc');
+
+                if (peso > 0 && altura > 0) {
+                    const imc = peso / (altura * altura);
+                    let classificacao = '';
+                    if (imc < 18.5) {
+                        classificacao = 'Abaixo do peso';
+                    } else if (imc < 24.9) {
+                        classificacao = 'Peso normal';
+                    } else if (imc < 29.9) {
+                        classificacao = 'Sobrepeso';
+                    } else {
+                        classificacao = 'Obesidade';
+                    }
+                    resultadoDiv.className = 'alert alert-success mt-4';
+                    resultadoDiv.innerHTML = `Seu IMC é <strong>${imc.toFixed(2)}</strong>. Classificação: <strong>${classificacao}</strong>.`;
+                } else {
+                    resultadoDiv.className = 'alert alert-danger mt-4';
+                    resultadoDiv.innerHTML = 'Por favor, preencha peso e altura com valores válidos.';
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>
+
+

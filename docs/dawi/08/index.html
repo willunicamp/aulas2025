@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula 08: Bootstrap - Revisão e Projeto Prático</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Fira+Code&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --main-bg: #f8f9fa;
+            --slide-bg: #ffffff;
+            --text-color: #212529;
+            --link-color: #6f42c1; /* Roxo do Bootstrap */
+            --heading-color: #343a40;
+            --border-color: #dee2e6;
+            --header-height: 60px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-color);
+            padding-top: var(--header-height); /* Espaço para o header fixo */
+        }
+
+        .presentation-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .slide {
+            padding: 4rem;
+            min-height: 100vh;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            scroll-margin-top: var(--header-height); /* Garante que o scroll pare abaixo do header */
+        }
+
+        .slide:last-child {
+            border-bottom: none;
+        }
+
+        .slide h1, .slide h2, .slide h3 {
+            color: var(--heading-color);
+            font-weight: 900;
+        }
+        
+        .slide h1, .slide h2 {
+            color: var(--link-color);
+        }
+        
+        .slide h1 { font-size: 3.5rem; }
+        .slide h2 {
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--link-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .code-snippet {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            margin: 1rem 0;
+        }
+
+        .inline-code {
+            background-color: #e9ecef;
+            color: #d63384;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .doc-note {
+            background-color: #f1eafa;
+            border-left: 5px solid var(--link-color);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .mission-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .example-box {
+            border: 2px dashed var(--link-color);
+            background-color: #f1eafa;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1001;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center; /* Alinha o contador e botões verticalmente */
+        }
+
+        .slide-counter-display {
+            padding: 0.5rem 1rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        .nav-buttons .btn {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Override para o botão primário ser roxo */
+        .btn-primary {
+            background-color: var(--link-color);
+            border-color: var(--link-color);
+        }
+        .btn-primary:hover {
+            background-color: #59359a; /* Roxo mais escuro */
+            border-color: #53328c;
+        }
+
+        /* Estilos para impressão */
+        @media print {
+            body {
+                font-size: 12pt;
+                padding-top: 0;
+            }
+            .presentation-header, .nav-buttons {
+                display: none;
+            }
+            .slide {
+                min-height: auto;
+                padding: 2rem 1rem;
+                page-break-after: always;
+                border-bottom: 1px solid #ccc;
+                scroll-margin-top: 0;
+            }
+            .slide h1, .slide h2 { font-size: 24pt; }
+            .code-snippet {
+                background-color: #eee !important;
+                color: #000 !important;
+                border: 1px solid #ccc;
+                white-space: pre-wrap;
+            }
+        }
+        
+        /* Estilos para Mobile */
+        @media (max-width: 768px) {
+            .slide { padding: 2rem; }
+            .slide h1 { font-size: 2.5rem; }
+            .slide h2 { font-size: 2rem; }
+            .nav-buttons {
+                display: none; /* Esconde os botões de navegação em telas menores */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Fixo -->
+    <header class="presentation-header">
+        <h5 class="mb-0 fw-bold">Bootstrap 5.3: Revisão e Projeto Prático</h5>
+    </header>
+
+    <!-- Conteúdo Principal com Slides -->
+    <main>
+
+        <!-- Slide 1: Introdução -->
+        <section id="slide1" class="slide">
+            <div>
+                <h1 class="display-3 fw-bolder">Revisão de Bootstrap</h1>
+                <p class="lead fs-2 text-muted mt-3">Aula 08</p>
+                <p class="fs-4 mt-4">Prof. Wiliam Paiva - COTIL - UNICAMP</p>
+                <hr class="my-5">
+                <p class="fs-4"><strong>Agenda de hoje:</strong></p>
+                <ul class="fs-4">
+                    <li>Revisar os conceitos fundamentais: Grid, Componentes e Utilitários.</li>
+                    <li>Construir, passo a passo, uma página de portfólio pessoal.</li>
+                    <li>Solidificar o conhecimento prático para criar layouts responsivos e profissionais.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 2: Nosso Projeto -->
+        <section id="slide2" class="slide bg-light">
+            <div>
+                <h2>Nosso Projeto de Revisão: Portfólio Pessoal</h2>
+                <p class="lead fs-4">A melhor forma de revisar é construindo! Hoje vamos criar uma página de portfólio do zero, aplicando os conceitos mais importantes do Bootstrap.</p>
+                <div class="mission-box mt-4">
+                    <h4 class="fw-bold">Passo 1: A Estrutura Inicial</h4>
+                    <p>Copie e cole o código abaixo em um novo arquivo <code class="inline-code">portfolio.html</code>. Esta será a nossa tela em branco.</p>
+                </div>
+                <div class="code-snippet">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Meu Portfólio&lt;/title&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"&gt;
+    &lt;link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;!-- 1. NAVBAR VIRÁ AQUI --&gt;
+
+    &lt;!-- 2. SEÇÃO 'SOBRE MIM' VIRÁ AQUI --&gt;
+
+    &lt;!-- 3. SEÇÃO 'PROJETOS' VIRÁ AQUI --&gt;
+    
+    &lt;!-- 4. SEÇÃO 'CONTATO' VIRÁ AQUI --&gt;
+
+    &lt;!-- 5. RODAPÉ VIRÁ AQUI --&gt;
+
+
+    &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 3: O Coração do Layout: O Grid -->
+        <section id="slide3" class="slide">
+            <div>
+                <h2>O Coração do Layout: O Sistema de Grid</h2>
+                <p class="lead fs-4">Se você entender o Grid, você entende 80% do Bootstrap. A lógica é uma hierarquia de 3 níveis:</p>
+                <ol class="fs-4 mt-4">
+                    <li><code class="inline-code">.container</code>: A caixa principal que centraliza seu conteúdo.</li>
+                    <li><code class="inline-code">.row</code>: Uma linha horizontal que serve como um contêiner para as colunas.</li>
+                    <li><code class="inline-code">.col</code>: As colunas verticais dentro de uma linha. <strong>Cada linha tem 12 colunas imaginárias.</strong></li>
+                </ol>
+                <div class="example-box">
+                    <div class="container text-center">
+                        <div class="row bg-body-secondary p-2 rounded g-3">
+                            <div class="col-6"><div class="p-3 border rounded bg-white">.col-6</div></div>
+                            <div class="col-6"><div class="p-3 border rounded bg-white">.col-6</div></div>
+                            <div class="col-4"><div class="p-3 border rounded bg-white">.col-4</div></div>
+                            <div class="col-4"><div class="p-3 border rounded bg-white">.col-4</div></div>
+                            <div class="col-4"><div class="p-3 border rounded bg-white">.col-4</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Responsividade com Breakpoints -->
+        <section id="slide4" class="slide">
+            <div>
+                <h2>Responsividade com Breakpoints</h2>
+                <p class="lead fs-4">O segredo para um site funcionar bem no celular e no desktop é usar os breakpoints do Grid. Eles dizem "em telas de tal tamanho, ocupe X colunas".</p>
+                 <div class="code-snippet">
+<pre><code>&lt;div class="row"&gt;
+  &lt;!-- Ocupa 12/12 colunas em telas pequenas (celular),
+       6/12 em telas médias (tablet) e
+       4/12 em telas grandes (desktop) --&gt;
+  &lt;div class="col-12 col-md-6 col-lg-4"&gt;
+    ...
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <ul class="fs-5 mt-4">
+                    <li><code class="inline-code">col-</code> (Extra small < 576px) - Padrão mobile-first</li>
+                    <li><code class="inline-code">col-sm-</code> (Small ≥ 576px)</li>
+                    <li><code class="inline-code">col-md-</code> (Medium ≥ 768px)</li>
+                    <li><code class="inline-code">col-lg-</code> (Large ≥ 992px)</li>
+                    <li><code class="inline-code">col-xl-</code> (Extra large ≥ 1200px)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Slide 5: Componente: Navbar -->
+        <section id="slide5" class="slide">
+            <div>
+                <h2>Componente: Navbar</h2>
+                <p class="lead fs-4">Vamos começar a montar nosso portfólio pela navegação principal.</p>
+                <div class="code-snippet">
+<pre><code>&lt;nav class="navbar navbar-expand-lg bg-body-tertiary"&gt;
+  &lt;div class="container"&gt;
+    &lt;a class="navbar-brand" href="#"&gt;Meu Portfólio&lt;/a&gt;
+    &lt;button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"&gt;
+      &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="collapse navbar-collapse" id="navbarNav"&gt;
+      &lt;ul class="navbar-nav ms-auto"&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link" href="#sobre"&gt;Sobre Mim&lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="nav-item"&gt;
+          &lt;a class="nav-link" href="#projetos"&gt;Projetos&lt;/a&gt;
+        &lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Desvendando a Navbar -->
+        <section id="slide6" class="slide">
+            <div>
+                <h2>Desvendando a Navbar</h2>
+                <p class="lead fs-4">A Navbar parece complexa, mas é uma combinação de peças que trabalham juntas para a responsividade.</p>
+                <dl class="fs-5 mt-4">
+                    <dt><code class="inline-code">.navbar-toggler</code></dt>
+                    <dd>Este é o "botão sanduíche" (hamburger button) que aparece apenas em telas pequenas. Ele é o gatilho para mostrar ou esconder o menu.</dd>
+                    <dt class="mt-3"><code class="inline-code">.collapse .navbar-collapse</code></dt>
+                    <dd>Esta <code class="inline-code">&lt;div&gt;</code> é o contêiner que "esconde" (<code class="inline-code">collapse</code>) os links do menu em telas pequenas. Em telas grandes, ela se expande automaticamente (<code class="inline-code">navbar-expand-lg</code>).</dd>
+                     <dt class="mt-3"><code class="inline-code">data-bs-toggle="collapse"</code> e <code class="inline-code">data-bs-target="#navbarNav"</code></dt>
+                    <dd>Essa é a "mágica" do JavaScript do Bootstrap! O <code class="inline-code">data-bs-toggle</code> diz ao botão que sua função é controlar um <code class="inline-code">collapse</code>. O <code class="inline-code">data-bs-target</code> diz a ele <strong>qual</strong> elemento colapsar, usando o ID (<code class="inline-code">#navbarNav</code>).</dd>
+                </dl>
+            </div>
+        </section>
+
+        <!-- Slide 7: Exercício Navbar -->
+        <section id="slide7" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 2: Construindo a Navbar</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>No seu arquivo <code class="inline-code">portfolio.html</code>, substitua o comentário <code class="inline-code">&lt;!-- 1. NAVBAR VIRÁ AQUI --&gt;</code> pelo código da Navbar que acabamos de ver.</p>
+                    <hr>
+                    <p><strong>Personalize:</strong></p>
+                    <ol>
+                        <li>Troque "Meu Portfólio" pelo seu nome.</li>
+                        <li>Adicione um link para a seção "Contato" (<code class="inline-code">href="#contato"</code>).</li>
+                        <li>Experimente trocar <code class="inline-code">bg-body-tertiary</code> por <code class="inline-code">bg-dark</code> e adicione a classe <code class="inline-code">navbar-dark</code> para um menu escuro.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Utilitários: Espaçamento e Cores -->
+        <section id="slide8" class="slide">
+            <div>
+                <h2>Classes Utilitárias: A "cola" do Design</h2>
+                <p class="lead fs-4">Os utilitários são classes que fazem uma única coisa, mas fazem muito bem. Eles nos permitem ajustar o design sem escrever CSS.</p>
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <h5 class="fw-bold">Espaçamento</h5>
+                        <p><code class="inline-code">m</code> para margem, <code class="inline-code">p</code> para padding. <code class="inline-code">t</code> (top), <code class="inline-code">b</code> (bottom), <code class="inline-code">s</code> (start), <code class="inline-code">e</code> (end), <code class="inline-code">x</code> (horizontal), <code class="inline-code">y</code> (vertical). Os números vão de 0 a 5.</p>
+                        <p>Exemplo: <code class="inline-code">.my-5</code> (margem no eixo Y), <code class="inline-code">.px-3</code> (padding no eixo X).</p>
+                    </div>
+                     <div class="col-lg-6">
+                        <h5 class="fw-bold">Cores e Background</h5>
+                        <p>Classes como <code class="inline-code">.bg-primary</code>, <code class="inline-code">.bg-light</code>, <code class="inline-code">.bg-dark</code> mudam a cor de fundo. <code class="inline-code">.text-white</code>, <code class="inline-code">.text-muted</code> mudam a cor do texto.</p>
+                    </div>
+                </div>
+                <div class="example-box">
+                    <div class="bg-dark text-white p-5 text-center">
+                        Este div tem as classes .bg-dark, .text-white, .p-5 e .text-center
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Exercício Sobre Mim -->
+        <section id="slide9" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 3: Seção "Sobre Mim"</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Vamos criar a primeira seção de conteúdo, aplicando utilitários e o grid.</p>
+                    <hr>
+                    <ol>
+                        <li>Substitua o comentário <code class="inline-code">&lt;!-- 2. SEÇÃO 'SOBRE MIM' --&gt;</code> por uma <code class="inline-code">&lt;section id="sobre"&gt;...&lt;/section&gt;</code>.</li>
+                        <li>Dê à seção as classes <code class="inline-code">.py-5</code> e <code class="inline-code">.bg-light</code> para criar espaçamento e cor de fundo.</li>
+                        <li>Dentro, adicione um <code class="inline-code">.container</code> e, dentro dele, um <code class="inline-code">.row</code>.</li>
+                        <li>Crie <strong>duas colunas</strong>. Na primeira (<code class="inline-code">col-12 col-md-4</code>), coloque uma foto sua. Na segunda (<code class="inline-code">col-12 col-md-8</code>), adicione um título e um parágrafo sobre você.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Componente: Cards -->
+        <section id="slide10" class="slide">
+            <div>
+                <h2>Componente: Cards</h2>
+                <p class="lead fs-4">Cards são perfeitos para exibir conteúdo de forma organizada, como em uma galeria de projetos.</p>
+                <div class="code-snippet">
+<pre><code>&lt;div class="card"&gt;
+  &lt;img src="..." class="card-img-top" alt="Imagem do Projeto"&gt;
+  &lt;div class="card-body"&gt;
+    &lt;h5 class="card-title"&gt;Nome do Projeto&lt;/h5&gt;
+    &lt;p class="card-text"&gt;Breve descrição do que este projeto faz.&lt;/p&gt;
+    &lt;!-- Este botão vai abrir um Modal! --&gt;
+    &lt;button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#meuModal"&gt;
+      Ver Detalhes
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                 <div class="example-box d-flex justify-content-center">
+                    <div class="card" style="width: 18rem;">
+                      <img src="https://placehold.co/400x200/6f42c1/white?text=Meu+Projeto" class="card-img-top" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title">Nome do Projeto</h5>
+                        <p class="card-text">Breve descrição do que este projeto faz.</p>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exemploModal">Ver Detalhes</button>
+                      </div>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: Componente Interativo: Modal -->
+        <section id="slide11" class="slide">
+            <div>
+                <h2>Componente Interativo: Modal</h2>
+                <p class="lead fs-4">O Modal é uma janela pop-up que aparece sobre o conteúdo da página. É ótimo para exibir mais detalhes sem sair da tela.</p>
+                <div class="doc-note">
+                    <p>O Modal, assim como a Navbar, precisa de duas partes: o <strong>gatilho</strong> (o botão que o abre) e a <strong>estrutura do Modal</strong> (o conteúdo que fica escondido).</p>
+                </div>
+                <div class="code-snippet">
+<pre><code>&lt;!-- 1. O Gatilho (O botão dentro do Card) --&gt;
+&lt;button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exemploModal"&gt;
+  Ver Detalhes
+&lt;/button&gt;
+
+&lt;!-- 2. A Estrutura do Modal (pode ficar em qualquer lugar, geralmente no fim do body) --&gt;
+&lt;div class="modal fade" id="exemploModal" tabindex="-1"&gt;
+  &lt;div class="modal-dialog"&gt;
+    &lt;div class="modal-content"&gt;
+      &lt;div class="modal-header"&gt;
+        &lt;h5 class="modal-title"&gt;Detalhes do Projeto&lt;/h5&gt;
+        &lt;button type="button" class="btn-close" data-bs-dismiss="modal"&gt;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-body"&gt;
+        &lt;p&gt;Aqui vão todas as informações detalhadas sobre o projeto.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="modal-footer"&gt;
+        &lt;button type="button" class="btn btn-secondary" data-bs-dismiss="modal"&gt;Fechar&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Exercício Projetos com Modal -->
+        <section id="slide12" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 4: Galeria com Modals</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Agora vamos combinar o Grid com os Cards para criar sua galeria interativa.</p>
+                    <hr>
+                    <ol>
+                        <li>Substitua o comentário <code class="inline-code">&lt;!-- 3. SEÇÃO 'PROJETOS' --&gt;</code> por uma <code class="inline-code">&lt;section id="projetos" class="py-5"&gt;</code>.</li>
+                        <li>Dentro, crie um <code class="inline-code">.container</code>, um título "Meus Projetos" e, em seguida, um <code class="inline-code">.row</code> com a classe <code class="inline-code">.g-4</code>.</li>
+                        <li>Dentro do <code class="inline-code">.row</code>, crie <strong>3 colunas</strong>. Cada coluna deve ter a responsividade: <code class="inline-code">.col-12 .col-md-6 .col-lg-4</code>.</li>
+                        <li>Dentro de cada coluna, coloque o código de um <code class="inline-code">.card</code> completo, com o botão configurado para abrir um modal.</li>
+                        <li>No final do seu <code class="inline-code">&lt;body&gt;</code>, adicione a estrutura HTML de <strong>um modal</strong>. Faça com que os botões de todos os cards abram este mesmo modal.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 13: Componente: Forms -->
+        <section id="slide13" class="slide">
+            <div>
+                <h2>Componente: Formulários (Inputs)</h2>
+                <p class="lead fs-4">Revisando a estrutura básica de formulários para a seção de contato.</p>
+                <div class="code-snippet">
+<pre><code>&lt;form&gt;
+  &lt;div class="mb-3"&gt;
+    &lt;label for="nome" class="form-label"&gt;Seu Nome&lt;/label&gt;
+    &lt;input type="text" class="form-control" id="nome"&gt;
+  &lt;/div&gt;
+  &lt;div class="mb-3"&gt;
+    &lt;label for="mensagem" class="form-label"&gt;Mensagem&lt;/label&gt;
+    &lt;textarea class="form-control" id="mensagem" rows="4"&gt;&lt;/textarea&gt;
+  &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 14: Componente: Forms (Checks e Radios) -->
+        <section id="slide14" class="slide">
+            <div>
+                <h2>Formulários: Checks e Radios</h2>
+                <p class="lead fs-4">Para opções de múltipla escolha ou única escolha, usamos a estrutura <code class="inline-code">.form-check</code>.</p>
+                <div class="code-snippet">
+<pre><code>&lt;!-- Checkbox --&gt;
+&lt;div class="form-check"&gt;
+  &lt;input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"&gt;
+  &lt;label class="form-check-label" for="flexCheckDefault"&gt;
+    Aceito os termos e condições
+  &lt;/label&gt;
+&lt;/div&gt;
+
+&lt;!-- Rádio --&gt;
+&lt;div class="form-check"&gt;
+  &lt;input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"&gt;
+  &lt;label class="form-check-label" for="flexRadioDefault1"&gt;
+    Opção 1
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                 <div class="example-box">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="" id="exampleCheck1">
+                      <label class="form-check-label" for="exampleCheck1">
+                        Aceito os termos e condições
+                      </label>
+                    </div>
+                 </div>
+            </div>
+        </section>
+        
+        <!-- Slide 15: Componente: Forms (Select) -->
+        <section id="slide15" class="slide">
+            <div>
+                <h2>Formulários: Select</h2>
+                <p class="lead fs-4">Para listas de opções (dropdowns), usamos a classe <code class="inline-code">.form-select</code>.</p>
+                <div class="code-snippet">
+<pre><code>&lt;label for="assuntoSelect" class="form-label"&gt;Assunto&lt;/label&gt;
+&lt;select class="form-select" id="assuntoSelect"&gt;
+  &lt;option selected&gt;Selecione o motivo do contato&lt;/option&gt;
+  &lt;option value="1"&gt;Orçamento&lt;/option&gt;
+  &lt;option value="2"&gt;Dúvida&lt;/option&gt;
+  &lt;option value="3"&gt;Feedback&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+                </div>
+                 <div class="example-box">
+                    <label for="exampleSelect" class="form-label">Assunto</label>
+                    <select class="form-select" id="exampleSelect">
+                      <option selected>Selecione o motivo do contato</option>
+                      <option value="1">Orçamento</option>
+                    </select>
+                 </div>
+            </div>
+        </section>
+
+        <!-- Slide 16: Exercício Contato -->
+        <section id="slide16" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo 5: Formulário Completo</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Crie uma seção de contato robusta.</p>
+                    <hr>
+                    <ol>
+                        <li>Substitua o comentário <code class="inline-code">&lt;!-- 4. SEÇÃO 'CONTATO' --&gt;</code> por uma <code class="inline-code">&lt;section id="contato" class="py-5 bg-light"&gt;</code>.</li>
+                        <li>Adicione um <code class="inline-code">.container</code> e um título "Entre em Contato".</li>
+                        <li>Crie um formulário com os campos: "Nome", "Email", um <strong>Select</strong> para "Assunto", a "Mensagem" e um <strong>Checkbox</strong> para "Aceito receber novidades".</li>
+                        <li>Finalize com um botão <code class="inline-code">.btn-primary</code> para enviar.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 17: Utilitários: Flexbox -->
+        <section id="slide17" class="slide">
+             <div>
+                <h2>Utilitários: Flexbox</h2>
+                <p class="lead fs-4">Flexbox é um modelo de layout poderoso. Bootstrap o simplifica com classes utilitárias, perfeitas para alinhar itens em um rodapé.</p>
+                 <div class="code-snippet">
+<pre><code>&lt;div class="d-flex justify-content-between align-items-center"&gt;
+  &lt;div&gt;Item à Esquerda&lt;/div&gt;
+  &lt;div&gt;Item à Direita&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <ul>
+                    <li><code class="inline-code">.d-flex</code>: Ativa o modo flex.</li>
+                    <li><code class="inline-code">.justify-content-*</code>: Alinha horizontalmente (start, end, center, between, around).</li>
+                    <li><code class="inline-code">.align-items-*</code>: Alinha verticalmente (start, end, center).</li>
+                </ul>
+            </div>
+        </section>
+        
+        <!-- Slide 18: Exercício Footer -->
+        <section id="slide18" class="slide bg-light">
+             <div>
+                <h2>Projeto - Passo Final: O Rodapé</h2>
+                <div class="mission-box">
+                    <h4 class="fw-bold">Sua Missão</h4>
+                    <p>Finalize sua página com um rodapé profissional.</p>
+                    <hr>
+                    <ol>
+                        <li>Substitua o comentário <code class="inline-code">&lt;!-- 5. RODAPÉ --&gt;</code> por um <code class="inline-code">&lt;footer class="bg-dark text-white text-center p-4"&gt;</code>.</li>
+                        <li>Dentro, adicione um <code class="inline-code">.container</code>.</li>
+                        <li>Coloque um parágrafo com seu nome e o ano atual (ex: "© 2025 Wiliam Paiva").</li>
+                        <li><strong>Desafio:</strong> Adicione ícones de redes sociais (use Bootstrap Icons) e alinhe-os à direita usando Flexbox.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Slide 19: Resumo -->
+        <section id="slide19" class="slide">
+            <div>
+                <h2>Revisão Concluída!</h2>
+                <p class="lead fs-4">O que fizemos hoje:</p>
+                <ul class="fs-4 mt-4">
+                    <li><strong>Construímos uma página completa do zero</strong>, aplicando os conceitos na prática.</li>
+                    <li><strong>Dominamos o Grid</strong>, a base de todo layout responsivo no Bootstrap.</li>
+                    <li><strong>Revisamos componentes essenciais</strong> como Navbar, Cards, Modals e Forms.</li>
+                    <li><strong>Utilizamos classes utilitárias</strong> para refinar o design com espaçamento, cores e alinhamento, sem escrever CSS.</li>
+                </ul>
+                <div class="doc-note mt-5">
+                    <h4 class="fw-bold">Parabéns!</h4>
+                    <p class="fs-5 mb-0">Você agora tem uma base sólida para construir praticamente qualquer tipo de layout com Bootstrap e a confiança para explorar a documentação e descobrir ainda mais componentes.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Modal de Exemplo -->
+    <div class="modal fade" id="exemploModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Detalhes do Projeto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p>Aqui vão todas as informações detalhadas sobre o projeto.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botões de Navegação -->
+    <div class="nav-buttons">
+        <span id="slide-counter" class="slide-counter-display"></span>
+        <button class="btn btn-light" id="prev-btn" title="Slide Anterior (←)">
+            <i class="bi bi-arrow-left"></i>
+        </button>
+        <button class="btn btn-light" id="next-btn" title="Próximo Slide (→)">
+            <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            let currentSlide = 0;
+
+            function updateNav() {
+                if (slideCounter) {
+                    slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+                }
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+
+            function goToSlide(index) {
+                if (index < 0) index = 0;
+                if (index >= slides.length) index = slides.length - 1;
+                
+                currentSlide = index;
+
+                const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'), 10) || 60;
+                const targetPosition = slides[currentSlide].offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+
+                updateNav();
+            }
+
+            prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+            nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.code === 'Space') {
+                    e.preventDefault();
+                    goToSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goToSlide(currentSlide - 1);
+                }
+            });
+            
+            updateNav();
+        });
+    </script>
+</body>
+</html>
+
+
+
+

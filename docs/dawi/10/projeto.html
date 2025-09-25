@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta de Projeto Final - Site Dinâmico Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .prose h2 {
+            font-size: 1.75em;
+            font-weight: 900;
+            margin-top: 2em;
+            margin-bottom: 1em;
+            padding-bottom: 0.3em;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .prose h3 {
+            font-size: 1.25em;
+            font-weight: 700;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .prose code {
+            font-family: 'Fira Code', monospace;
+            background-color: #f1f5f9;
+            color: #ef4444;
+            padding: 0.2em 0.4em;
+            border-radius: 0.25rem;
+            font-size: 0.9em;
+        }
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .prose ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+        .prose li {
+            margin-bottom: 0.5rem;
+        }
+        .highlight-box {
+            background-color: #fffbeb;
+            border-left: 4px solid #facc15;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0.25rem;
+        }
+         .requirement-box {
+            background-color: #f0f9ff;
+            border-left: 4px solid #38bdf8;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 leading-relaxed">
+
+    <header class="bg-slate-800 text-white p-8 text-center shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-black">Proposta de Projeto Final</h1>
+        <p class="text-xl mt-2 text-slate-300">Desenvolvimento de Site Dinâmico com Framework CSS e JavaScript</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-8 prose">
+        <h2>🎯 Objetivo</h2>
+        <p>O objetivo deste projeto é consolidar todos os conhecimentos adquiridos nas disciplinas de front-end, aplicando conceitos de <strong>HTML5</strong>, estilização com <strong>Frameworks CSS</strong> (como Bootstrap ou Tailwind), e interatividade com <strong>JavaScript</strong>, incluindo a manipulação de dados externos (<strong>JSON</strong>). O resultado final será um site completo, moderno, responsivo e funcional.</p>
+
+        <h2>🎨 Tema do Site</h2>
+        <p>O tema do site é de <strong>livre escolha</strong>. Pense em algo que você goste ou que tenha potencial para um layout interessante. A criatividade na escolha e na execução do tema será um diferencial. Algumas sugestões:</p>
+        <ul>
+            <li><strong>Catálogo Online:</strong> Uma loja (sem carrinho de compras) de produtos, como games, livros, cosméticos, roupas, etc.</li>
+            <li><strong>Portal de Adoção:</strong> Um site para exibir pets (cães, gatos) disponíveis para adoção.</li>
+            <li><strong>Site de Receitas:</strong> Um portal com categorias e detalhes de receitas culinárias.</li>
+            <li><strong>Portfólio Avançado:</strong> Uma página profissional para um artista, fotógrafo ou desenvolvedor, com galeria de projetos.</li>
+            <li><strong>Fan Page/Enciclopédia:</strong> Um site sobre sua série, filme ou universo de ficção favorito, com fichas de personagens, guias de episódios, etc.</li>
+        </ul>
+
+        <h2>👥 Formato de Trabalho</h2>
+        <p>O projeto será desenvolvido em <strong>grupos de 3 (três) ou 4 (quatro) pessoas</strong>.</p>
+        <ul>
+            <li>A formação dos grupos é de responsabilidade dos alunos.</li>
+            <li>Caso algum grupo se forme com apenas 1 ou 2 membros, estes serão unificados com outros para formar um novo grupo dentro do requisito estabelecido.</li>
+        </ul>
+
+        <h2>📋 Requisitos Obrigatórios</h2>
+        <p>A seguir, estão os requisitos mínimos que <strong>todos os projetos devem obrigatoriamente cumprir</strong>. A ausência de qualquer um destes itens impactará diretamente a avaliação.</p>
+
+        <div class="requirement-box">
+            <h3>1. Estrutura de Páginas e Arquivos</h3>
+            <ul>
+                <li>O site será construído no modelo de <strong>Página Única (Single Page Application - SPA)</strong>. Isso significa que o <code>index.html</code> servirá como a "casca" principal, e o conteúdo das outras seções será carregado dinamicamente sem recarregar a página.</li>
+                <li><strong>Páginas de Conteúdo (Fragmentos):</strong> Você criará arquivos HTML separados para cada seção, mas eles conterão apenas o "miolo" (o conteúdo específico daquela página). As seções mínimas são: <code>Home</code>, <code>Quem Somos</code>, <code>Contato</code>, <code>FAQ</code> e a <code>Página Dinâmica</code> (ex: Catálogo, Galeria, etc.).</li>
+                <li><strong>Organização:</strong> O projeto deve ter uma estrutura de pastas bem definida:
+                    <ul>
+                        <li><code>/index.html</code> (A "casca" principal que contém o layout comum)</li>
+                        <li><code>/pages/</code> (Pasta para os fragmentos de conteúdo)
+                            <ul>
+                                <li><code>home.html</code></li>
+                                <li><code>contato.html</code></li>
+                                <li>...etc</li>
+                            </ul>
+                        </li>
+                        <li><code>/css/style.css</code> (Para seus estilos customizados)</li>
+                        <li><code>/js/main.js</code> (Para seus scripts, incluindo a lógica de roteamento)</li>
+                        <li><code>/img/</code> (Para todas as imagens do projeto)</li>
+                        <li><code>/data/</code> (Para os arquivos JSON)</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="requirement-box">
+            <h3>2. Estilização com Framework CSS</h3>
+            <ul>
+                <li>Toda a estilização do site deve ser feita utilizando um <strong>Framework CSS</strong>.</li>
+                <li>A opção padrão é o <strong>Bootstrap 5</strong>.</li>
+                <li>Alunos que desejarem se desafiar podem utilizar <strong>Tailwind CSS</strong> ou outro framework de sua escolha (ex: Materialize, Bulma), desde que o resultado seja coeso e profissional.</li>
+            </ul>
+        </div>
+
+        <div class="requirement-box">
+            <h3>3. Conteúdo Dinâmico com JSON</h3>
+            <ul>
+                <li>O site deve possuir, no mínimo, <strong>duas seções distintas</strong> que carregam seus dados a partir de arquivos <code>.json</code> locais.</li>
+                <li><strong>Exemplo:</strong> Em um site de e-commerce, a página principal pode ter uma seção de "Promoções" carregada de <code>promocoes.json</code>, e a página de catálogo pode carregar os produtos de <code>produtos.json</code>.</li>
+            </ul>
+        </div>
+
+        <div class="requirement-box">
+            <h3>4. Formulário Complexo com Validação</h3>
+            <ul>
+                <li>A página de "Contato" (ou outra página designada) deve conter um formulário com, no mínimo, <strong>10 tipos diferentes de campos de entrada (inputs)</strong>.</li>
+                <li><strong>Exemplos de Campos:</strong> <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>date</code>, <code>select</code> (com opções), <code>textarea</code>, <code>checkbox</code> (múltiplos), <code>radio</code> (múltiplos), <code>file</code>, <code>range</code>, <code>color</code>, <code>url</code>, etc.</li>
+                <li><strong>Validação Completa:</strong> O formulário deve ter validação de campos combinando:
+                    <ol>
+                        <li><strong>Validação nativa do framework</strong> (ex: classes <code>is-invalid</code> do Bootstrap).</li>
+                        <li><strong>Validação customizada com JavaScript</strong> para regras mais complexas, executada no momento do envio do formulário.</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+
+        <div class="requirement-box">
+            <h3>5. Arquitetura de Página Única (SPA) com JavaScript</h3>
+            <ul>
+                <li>Seu site não terá múltiplos arquivos <code>.html</code> completos. Em vez disso, o arquivo <code>index.html</code> funcionará como um "template" mestre, contendo os elementos que nunca mudam: o <strong>Header</strong>, <strong>Navbar</strong>, um possível <strong>Sidebar</strong>, e o <strong>Footer</strong>.</li>
+                <li>Dentro do <code>index.html</code>, haverá uma área de conteúdo principal vazia (ex: <code>&lt;main id="content-container"&gt;&lt;/main&gt;</code>).</li>
+                <li>O conteúdo das diferentes seções (Home, Contato, etc.) será criado em arquivos HTML separados (ex: <code>/pages/home.html</code>), contendo <strong>apenas o HTML do miolo</strong>, sem as tags <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code> ou <code>&lt;body&gt;</code>.</li>
+                <li>Você deverá criar um script em JavaScript que:
+                    <ol>
+                        <li>Adiciona "escutadores de evento" (event listeners) aos links do seu Navbar.</li>
+                        <li>Quando um link for clicado, o script deve impedir o comportamento padrão de recarregar a página (usando <code>event.preventDefault()</code>).</li>
+                        <li>Em seguida, o script usará a função <code>fetch()</code> para buscar o conteúdo do arquivo HTML correspondente ao link clicado (ex: buscar <code>/pages/contato.html</code>).</li>
+                        <li>Finalmente, o conteúdo retornado pelo <code>fetch()</code> será inserido na área de conteúdo principal (<code>#content-container</code>) usando <code>.innerHTML</code>.</li>
+                    </ol>
+                </li>
+                <li>Esta técnica simula o comportamento de frameworks modernos como React e Vue, criando uma experiência de navegação fluida e rápida para o usuário.</li>
+            </ul>
+        </div>
+
+        <h2>🛠️ Ferramentas e Recursos</h2>
+        <p>Vocês estão livres para consultar qualquer tipo de material para a realização do projeto. A capacidade de pesquisar e aprender de forma autônoma é uma das habilidades mais importantes para um desenvolvedor.</p>
+        <ul>
+            <li><strong>Documentação Oficial:</strong> A documentação do Bootstrap, Tailwind, MDN (para JavaScript) são suas melhores amigas.</li>
+            <li><strong>Tutoriais e Aulas:</strong> Podem usar o material de aula, vídeos no YouTube, artigos, etc.</li>
+            <li><strong>Inteligência Artificial:</strong> O uso de IAs (como esta) para tirar dúvidas, gerar snippets de código ou explicar conceitos é permitido e encorajado (vibe coding!).</li>
+        </ul>
+        <div class="highlight-box">
+            <h3>⚠️ Atenção!</h3>
+            <p>Apesar da liberdade de consulta, a avaliação final será individual e presencial. No dia da entrega, farei perguntas sobre o código a cada membro do grupo. É fundamental que vocês <strong>entendam o que o código faz</strong> e saibam explicar a lógica por trás de cada funcionalidade. Código copiado sem entendimento resultará em penalização.</p>
+        </div>
+
+        <h2>📦 Entrega</h2>
+        <ul>
+            <li><strong>Formato Preferencial:</strong> A entrega deve ser feita através de um link para um <strong>repositório no GitHub</strong>. Isso facilita a correção e já é uma boa prática de mercado.</li>
+            <li><strong>Formato Alternativo:</strong> Caso não seja possível usar o GitHub, o projeto completo pode ser entregue como um arquivo <code>.zip</code>.</li>
+            <li><strong>Data Limite:</strong> <code>[INSERIR DATA DA ENTREGA AQUI]</code></li>
+        </ul>
+
+        <p class="text-center mt-12 text-lg font-bold">Bom trabalho e divirtam-se codando!</p>
+    </main>
+
+</body>
+</html>
+
+

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        /* Ajuste para o conteúdo não ficar sob a navbar fixa */
+        body { 
+            padding-top: 56px; 
+        }
+        .sidebar {
+            height: calc(100vh - 56px);
+            position: fixed;
+            top: 56px;
+            left: 0;
+            bottom: 0;
+            width: 280px; /* Largura da sidebar */
+            z-index: 1000;
+            padding: 20px;
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+        }
+        .main-content {
+            margin-left: 280px; /* Mesma largura da sidebar */
+            padding: 20px;
+        }
+
+        /* Estilos para responsividade da sidebar */
+        @media (max-width: 992px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Cabeçalho Principal (Navbar) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Projetos</a>
+            <div class="d-flex ms-auto">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-bell fs-5"></i></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://placehold.co/32x32/6f42c1/white?text=W" class="rounded-circle me-2" alt="User">
+                            Will Paiva
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Configurações</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. Corpo da Página (Grid e Sidebar) -->
+    <div class="d-flex">
+        <!-- Coluna 1 (Sidebar) -->
+        <aside class="sidebar d-none d-lg-block">
+            <nav class="nav nav-pills flex-column">
+                <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-house-door me-2"></i>Dashboard</a>
+                <a class="nav-link" href="#"><i class="bi bi-folder me-2"></i>Projetos</a>
+                <a class="nav-link" href="#"><i class="bi bi-people me-2"></i>Equipes</a>
+                <a class="nav-link" href="#"><i class="bi bi-bar-chart me-2"></i>Relatórios</a>
+            </nav>
+        </aside>
+
+        <!-- Coluna 2 (Conteúdo Principal) -->
+        <main class="main-content flex-grow-1">
+            <!-- 3. Conteúdo: Título e Ações -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Projetos</li>
+                </ol>
+            </nav>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 fw-bold">Meus Projetos</h1>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+                    <i class="bi bi-plus-circle me-1"></i> Adicionar Novo Projeto
+                </button>
+            </div>
+
+            <!-- 4. Conteúdo: Alerta e Cards de Status -->
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Atenção!</strong> Você tem 3 tarefas atrasadas.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 col-xl-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Projetos Ativos</h5>
+                            <p class="card-text display-4 fw-bold">8</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Tarefas Concluídas</h5>
+                            <p class="card-text display-4 fw-bold">124</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Membros da Equipe</h5>
+                            <p class="card-text display-4 fw-bold">12</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Progresso Geral</h5>
+                            <div class="progress mt-3" style="height: 25px;">
+                                <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">75%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Conteúdo: Tabela de Projetos -->
+            <div class="card">
+                <div class="card-header fw-bold">Lista de Projetos</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nome do Projeto</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Responsável</th>
+                                    <th scope="col">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Desenvolvimento do App Mobile</td>
+                                    <td><span class="badge text-bg-primary">Em Andamento</span></td>
+                                    <td>Ana Silva</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalhes"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="popover" data-bs-title="Confirmar exclusão" data-bs-content="Tem certeza que deseja excluir este projeto?"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Migração de Servidores</td>
+                                    <td><span class="badge text-bg-success">Concluído</span></td>
+                                    <td>Carlos Souza</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalhes"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="popover" data-bs-title="Confirmar exclusão" data-bs-content="Tem certeza que deseja excluir este projeto?"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Novo Website Institucional</td>
+                                    <td><span class="badge text-bg-danger">Atrasado</span></td>
+                                    <td>Juliana Pereira</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalhes"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="popover" data-bs-title="Confirmar exclusão" data-bs-content="Tem certeza que deseja excluir este projeto?"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Conteúdo: FAQ (Accordion) -->
+            <h3 class="mt-5 mb-3 fw-bold">Dúvidas Frequentes</h3>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Como adicionar um novo membro à equipe?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Vá para a seção "Equipes", selecione a equipe desejada e clique no botão "Adicionar Membro".
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Onde vejo os relatórios de progresso?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                           Os relatórios detalhados estão disponíveis na seção "Relatórios" no menu lateral.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Rodapé -->
+            <footer class="text-center text-muted mt-5 py-3">
+                <p>&copy; 2025 Will. Todos os direitos reservados.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- 7. Modal: Adicionar Novo Projeto -->
+    <div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProjectModalLabel">Adicionar Novo Projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="projectName" class="form-label">Nome do Projeto</label>
+                            <input type="text" class="form-control" id="projectName" required>
+                            <div class="invalid-feedback">Por favor, insira o nome do projeto.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectDescription" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="projectDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectOwner" class="form-label">Responsável</label>
+                            <select class="form-select" id="projectOwner" required>
+                                <option selected disabled value="">Selecione...</option>
+                                <option>Ana Silva</option>
+                                <option>Carlos Souza</option>
+                                <option>Juliana Pereira</option>
+                            </select>
+                            <div class="invalid-feedback">Por favor, selecione um responsável.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Prioridade</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" id="priorityHigh" checked>
+                                <label class="form-check-label" for="priorityHigh">Alta</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" id="priorityMedium">
+                                <label class="form-check-label" for="priorityMedium">Média</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="priority" id="priorityLow">
+                                <label class="form-check-label" for="priorityLow">Baixa</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar Projeto</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Inicializar Tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        // Inicializar Popovers
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+
+        // Script para validação de formulário
+        (() => {
+          'use strict'
+          const forms = document.querySelectorAll('.needs-validation')
+          Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+              form.classList.add('was-validated')
+            }, false)
+          })
+        })()
+    </script>
+
+</body>
+</html>
+

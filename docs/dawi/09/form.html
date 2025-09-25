@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio: Validação de Formulário com JavaScript</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 700px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h3 class="mb-0">Formulário de Cadastro</h3>
+            </div>
+            <div class="card-body">
+                <div class="mission-box mb-4">
+                    <h4 class="fw-bold">🚀 Sua Missão</h4>
+                    <p>Seu objetivo é usar JavaScript para validar este formulário antes do envio. As regras de validação estão descritas nos componentes. Se houver algum erro, uma mensagem específica deve ser exibida no alerta abaixo. Se tudo estiver correto, exiba uma mensagem de sucesso!</p>
+		    <code>
+        // Seleciona o formulário
+        const form = document.getElementById('cadastroForm');
+
+        // Adiciona um "ouvinte de evento" para o envio do formulário
+        form.addEventListener('submit', function(evento) {
+		    </code>
+                </div>
+
+                <!-- Alerta para exibir mensagens de erro ou sucesso -->
+                <div id="mensagem" class="alert d-none" role="alert"></div>
+
+                <!-- Formulário -->
+                <form id="cadastroForm">
+                    <!-- Campo Nome Completo -->
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome Completo</label>
+                        <input type="text" class="form-control" id="nome" placeholder="Mínimo de 10 caracteres">
+                    </div>
+
+                    <!-- Campo CPF -->
+                    <div class="mb-3">
+                        <label for="cpf" class="form-label">CPF</label>
+                        <input type="number" class="form-control" id="cpf" placeholder="Exatamente 11 números">
+                    </div>
+
+                    <!-- Campo Estado -->
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select class="form-select" id="estado">
+                            <option value="">Selecione seu estado...</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="BA">Bahia</option>
+                        </select>
+                    </div>
+
+                    <!-- Campo Interesses (Checkboxes) -->
+                    <div class="mb-3">
+                        <label class="form-label">Áreas de Interesse (Selecione ao menos 2)</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="frontend" name="interesses">
+                            <label class="form-check-label" for="frontend">Frontend</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="backend" name="interesses">
+                            <label class="form-check-label" for="backend">Backend</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="dados" name="interesses">
+                            <label class="form-check-label" for="dados">Banco de Dados</label>
+                        </div>
+                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="devops" name="interesses">
+                            <label class="form-check-label" for="devops">DevOps</label>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Envio -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Seleciona o formulário
+        const form = document.getElementById('cadastroForm');
+
+        // Adiciona um "ouvinte de evento" para o envio do formulário
+        form.addEventListener('submit', function(evento) {
+            
+            // 1. PREVENIR O COMPORTAMENTO PADRÃO
+            // A linha abaixo é crucial! Ela impede que a página recarregue ao enviar o formulário,
+            // permitindo que nosso script de validação seja executado.
+            evento.preventDefault();
+
+            // 2. SELECIONAR OS ELEMENTOS
+            // Selecione o campo de nome, cpf, estado, os checkboxes de interesse e o div de mensagem.
+            const inputNome = document.getElementById('nome');
+            const inputCpf = document.getElementById('cpf');
+            const selectEstado = document.getElementById('estado');
+            const checkInteresses = document.querySelectorAll('input[name="interesses"]:checked');
+            const divMensagem = document.getElementById('mensagem');
+            
+            // 3. LÓGICA DE VALIDAÇÃO
+            let erros = []; // Vamos guardar as mensagens de erro em um array.
+
+            // REGRA 1: Nome deve ter mais de 10 caracteres.
+            // A propriedade .value pega o texto digitado no input.
+            // A propriedade .length pega o número de caracteres de uma string.
+            if (inputNome.value.length <= 10) {
+                erros.push("O nome completo deve ter mais de 10 caracteres.");
+            }
+
+            // REGRA 2: CPF deve ter exatamente 11 caracteres.
+            if (inputCpf.value.length !== 11) {
+                erros.push("O CPF deve ter exatamente 11 números.");
+            }
+
+            // REGRA 3: Um estado deve ser selecionado.
+            // Se o valor do select for "", significa que a opção "Selecione..." está marcada.
+            if (selectEstado.value === "") {
+                erros.push("Por favor, selecione um estado.");
+            }
+
+            // REGRA 4: Pelo menos 2 interesses devem ser selecionados.
+            // O `checkInteresses` é uma lista de checkboxes MARCADOS. 
+            // Podemos verificar seu tamanho com .length.
+            if (checkInteresses.length < 2) {
+                erros.push("Selecione pelo menos duas áreas de interesse.");
+            }
+
+
+            // 4. EXIBIR O RESULTADO
+            // Primeiro, removemos a classe 'd-none' para que o alerta fique visível.
+            divMensagem.classList.remove('d-none');
+
+            // Verificamos se nosso array de erros tem algum item.
+            if (erros.length > 0) {
+                // Se houver erros:
+                // - Adicionamos a classe de alerta de perigo (vermelho).
+                // - Removemos a classe de alerta de sucesso (verde), caso ela exista.
+                // - Juntamos todas as mensagens de erro em uma única string, separadas por quebras de linha.
+                divMensagem.className = 'alert alert-danger';
+                divMensagem.innerHTML = "<strong>Ops! Encontramos alguns erros:</strong><br>" + erros.join('<br>');
+
+            } else {
+                // Se não houver erros:
+                // - Adicionamos a classe de alerta de sucesso (verde).
+                // - Removemos a classe de alerta de perigo (vermelho).
+                // - Exibimos uma mensagem de sucesso.
+                // - Opcional: podemos limpar o formulário com form.reset().
+                divMensagem.className = 'alert alert-success';
+                divMensagem.innerHTML = "Cadastro realizado com sucesso!";
+                form.reset();
+            }
+        });
+    </script>
+</body>
+</html>
+
