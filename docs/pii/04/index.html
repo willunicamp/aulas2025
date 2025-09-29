@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Interativa - Análise de Custos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .slide { 
+                page-break-inside: avoid; 
+                border-bottom: none !important;
+                min-height: auto !important;
+            }
+        }
+        
+        :root {
+            /* Nova Paleta de Cores - Tons de Café */
+            --bg: #f5f5f4; /* stone-100 */
+            --text: #292524; /* stone-800 */
+            --primary: #b45309; /* amber-700 */
+            --primary-dark: #78350f; /* amber-900 */
+            --accent: #ca8a04; /* yellow-600 */
+            --gray-1: #f1f5f9;
+            --gray-2: #e2e8f0;
+            --gray-3: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem 1.5rem;
+            border-bottom: 1px solid var(--gray-2);
+        }
+        .slide:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+        }
+        
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-button {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 1.25rem;
+            line-height: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .nav-button:hover:not(:disabled) {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: var(--gray-3);
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body class="bg-stone-100">
+
+    <main id="slide-container">
+
+        <!-- Parte 1: Título -->
+        <section id="slide-1" class="slide">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-extrabold section-title">Análise de Custos</h1>
+                <p class="text-xl md:text-2xl mt-4 text-stone-600 max-w-4xl">Do Orçamento à Precificação do seu Software</p>
+            </div>
+        </section>
+        
+        <!-- Divisor de Tópico 1 -->
+        <section id="slide-2" class="slide bg-amber-900 text-white">
+            <div class="text-center">
+                <p class="text-lg font-semibold text-amber-300">Parte 1</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Quanto vou gastar no meu projeto?</h1>
+                <p class="text-xl mt-4 max-w-2xl">Entendendo os fundamentos da gestão de custos e recursos.</p>
+            </div>
+        </section>
+
+        <section id="slide-3" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">O que é um Custo?</h2>
+            <div class="text-center text-lg text-stone-700 leading-relaxed max-w-3xl space-y-4">
+                <p>É todo <strong class="highlight">gasto monetário</strong> necessário para produzir ou adquirir algo.</p>
+                <p>No nosso contexto, é o valor de todos os recursos consumidos para <strong class="highlight">desenvolver e entregar o software</strong>.</p>
+                <p class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg"><strong>Custo vs. Investimento:</strong> O custo é o que você gasta. O investimento é o que você gasta esperando um retorno futuro.</p>
+            </div>
+        </section>
+
+        <section id="slide-4" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Nosso Projeto Exemplo</h2>
+            <div class="flex flex-col md:flex-row items-center gap-8 max-w-4xl">
+                <img src="logo.png" class="rounded-lg shadow-lg w-48 h-48 flex-shrink-0" alt="Logo do GesCafé">
+                <div class="text-center md:text-left text-lg text-stone-700 leading-relaxed space-y-4">
+                     <p class="text-3xl font-bold">GesCafé</p>
+                     <p>Um sistema de gestão para cafeterias, focado em controlar o estoque de grãos, registrar vendas e gerenciar o cardápio de forma eficiente.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="slide-5" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Tipos de Custos (Parte 1)</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-amber-800 flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Custos Fixos
+                    </h3>
+                    <p class="mb-4">Não mudam, independentemente da produção.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> Salários da equipe, assinatura do Figma, aluguel do escritório.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-amber-800 flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                        Custos Variáveis
+                    </h3>
+                    <p class="mb-4">Mudam conforme o uso ou a produção.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> Custo do servidor na nuvem (varia com o uso), taxas de transação da App Store.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-6" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Tipos de Custos (Parte 2)</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-amber-800 flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        Custos Diretos
+                    </h3>
+                    <p class="mb-4">Facilmente associados ao projeto.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> Salário do desenvolvedor backend que trabalha 100% no projeto.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-amber-800 flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12s-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg>
+                        Custos Indiretos
+                    </h3>
+                    <p class="mb-4">Custos gerais, difíceis de alocar a um único projeto.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> Parte da conta de luz do escritório, salário do time de RH.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="slide-7" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Técnicas de Estimação na Prática</h2>
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-amber-800 mb-2">Estimativa Análoga</h3>
+                    <p class="mb-4">Usa dados de projetos <strong class="highlight">similares</strong> anteriores. É rápida, mas menos precisa.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> "Um sistema de estoque para uma padaria custou R$ 15.000. Este é parecido, então deve custar algo em torno disso."</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-amber-800 mb-2">Estimativa Paramétrica</h3>
+                    <p class="mb-4">Usa uma <strong class="highlight">relação estatística</strong> entre variáveis. Ex: Custo por funcionalidade.</p>
+                     <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> "Nosso custo médio é R$ 2.000 por funcionalidade. O projeto tem 5, logo, o custo será de R$ 10.000."</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-amber-800 mb-2">Estimativa Bottom-Up</h3>
+                    <p class="mb-4">Estima cada <strong class="highlight">tarefa individualmente</strong> (usando a WBS!) e soma tudo. É a mais precisa.</p>
+                     <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> "A tarefa 'CRUD de Produtos' levará 40h. O 'Controle de Estoque' levará 60h. Somando tudo, chegamos ao custo total."</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-8" class="slide">
+             <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Recursos do Projeto</h2>
+              <p class="text-lg text-center text-stone-700 leading-relaxed max-w-3xl mb-8">
+                Recursos são todos os meios necessários para executar o projeto. Não é apenas dinheiro!
+             </p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full text-left">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-2">Humanos</h3>
+                    <p class="mb-4">A equipe responsável pelo trabalho.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> 1 Dev Backend, 1 Dev Frontend, 1 Gerente de Projeto (meio período).</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-2">Materiais</h3>
+                     <p class="mb-4">Equipamentos, softwares e ferramentas.</p>
+                     <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> Notebooks, licença do Figma, servidor de hospedagem na nuvem.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-2">Financeiros</h3>
+                    <p class="mb-4">O orçamento disponível para pagar tudo.</p>
+                    <p class="text-sm border-t pt-4"><strong>Exemplo "GesCafé":</strong> Orçamento de R$ 20.000 + Reserva de contingência de R$ 3.000.</p>
+                </div>
+             </div>
+        </section>
+
+        <section id="slide-9" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">O Problema da Superalocação</h2>
+             <p class="text-lg text-center text-stone-700 leading-relaxed max-w-3xl mb-8">
+                Acontece quando um recurso (geralmente uma pessoa) é designado para mais trabalho do que é capaz de realizar no tempo disponível. Isso gera atrasos, queda de qualidade e burnout. Para resolver, usamos:
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">Nivelamento de Recursos</h3>
+                    <p>Pode <strong class="highlight">atrasar a data final do projeto</strong>. Adia tarefas para resolver o conflito. Ex: Se um dev tem duas tarefas ao mesmo tempo, uma delas é adiada para começar após a outra.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2 text-amber-800">Suavização de Recursos</h3>
+                    <p>Tenta resolver os conflitos <strong class="highlight">sem alterar a data final</strong>, usando a "folga" das tarefas. É menos disruptivo, mas nem sempre é possível.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divisor de Tópico 2 -->
+        <section id="slide-10" class="slide bg-amber-900 text-white">
+            <div class="text-center">
+                <p class="text-lg font-semibold text-amber-300">Parte 2</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Quanto vou cobrar pelo meu projeto?</h1>
+                <p class="text-xl mt-4 max-w-2xl">Explorando os modelos e estratégias de precificação de software.</p>
+            </div>
+        </section>
+
+         <section id="slide-11" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Custo, Preço e Valor na Prática</h2>
+            <p class="text-lg text-center text-stone-700 leading-relaxed max-w-3xl mb-8">
+                Vamos aplicar os conceitos ao nosso projeto "GesCafé":
+            </p>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl w-full text-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg"> <h3 class="font-bold text-xl mb-2">Custo</h3> <p>O projeto custou R$ 10.000 (salários, servidor, etc).</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg"> <h3 class="font-bold text-xl mb-2">Preço</h3> <p>O cliente pagou R$ 15.000 pelo software.</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg"> <h3 class="font-bold text-xl mb-2">Valor</h3> <p>O software ajuda o cliente a economizar R$ 5.000 por mês em desperdício de estoque. O valor percebido é imenso!</p></div>
+             </div>
+        </section>
+        
+        <section id="slide-12" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Modelos de Precificação</h2>
+            <p class="text-lg text-center text-stone-700 leading-relaxed max-w-3xl">
+                Não existe uma resposta única. A escolha do modelo depende do tipo de projeto, do cliente e do seu modelo de negócio.
+            </p>
+        </section>
+
+        <section id="slide-13" class="slide">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title text-center">Modelo 1: Preço Fixo (Fixed Price)</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Prós ✅</h3>
+                    <p>Previsibilidade para o cliente; Escopo bem definido.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Contras ❌</h3>
+                    <p>Risco alto para o desenvolvedor; Pouca flexibilidade.</p>
+                </div>
+            </div>
+             <p class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg max-w-4xl w-full"><strong>Exemplo "GesCafé":</strong> "O desenvolvimento completo do sistema custará R$ 15.000, entregue em 3 meses."</p>
+        </section>
+
+        <section id="slide-14" class="slide">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title text-center">Modelo 2: Tempo e Materiais (T&M)</h2>
+             <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Prós ✅</h3>
+                    <p>Flexibilidade total para o cliente; Risco baixo para o desenvolvedor.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Contras ❌</h3>
+                    <p>Imprevisibilidade de custo para o cliente; Requer confiança.</p>
+                </div>
+            </div>
+            <p class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg max-w-4xl w-full"><strong>Exemplo "GesCafé":</strong> "Nossa equipe trabalhará por R$ 80/hora. Faturaremos mensalmente pelas horas trabalhadas."</p>
+        </section>
+        
+        <section id="slide-15" class="slide">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title text-center">Modelo 3: Baseado em Valor</h2>
+             <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Prós ✅</h3>
+                    <p>Foco no ROI do cliente; Potencial de lucro muito maior.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Contras ❌</h3>
+                    <p>Difícil de mensurar o "valor"; Exige conhecimento do negócio.</p>
+                </div>
+            </div>
+            <p class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg max-w-4xl w-full"><strong>Exemplo "GesCafé":</strong> "O software economizará R$ 5.000/mês para a cafeteria. O preço será 3x esse valor mensal, ou seja, R$ 15.000."</p>
+            <div class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg max-w-4xl w-full"><strong>O que é ROI?</strong> É o "Retorno sobre o Investimento". Se o cliente gasta R$ 10k e o software economiza R$ 50k para ele, o ROI foi altíssimo.</div>
+        </section>
+
+        <section id="slide-16" class="slide">
+             <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title text-center">Modelo 4: Assinatura (SaaS)</h2>
+             <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Prós ✅</h3>
+                    <p>Receita recorrente e previsível (MRR/ARR); Escalabilidade.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-2">Contras ❌</h3>
+                    <p>Custo inicial alto; Exige suporte e evolução contínua.</p>
+                </div>
+            </div>
+            <p class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg max-w-4xl w-full"><strong>Exemplo "GesCafé":</strong> "O acesso ao sistema custará R$ 199/mês, com suporte e atualizações inclusas."</p>
+             <div class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg max-w-4xl w-full"><strong>O que é SaaS?</strong> "Software as a Service" (Software como Serviço). Em vez de vender o software, você "aluga" o acesso a ele. Ex: Netflix, Spotify.</div>
+        </section>
+        
+        <section id="slide-17" class="slide">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title text-center">Calculadora de Preço Interativa</h2>
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl">
+                <div class="text-center mb-6 p-3 bg-amber-50 border border-amber-200 rounded-lg">Essa calculadora usa o método <strong>Cost-Plus (Custo-Mais)</strong>, onde adicionamos uma margem de lucro sobre o custo total. É a base para um orçamento de Preço Fixo.</div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="horas" class="block font-bold mb-1">Horas Estimadas</label>
+                        <input type="number" id="horas" value="200" class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                     <div>
+                        <label for="custo_hora" class="block font-bold mb-1">Custo/Hora (R$)</label>
+                        <input type="number" id="custo_hora" value="50" class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                     <div>
+                        <label for="lucro" class="block font-bold mb-1">Margem de Lucro (%)</label>
+                        <input type="number" id="lucro" value="40" class="w-full p-2 border border-gray-300 rounded">
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <button id="calcular_btn" class="bg-amber-700 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-amber-800 transition">Calcular Preço</button>
+                </div>
+                <div id="resultado" class="mt-8 p-6 bg-amber-50 border-l-4 border-amber-500 rounded-r-lg text-center hidden">
+                    <p class="text-lg">Custo Total do Projeto: <strong id="custo_total" class="text-amber-800"></strong></p>
+                    <p class="text-2xl font-bold mt-2">Preço Final para o Cliente: <strong id="preco_final" class="text-amber-800"></strong></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-18" class="slide">
+             <h2 class="text-3xl md:text-4xl font-bold mb-8 section-title text-center">Juntando Tudo: A Proposta</h2>
+             <p class="text-lg text-center text-stone-700 leading-relaxed max-w-3xl">
+                Uma boa proposta comercial deve ser transparente. Apresente o escopo, o cronograma e, finalmente, o preço. Justifique o valor mostrando os benefícios que o software trará, conectando seu preço ao <strong class="highlight">valor</strong> que você gera.
+            </p>
+        </section>
+
+        <!-- Parte 4: Conclusão -->
+        <section id="slide-19" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Perguntas?</h2>
+        </section>
+
+    </main>
+    
+    <div id="navigation-controls" class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 z-50 no-print">
+        <button id="prev-btn" class="nav-button">◀</button>
+        <span id="slide-indicator" class="text-lg font-semibold text-gray-600 w-16 text-center"></span>
+        <button id="next-btn" class="nav-button">▶</button>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideIndicator = document.getElementById('slide-indicator');
+
+        let currentSlide = 0;
+        
+        const goToSlide = (slideIndex) => {
+            if (slideIndex < 0 || slideIndex >= slides.length) return;
+            
+            currentSlide = slideIndex;
+            const targetSlide = slides[slideIndex];
+            targetSlide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            updateControls();
+        };
+
+        const updateControls = () => {
+            slideIndicator.textContent = `${currentSlide + 1} / ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        };
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                goToSlide(currentSlide - 1);
+            }
+        });
+        
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = Array.from(slides).indexOf(entry.target);
+                    currentSlide = index;
+                    updateControls();
+                }
+            });
+        }, { threshold: 0.7 });
+
+        slides.forEach(slide => observer.observe(slide));
+        updateControls();
+        
+        // Calculadora Interativa
+        const calcularBtn = document.getElementById('calcular_btn');
+        const resultadoDiv = document.getElementById('resultado');
+        const custoTotalSpan = document.getElementById('custo_total');
+        const precoFinalSpan = document.getElementById('preco_final');
+
+        function calcularPreco() {
+            const horas = parseFloat(document.getElementById('horas').value) || 0;
+            const custoHora = parseFloat(document.getElementById('custo_hora').value) || 0;
+            const margemLucro = parseFloat(document.getElementById('lucro').value) || 0;
+            
+            const custoTotal = horas * custoHora;
+            let precoFinal = custoTotal;
+            if (margemLucro < 100) {
+                 precoFinal = custoTotal / (1 - (margemLucro / 100));
+            }
+            
+            const formatter = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+            
+            custoTotalSpan.textContent = formatter.format(custoTotal);
+            precoFinalSpan.textContent = formatter.format(precoFinal);
+            
+            resultadoDiv.classList.remove('hidden');
+        }
+        
+        const inputs = [document.getElementById('horas'), document.getElementById('custo_hora'), document.getElementById('lucro')];
+        
+        inputs.forEach(input => input.addEventListener('input', calcularPreco));
+        calcularBtn.addEventListener('click', calcularPreco);
+        
+        // Calcular na inicialização
+        calcularPreco();
+    });
+    </script>
+
+</body>
+</html>
+

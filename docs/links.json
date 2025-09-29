@@ -14,7 +14,14 @@
                         { "text": "Aula 06 - Bootstrap - Componentes",   "link": "./dawi/06/" },
                         { "text": "Aula 06 - Exercício",   "link": "./dawi/06/ex.html" },
                         { "text": "Aula 07 - Bootstrap - Componentes interativos",   "link": "./dawi/07/" },
-                        { "text": "Aula 07 - Exercício",   "link": "./dawi/07/ex.html" }
+                        { "text": "Aula 07 - Exercício",   "link": "./dawi/07/ex.html" },
+                        { "text": "Aula 08 - Bootstrap - Revisão",   "link": "./dawi/07/" },
+                        { "text": "Aula 08 - Exercício",   "link": "./dawi/07/ex.html" },
+                        { "text": "Aula 09 - Javascript - Introdução",   "link": "./dawi/07/" },
+                        { "text": "Aula 09 - Exercício",   "link": "./dawi/07/ex.html" },
+                        { "text": "Aula 10 - Javascript - JSON",   "link": "./dawi/07/" },
+                        { "text": "Projeto Final",   "link": "./dawi/07/ex.html" }
+                        
                     ]
                 },
                 {
@@ -46,6 +53,9 @@
                     "items": [
                         { "text": "Aula 02 - Exemplo WBS",  "link": "./pii/02/" },
                         { "text": "Aula 03 - Gantt",    "link": "./pii/03/" }
+                        { "text": "Aula 04 - Análise de Custos",    "link": "./pii/04/" }
+                        { "text": "Aula 05 - Análise de Riscos",    "link": "./pii/05/" }
+                        { "text": "Aula 06 - Kanban",    "link": "./pii/06/" }
                     ]
                 },
                 {

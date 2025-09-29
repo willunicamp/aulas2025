@@ -3,35 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aula Interativa - Análise de Riscos</title>
+    <title>Aula Interativa - Kanban</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         @media print {
-            .no-print { display: none !important; }
-            .slide { 
-                page-break-inside: avoid; 
-                border-bottom: none !important;
-                min-height: auto !important;
+            html, body {
+                overflow: auto !important;
+                height: auto !important;
+            }
+            .slide {
+                height: auto !important;
+                page-break-inside: avoid;
+                padding: 2rem 1rem !important;
+                display: block !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .interactive-board, .tool-card {
+                border: 1px solid #ccc;
             }
         }
         
         :root {
-            /* Nova Paleta de Cores - Deep Sea */
-            --bg: #f0f9ff; /* sky-50 */
-            --text: #1e293b; /* slate-800 */
-            --primary: #3b82f6; /* blue-500 */
-            --primary-dark: #2563eb; /* blue-600 */
-            --gradient-from: #06b6d4; /* cyan-500 */
-            --gradient-to: #3b82f6; /* blue-500 */
-            --gray-1: #f1f5f9;
-            --gray-2: #e2e8f0;
-            --gray-3: #cbd5e1;
+            /* Nova Paleta de Cores */
+            --bg: #f8fafc; /* gray-50 */
+            --text: #1f2937; /* gray-800 */
+            --primary-dark: #134e4a; /* teal-900 */
+            --primary-accent: #166534; /* green-800 */
+            --highlight-light: #67e8f9; /* cyan-300 */
+            --red: #a60000;
+            --gray-1: #f1f5f9; /* slate-100 */
+            --gray-2: #e2e8f0; /* slate-200 */
+            --gray-3: #cbd5e1; /* slate-300 */
         }
 
         body {
+            margin: 0;
+            padding: 0;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: var(--text);
@@ -39,28 +51,28 @@
 
         .slide {
             width: 100%;
-            min-height: 100vh;
+            min-height: 100vh; /* Garante que o slide ocupe pelo menos a tela inteira, mas pode crescer */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 5rem 1.5rem;
-            border-bottom: 1px solid var(--gray-2);
+            padding: 5rem 1rem; /* Mais padding para espaçamento */
+            border-bottom: 1px solid var(--gray-2); /* Separador sutil */
         }
         .slide:last-child {
             border-bottom: none;
         }
 
+        h1, h2, h3 {
+            letter-spacing: -0.02em;
+        }
+
         .section-title {
-            background-image: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
+            color: var(--primary-dark);
         }
         
         .highlight {
-            color: var(--primary);
+            color: var(--primary-accent);
             font-weight: 600;
         }
         
@@ -76,7 +88,7 @@
             transition: background-color 0.3s, transform 0.2s;
         }
         .nav-button:hover:not(:disabled) {
-            background-color: var(--primary);
+            background-color: var(--primary-accent);
             transform: scale(1.05);
         }
         .nav-button:disabled {
@@ -84,245 +96,243 @@
             cursor: not-allowed;
             transform: none;
         }
-        
-        /* Estilos SWOT */
-        .swot-quadrant {
-            transition: all 0.3s ease-in-out;
+
+        .kanban-column {
+            background-color: var(--gray-1);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: background-color 0.3s;
+            display: flex;
+            flex-direction: column;
         }
+        .kanban-column.drag-over {
+            background-color: var(--gray-2);
+        }
+        .kanban-column-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--primary-accent);
+            flex-shrink: 0;
+        }
+        .kanban-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            cursor: grab;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+        .kanban-card.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+        }
+        
+        .wip-limit-exceeded {
+            animation: shake 0.5s;
+            border: 2px solid var(--red);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
     </style>
 </head>
-<body class="bg-sky-50">
+<body class="bg-gray-50">
 
     <main id="slide-container">
-
+        <!-- Slide 1: Título e O que é? -->
         <section id="slide-1" class="slide">
             <div class="text-center">
-                <h1 class="text-5xl md:text-7xl font-extrabold section-title">Análise de Riscos</h1>
-                <p class="text-xl md:text-2xl mt-4 text-slate-600 max-w-4xl">Identificando e se preparando para o inesperado</p>
+                <h1 class="text-5xl md:text-7xl font-extrabold section-title">Kanban</h1>
+                <p class="text-xl md:text-2xl mt-4 text-gray-600 max-w-4xl">Visualizando o Fluxo de Trabalho e Otimizando a Entrega</p>
+            </div>
+            <div class="mt-8 text-lg text-gray-700 leading-relaxed space-y-4 max-w-4xl text-center">
+                <p>
+                    Kanban (看板), que em japonês significa "cartão visual", é um <strong class="highlight">método de gestão visual</strong> para controlar e otimizar fluxos de trabalho, criado na Toyota nos anos 40.
+                </p>
+                <p>
+                    Seu objetivo é <strong class="highlight">identificar gargalos, equilibrar a carga de trabalho e promover um fluxo de entrega contínuo e previsível</strong> através de um sistema "puxado".
+                </p>
             </div>
         </section>
         
+        <!-- Slide 2: Princípios -->
         <section id="slide-2" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Por que se preocupar com riscos?</h2>
-            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl">
-                Gerenciar um projeto sem analisar os riscos é como planejar uma viagem sem checar a previsão do tempo. Você pode ter sorte e ter um dia ensolarado, ou pode ser pego por uma tempestade sem um guarda-chuva.
-            </p>
-            <p class="mt-6 text-lg text-center text-slate-700 leading-relaxed max-w-3xl">
-                A análise de riscos nos dá o <strong class="highlight">"guarda-chuva"</strong>: ela nos ajuda a antecipar problemas, preparar respostas e aumentar drasticamente as chances de sucesso do projeto.
-            </p>
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Os 4 Princípios Fundamentais</h2>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">1. Comece com o que você faz agora</h3>
+                    <p class="text-gray-700">Kanban não exige uma mudança radical. Ele é aplicado sobre o seu processo existente, respeitando os papéis e as responsabilidades atuais para evoluir a partir deles.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">2. Busque mudanças incrementais</h3>
+                    <p class="text-gray-700">O método promove pequenas e contínuas melhorias (Kaizen) em vez de grandes e arriscadas transformações, o que diminui a resistência da equipe.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">3. Respeite o processo atual</h3>
+                    <p class="text-gray-700">É fundamental entender e respeitar os papéis, responsabilidades e fluxos de trabalho já existentes. O Kanban busca melhorar, não substituir tudo do zero.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">4. Incentive a liderança em todos os níveis</h3>
+                    <p class="text-gray-700">No Kanban, qualquer pessoa da equipe pode ter insights e propor melhorias. A liderança não é restrita a cargos de gerência, mas é um ato de iniciativa.</p>
+                </div>
+            </div>
         </section>
-        
+
+        <!-- Slide 3: Vantagens -->
         <section id="slide-3" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">O que é um Risco?</h2>
-            <div class="text-center text-lg text-slate-700 leading-relaxed max-w-3xl space-y-4">
-                <p>É um <strong class="highlight">evento ou condição incerta</strong> que, se ocorrer, terá um efeito <strong class="text-green-600">positivo (oportunidade)</strong> ou <strong class="text-red-600">negativo (ameaça)</strong> em um ou mais objetivos do projeto.</p>
-                <p class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg"><strong>Risco vs. Problema:</strong> Um risco é algo que <strong>pode</strong> acontecer no futuro. Um problema (ou issue) é algo que <strong>já está</strong> acontecendo agora.</p>
-            </div>
-        </section>
-
-        <section id="slide-4" class="slide bg-blue-900 text-white">
-            <div class="text-center">
-                <p class="text-lg font-semibold text-cyan-300">Etapa 1</p>
-                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Identificação com SWOT</h1>
-                <p class="text-xl mt-4 max-w-2xl">Vamos usar a Análise SWOT para mapear o cenário do nosso projeto.</p>
-            </div>
-        </section>
-
-        <section id="slide-5" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Ferramenta Principal: Análise SWOT</h2>
-            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
-                A Análise SWOT (ou FOFA, em português) é uma ferramenta de planejamento estratégico usada para identificar e analisar os ambientes <strong>interno</strong> e <strong>externo</strong> de um projeto.
-            </p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full text-center">
-                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-green-600">S</h3><p>Strengths (Forças)</p></div>
-                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-red-600">W</h3><p>Weaknesses (Fraquezas)</p></div>
-                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-sky-600">O</h3><p>Opportunities (Oportunidades)</p></div>
-                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-orange-600">T</h3><p>Threats (Ameaças)</p></div>
-            </div>
-        </section>
-
-        <section id="slide-6" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Análise SWOT: Fatores Internos</h2>
-            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
-                São os fatores que estão <strong class="highlight">sob o controle</strong> da equipe ou da organização.
-            </p>
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-green-600">Forças (Strengths)</h3>
-                    <p>Características da equipe ou do projeto que lhe dão uma <strong>vantagem</strong>. <br>Ex: Equipe experiente, tecnologia própria, boa reputação.</p>
+             <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Vantagens de usar Kanban</h2>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">Aumento da Produtividade</h3>
+                    <p class="text-gray-700">Ao focar em finalizar tarefas (limitar o WIP), a equipe entrega valor de forma mais rápida e constante.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-red-600">Fraquezas (Weaknesses)</h3>
-                    <p>Características que colocam a equipe ou o projeto em <strong>desvantagem</strong>. <br>Ex: Falta de experiência, orçamento limitado, tecnologia desatualizada.</p>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">Maior Previsibilidade</h3>
+                    <p class="text-gray-700">Métricas como Lead Time e Cycle Time permitem prever com mais precisão quando uma tarefa será concluída.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">Redução de Desperdícios</h3>
+                    <p class="text-gray-700">O foco no fluxo contínuo ajuda a eliminar atividades que não agregam valor e a reduzir o tempo de espera.</p>
                 </div>
             </div>
         </section>
 
-        <section id="slide-7" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Análise SWOT: Fatores Externos</h2>
-            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
-                São os fatores que estão <strong class="highlight">fora do controle</strong> da equipe, vindos do mercado ou do ambiente.
-            </p>
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-sky-600">Oportunidades (Opportunities)</h3>
-                    <p>Elementos no ambiente que o projeto poderia explorar a seu <strong>favor</strong>. <br>Ex: Mercado em crescimento, poucos concorrentes, nova tecnologia disponível.</p>
+        <!-- Slide 4: Pilares -->
+        <section id="slide-4" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Os 3 Pilares Práticos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">1. Visualizar o Fluxo</h3>
+                    <p class="text-gray-700">Mapear as etapas do processo em um quadro para que todos vejam o status do trabalho. A transparência é total.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-orange-600">Ameaças (Threats)</h3>
-                    <p>Elementos no ambiente que podem causar <strong>problemas</strong> para o projeto. <br>Ex: Novo concorrente forte, mudança na legislação, crise econômica.</p>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">2. Limitar o WIP</h3>
+                    <p class="text-gray-700">"Work In Progress". Limitar tarefas em andamento evita sobrecarga, melhora o foco e expõe gargalos rapidamente.</p>
                 </div>
-            </div>
-        </section>
-
-        <section id="slide-8" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">SWOT na Prática: Projeto "GesCafé"</h2>
-            <div class="w-full max-w-4xl bg-white shadow-xl rounded-lg p-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="swot-quadrant bg-green-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-green-700">Forças</h3>
-                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
-                            <li>Equipe com forte conhecimento em backend e APIs.</li>
-                            <li>Acesso direto ao dono da cafeteria para feedback rápido.</li>
-                            <li>Metodologia ágil já implementada na equipe.</li>
-                        </ul>
-                    </div>
-                    <div class="swot-quadrant bg-red-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-red-700">Fraquezas (Riscos)</h3>
-                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
-                            <li><strong>Risco de atraso</strong> devido à inexperiência da equipe em UI/UX.</li>
-                            <li><strong>Risco de gargalo no frontend</strong> por ter apenas um desenvolvedor.</li>
-                            <li><strong>Risco de baixa adoção</strong> inicial por falta de orçamento de marketing.</li>
-                        </ul>
-                    </div>
-                    <div class="swot-quadrant bg-sky-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-sky-700">Oportunidades</h3>
-                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
-                            <li>Mercado de cafeterias especiais em alta na região.</li>
-                            <li>Poucos concorrentes oferecem um sistema tão específico.</li>
-                            <li>Possibilidade de vender o software para outras cafeterias.</li>
-                        </ul>
-                    </div>
-                    <div class="swot-quadrant bg-orange-50 p-4 rounded-lg">
-                        <h3 class="text-2xl font-bold text-orange-700">Ameaças (Riscos)</h3>
-                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
-                            <li><strong>Risco de aumento de custo</strong> do servidor na nuvem.</li>
-                            <li><strong>Risco de perda de mercado</strong> para um concorrente grande.</li>
-                            <li><strong>Risco de instabilidade</strong> ao usar uma nova biblioteca de pagamentos.</li>
-                             <li><strong>Risco de falha crítica</strong> no servidor de hospedagem.</li>
-                        </ul>
-                    </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-2xl font-bold mb-3 text-green-800">3. Medir e Otimizar</h3>
+                    <p class="text-gray-700">É um sistema de melhoria contínua (Kaizen). Medir o fluxo permite otimizar o processo constantemente.</p>
                 </div>
             </div>
         </section>
         
-        <section id="slide-9" class="slide bg-blue-900 text-white">
-            <div class="text-center">
-                <p class="text-lg font-semibold text-cyan-300">Etapa 2</p>
-                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Priorização com a Matriz</h1>
-                <p class="text-xl mt-4 max-w-2xl">Avaliando a probabilidade e o impacto de cada risco.</p>
+        <!-- Slide 5: Anatomia -->
+        <section id="slide-5" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Anatomia de um Quadro Kanban</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl">
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-green-800 mb-2">Cartões</h3>
+                    <p>Representam as tarefas. Contêm a descrição, responsável, prazo, etc. São a unidade de trabalho.</p>
+                 </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-green-800 mb-2">Colunas</h3>
+                    <p>Representam as etapas do fluxo. O mais simples: "A Fazer", "Em Andamento", "Feito".</p>
+                 </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-green-800 mb-2">Limites de WIP</h3>
+                    <p>Um número no topo da coluna que limita a quantidade de cartões permitidos naquela etapa.</p>
+                 </div>
+            </div>
+        </section>
+        
+        <!-- Slide 6: Quadro Físico -->
+        <section id="slide-6" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Kanban na Prática: O Quadro Físico</h2>
+            <p class="text-center text-lg text-gray-600 mb-8 max-w-3xl">O Kanban pode ser tão simples quanto uma lousa e post-its. A visibilidade e a simplicidade são a chave.</p>
+            <div class="bg-white p-4 rounded-lg shadow-xl w-full max-w-4xl">
+                <img src="kanban.png" alt="Exemplo de um quadro Kanban físico com post-its em uma lousa" class="rounded-md object-contain w-full h-full max-h-[60vh]">
             </div>
         </section>
 
-        <section id="slide-10" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Priorizando Riscos com a Matriz</h2>
-            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
-                Após identificar as <strong>Fraquezas</strong> e <strong>Ameaças</strong>, usamos a Matriz de Probabilidade e Impacto para decidir em quais focar primeiro.
-            </p>
-            <div class="w-full max-w-4xl bg-white shadow-xl rounded-lg p-6 relative">
-                 <table class="w-full border-collapse text-center text-sm md:text-base">
+        <!-- Slide 7: Interativo -->
+        <section id="slide-7" class="slide">
+            <h2 class="text-2xl md:text-4xl font-bold mb-4 section-title text-center">Exemplo: Implementando um CRUD</h2>
+            <p class="text-center text-md md:text-lg text-gray-600 mb-6 max-w-3xl">Arraste os cartões e tente mover um terceiro para "Desenvolvimento", que tem um limite de WIP de 2.</p>
+            <div class="bg-white p-4 rounded-lg shadow-xl w-full max-w-md md:max-w-6xl h-[70vh] md:h-auto">
+                <div id="kanban-board" class="flex flex-col md:flex-row gap-4 h-full">
+                    <div class="kanban-column w-full md:w-1/3" data-column-id="todo">
+                        <h3 class="kanban-column-title">A Fazer (Backlog)</h3>
+                        <div class="kanban-cards flex-grow overflow-y-auto pr-2">
+                            <div class="kanban-card" draggable="true">Modelar Banco de Dados</div>
+                            <div class="kanban-card" draggable="true">Criar Rota POST (Create)</div>
+                            <div class="kanban-card" draggable="true">Criar Rota GET (Read)</div>
+                            <div class="kanban-card" draggable="true">Criar Rota PUT (Update)</div>
+                            <div class="kanban-card" draggable="true">Criar Rota DELETE (Delete)</div>
+                            <div class="kanban-card" draggable="true">Desenvolver UI de Listagem</div>
+                            <div class="kanban-card" draggable="true">Desenvolver Formulário (Create/Update)</div>
+                        </div>
+                    </div>
+                    <div class="kanban-column w-full md:w-1/3" data-column-id="doing" data-wip-limit="2">
+                        <h3 class="kanban-column-title">Desenvolvimento - WIP: 2</h3>
+                         <div class="kanban-cards flex-grow overflow-y-auto pr-2"></div>
+                    </div>
+                    <div class="kanban-column w-full md:w-1/3" data-column-id="done">
+                        <h3 class="kanban-column-title">Feito (Done)</h3>
+                         <div class="kanban-cards flex-grow overflow-y-auto pr-2"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: vs Scrum -->
+        <section id="slide-8" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Kanban vs. Scrum</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                         <tr>
-                            <th class="border p-2"></th>
-                            <th class="border p-2 bg-slate-100 font-bold">Baixo Impacto</th>
-                            <th class="border p-2 bg-slate-100 font-bold">Médio Impacto</th>
-                            <th class="border p-2 bg-slate-100 font-bold">Alto Impacto</th>
+                            <th class="border-b-2 p-4 text-lg">Critério</th>
+                            <th class="border-b-2 p-4 text-lg text-green-800">Scrum</th>
+                            <th class="border-b-2 p-4 text-lg text-teal-800">Kanban</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="border p-2 bg-slate-100 font-bold">Alta Prob.</td>
-                            <td class="border p-4 bg-yellow-300"></td>
-                            <td class="border p-4 bg-orange-400"><strong>Gargalo no Frontend</strong></td>
-                            <td class="border p-4 bg-red-500 text-white"><strong>Instabilidade da Biblioteca</strong></td>
-                        </tr>
-                         <tr>
-                            <td class="border p-2 bg-slate-100 font-bold">Média Prob.</td>
-                            <td class="border p-4 bg-green-300"></td>
-                            <td class="border p-4 bg-yellow-300"><strong>Atraso em UI/UX</strong></td>
-                            <td class="border p-4 bg-orange-400"><strong>Aumento do Custo (Nuvem)</strong></td>
-                        </tr>
-                         <tr>
-                            <td class="border p-2 bg-slate-100 font-bold">Baixa Prob.</td>
-                            <td class="border p-4 bg-green-300"><strong>Baixa Adoção Inicial</strong></td>
-                            <td class="border p-4 bg-green-300"></td>
-                            <td class="border p-4 bg-yellow-300"><strong>Falha no Servidor</strong><br><strong>Concorrente Grande</strong></td>
-                        </tr>
+                        <tr class="border-b"> <td class="p-4 font-bold">Ritmo</td> <td class="p-4">Iterações fixas (Sprints)</td> <td class="p-4">Fluxo contínuo</td> </tr>
+                        <tr class="border-b"> <td class="p-4 font-bold">Papéis</td> <td class="p-4">Definidos (PO, SM, Devs)</td> <td class="p-4">Não há papéis pré-definidos</td> </tr>
+                        <tr class="border-b"> <td class="p-4 font-bold">Métricas</td> <td class="p-4">Velocidade (Velocity)</td> <td class="p-4">Lead Time, Cycle Time</td> </tr>
+                        <tr> <td class="p-4 font-bold">Mudanças</td> <td class="p-4">Evitadas durante a Sprint</td> <td class="p-4">Podem ser feitas a qualquer momento</td> </tr>
                     </tbody>
-                 </table>
-            </div>
-        </section>
-        
-        <section id="slide-11" class="slide bg-blue-900 text-white">
-            <div class="text-center">
-                <p class="text-lg font-semibold text-cyan-300">Etapa 3</p>
-                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Planejamento das Respostas</h1>
-                <p class="text-xl mt-4 max-w-2xl">Definindo como lidar com os principais riscos.</p>
+                </table>
             </div>
         </section>
 
-        <section id="slide-12" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Estratégias de Resposta a Riscos</h2>
-             <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
-                Uma vez que os riscos são identificados e priorizados, decidimos como responder a eles.
-            </p>
-            <div class="grid grid-cols-2 gap-8 max-w-6xl">
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Mitigar</h3>
-                    <p><strong>Reduzir</strong> a probabilidade ou o impacto do risco. </p>
+        <!-- Slide 9: Ferramentas -->
+        <section id="slide-9" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Ferramentas Populares</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col text-center items-center tool-card">
+                    <h3 class="text-2xl font-bold mb-2">Trello</h3>
+                    <p class="flex-grow text-gray-700 mb-4">Extremamente simples, visual e intuitivo, perfeito para projetos pessoais e equipes pequenas.</p>
+                    <a href="https://trello.com" target="_blank" class="bg-teal-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-900 transition-colors">Visitar o Site</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Transferir</h3>
-                    <p><strong>Passar</strong> o risco para um terceiro.</p>
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col text-center items-center tool-card">
+                    <h3 class="text-2xl font-bold mb-2">Kanbanflow</h3>
+                    <p class="flex-grow text-gray-700 mb-4">Focado na produtividade, com um cronômetro Pomodoro integrado para medir o tempo gasto.</p>
+                    <a href="https://kanbanflow.com" target="_blank" class="bg-teal-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-900 transition-colors">Visitar o Site</a>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Aceitar</h3>
-                    <p><strong>Reconhecer</strong> o risco, mas não tomar nenhuma ação proativa.</p>
+                <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col text-center items-center tool-card">
+                    <h3 class="text-2xl font-bold mb-2">Monday.com</h3>
+                    <p class="flex-grow text-gray-700 mb-4">Uma plataforma de "Work OS" completa, com automações e múltiplos tipos de visualização.</p>
+                    <a href="https://monday.com" target="_blank" class="bg-green-800 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-900 transition-colors">Visitar o Site</a>
                 </div>
-                 <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Evitar</h3>
-                    <p><strong>Mudar</strong> o plano do projeto para eliminar o risco completamente.</p>
+                 <div class="bg-white rounded-lg shadow-lg p-6 flex flex-col text-center items-center tool-card">
+                    <h3 class="text-2xl font-bold mb-2">KanBanWill</h3>
+                    <p class="flex-grow text-gray-700 mb-4">Simples Kanban do Will</p>
+                    <a href="https://willunicamp.github.io/aulas2025/" target="_blank" class="bg-red-700 text-white font-bold py-2 px-6 rounded-lg hover:bg-red-800 transition-colors">Visitar o Site</a>
                 </div>
             </div>
         </section>
         
-        <section id="slide-13" class="slide">
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Respostas na Prática: "GesCafé"</h2>
-            <div class="space-y-6 max-w-4xl w-full">
-                <div class="bg-white p-4 rounded-lg shadow-lg">
-                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Instabilidade da biblioteca de pagamentos.</p>
-                    <p class="mt-2"><strong class="highlight">Estratégia (Evitar):</strong> Mudar o plano e usar uma biblioteca de pagamentos já estabelecida no mercado, eliminando o risco.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-lg">
-                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Atraso na entrega devido à inexperiência em UI/UX.</p>
-                    <p class="mt-2"><strong class="highlight">Estratégia (Mitigar):</strong> Alocar 20 horas do cronograma para um curso online de Figma para o desenvolvedor, reduzindo o impacto da curva de aprendizagem.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-lg">
-                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Falha crítica no servidor de hospedagem.</p>
-                    <p class="mt-2"><strong class="highlight">Estratégia (Transferir):</strong> Contratar um plano de hospedagem com SLA (Acordo de Nível de Serviço) que garanta 99.9% de uptime e backups automáticos.</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-lg">
-                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Baixa adoção inicial do produto.</p>
-                    <p class="mt-2"><strong class="highlight">Estratégia (Aceitar):</strong> Lançar a versão MVP, aceitar que poucos clientes usarão no início e focar em coletar feedback para melhorar o produto.</p>
-                </div>
-                <div class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg max-w-4xl w-full"><strong>O que é MVP?</strong> É o "Produto Mínimo Viável". A versão mais simples de um produto que pode ser lançada para testar a ideia principal e coletar feedback real dos usuários com o mínimo de esforço.</div>
-            </div>
-        </section>
-
-        <section id="slide-14" class="slide">
-             <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Perguntas?</h2>
-        </section>
-
     </main>
     
     <div id="navigation-controls" class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 z-50 no-print">
@@ -367,6 +377,7 @@
         prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
         nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
         
+        // Update slide indicator on manual scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -375,9 +386,58 @@
                     updateControls();
                 }
             });
-        }, { threshold: 0.7 });
+        }, { threshold: 0.5 });
 
         slides.forEach(slide => observer.observe(slide));
+
+
+        // Kanban Board Logic
+        const cards = document.querySelectorAll('.kanban-card');
+        const columns = document.querySelectorAll('.kanban-column');
+
+        let draggedCard = null;
+
+        cards.forEach(card => {
+            card.addEventListener('dragstart', () => {
+                draggedCard = card;
+                setTimeout(() => card.classList.add('dragging'), 0);
+            });
+
+            card.addEventListener('dragend', () => {
+                draggedCard?.classList.remove('dragging');
+                draggedCard = null;
+            });
+        });
+
+        columns.forEach(column => {
+            column.addEventListener('dragover', e => {
+                e.preventDefault();
+                column.classList.add('drag-over');
+            });
+
+            column.addEventListener('dragleave', () => {
+                column.classList.remove('drag-over');
+            });
+            
+            column.addEventListener('drop', e => {
+                e.preventDefault();
+                column.classList.remove('drag-over');
+                
+                const cardContainer = column.querySelector('.kanban-cards');
+                const wipLimit = parseInt(column.dataset.wipLimit, 10);
+                
+                if (wipLimit && cardContainer.children.length >= wipLimit) {
+                    column.classList.add('wip-limit-exceeded');
+                    setTimeout(() => column.classList.remove('wip-limit-exceeded'), 500);
+                    return;
+                }
+
+                if (draggedCard) {
+                    cardContainer.appendChild(draggedCard);
+                }
+            });
+        });
+
         updateControls();
     });
     </script>
