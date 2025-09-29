@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanBanWill - Mini App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --text: #1f2937;
+            --primary-dark: #134e4a;
+            --primary-accent: #166534;
+            --red-light: #fee2e2;
+            --yellow-light: #fef9c3;
+            --green-light: #dcfce7;
+            --red: #a60000;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            /* Impede o "overscroll" em dispositivos móveis */
+            overscroll-behavior: none;
+        }
+
+        .kanban-column {
+            border-radius: 0.75rem;
+            padding: 1rem;
+            transition: background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .kanban-column.drag-over {
+            filter: brightness(0.95);
+        }
+        .kanban-column-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .kanban-card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+            position: relative;
+            /* Garante que o toque não selecione o texto */
+            user-select: none; 
+        }
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+        .kanban-card.dragging {
+            opacity: 0.8;
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+        
+        .wip-limit-exceeded {
+            animation: shake 0.5s;
+            border: 2px solid var(--red);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .delete-card-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.2;
+            transition: opacity 0.2s;
+        }
+        .kanban-card:hover .delete-card-btn {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold" style="color: var(--primary-dark);">KanBanWill</h1>
+            <p class="text-lg text-gray-600 mt-2">Arraste as tarefas, adicione, edite, exclua, salve e carregue.</p>
+        </header>
+
+        <div class="flex justify-center items-center gap-4 mb-8">
+            <button id="save-button" class="bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                Salvar Quadro
+            </button>
+            <button id="load-button" class="bg-teal-700 hover:bg-teal-800 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+                Carregar Quadro
+            </button>
+            <input type="file" id="file-input" class="hidden" accept=".kb">
+        </div>
+
+        <main class="bg-white p-4 rounded-lg shadow-xl w-full min-h-[70vh] md:h-auto">
+            <div id="kanban-board" class="flex flex-col md:flex-row gap-4 h-full">
+                <!-- Coluna A Fazer -->
+                <div class="kanban-column w-full md:w-1/3" data-column-id="todo" style="background-color: var(--red-light);">
+                    <h3 class="kanban-column-title text-red-800">
+                        <span>A Fazer (Backlog)</span>
+                        <button id="add-task-btn" class="bg-red-200 hover:bg-red-300 text-red-800 font-bold w-8 h-8 rounded-full transition-colors">+</button>
+                    </h3>
+                    <div class="kanban-cards flex-grow overflow-y-auto pr-2">
+                        <!-- Tarefas serão geradas pelo JS -->
+                    </div>
+                </div>
+                <!-- Coluna Desenvolvimento -->
+                <div class="kanban-column w-full md:w-1/3" data-column-id="doing" style="background-color: var(--yellow-light);">
+                    <h3 class="kanban-column-title text-yellow-800">Desenvolvimento</h3>
+                     <div class="kanban-cards flex-grow overflow-y-auto pr-2"></div>
+                </div>
+                <!-- Coluna Feito -->
+                <div class="kanban-column w-full md:w-1/3" data-column-id="done" style="background-color: var(--green-light);">
+                    <h3 class="kanban-column-title text-green-800">Feito (Done)</h3>
+                     <div class="kanban-cards flex-grow overflow-y-auto pr-2"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Add/Rename Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h2 id="task-modal-title" class="text-2xl font-bold mb-4">Adicionar Tarefa</h2>
+            <input id="task-input" type="text" class="w-full border border-gray-300 p-2 rounded-md" placeholder="Nome da tarefa...">
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancel-task-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancelar</button>
+                <button id="save-task-btn" class="bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-4 rounded-lg">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-4">Confirmar Exclusão</h2>
+            <p>Você tem certeza que deseja excluir esta tarefa?</p>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancel-delete-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancelar</button>
+                <button id="confirm-delete-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const columns = document.querySelectorAll('.kanban-column');
+        const saveButton = document.getElementById('save-button');
+        const loadButton = document.getElementById('load-button');
+        const fileInput = document.getElementById('file-input');
+        const addTaskBtn = document.getElementById('add-task-btn');
+
+        // Modals
+        const taskModal = document.getElementById('task-modal');
+        const taskModalTitle = document.getElementById('task-modal-title');
+        const taskInput = document.getElementById('task-input');
+        const saveTaskBtn = document.getElementById('save-task-btn');
+        const cancelTaskBtn = document.getElementById('cancel-task-btn');
+        
+        const deleteModal = document.getElementById('delete-modal');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+
+        let draggedCard = null;
+        let cardToEdit = null;
+        let cardToDelete = null;
+
+        // Variáveis para o drag-and-drop
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let touchTimer = null;
+        let isDragging = false;
+        
+        function createCard(text) {
+            const card = document.createElement('div');
+            card.className = 'kanban-card';
+            card.draggable = true;
+            
+            const cardText = document.createElement('span');
+            cardText.className = 'card-text';
+            cardText.textContent = text;
+            card.appendChild(cardText);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-card-btn';
+            deleteBtn.innerHTML = '🗑️';
+            card.appendChild(deleteBtn);
+
+            addEventListenersToCard(card);
+            return card;
+        }
+        
+        function addEventListenersToCard(card) {
+            // Drag & Drop para Desktop
+            card.addEventListener('dragstart', (e) => {
+                draggedCard = card;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                setTimeout(() => card.classList.add('dragging'), 0);
+            });
+            card.addEventListener('dragend', () => {
+                draggedCard?.classList.remove('dragging');
+                draggedCard = null;
+            });
+            
+            // Drag & Drop para Mobile (Toque)
+            let touchStartCoords = { x: 0, y: 0 };
+            card.addEventListener('touchstart', (e) => {
+                if (e.target.classList.contains('delete-card-btn')) return;
+                
+                clearTimeout(touchTimer);
+                draggedCard = card;
+                const touch = e.touches[0];
+                touchStartCoords = { x: touch.clientX, y: touch.clientY };
+
+                touchTimer = setTimeout(() => {
+                    isDragging = true;
+                    document.body.style.overflow = 'hidden';
+                    draggedCard.classList.add('dragging');
+                }, 500); // 500ms para iniciar o arraste
+
+            }, { passive: true });
+            
+            // Botões e duplo clique
+            card.querySelector('.delete-card-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                cardToDelete = card;
+                deleteModal.style.display = 'flex';
+            });
+
+            card.addEventListener('dblclick', () => {
+                cardToEdit = card;
+                taskModalTitle.textContent = 'Renomear Tarefa';
+                taskInput.value = card.querySelector('.card-text').textContent;
+                taskModal.style.display = 'flex';
+            });
+        }
+        
+        document.body.addEventListener('touchmove', (e) => {
+            if (!isDragging || !draggedCard) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - touchStartCoords.x;
+            const deltaY = touch.clientY - touchStartCoords.y;
+            draggedCard.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(1.05)`;
+
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            columns.forEach(c => c.classList.remove('drag-over'));
+            const columnBelow = elementBelow ? elementBelow.closest('.kanban-column') : null;
+            if (columnBelow) {
+                columnBelow.classList.add('drag-over');
+            }
+        }, { passive: false });
+
+        document.body.addEventListener('touchend', (e) => {
+            clearTimeout(touchTimer);
+            if (!isDragging || !draggedCard) {
+                draggedCard = null;
+                return;
+            }
+
+            document.body.style.overflow = '';
+            draggedCard.style.transform = '';
+            
+            const touch = e.changedTouches[0];
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const columnBelow = elementBelow ? elementBelow.closest('.kanban-column') : null;
+
+            if (columnBelow) {
+                handleDrop(columnBelow);
+            }
+
+            draggedCard.classList.remove('dragging');
+            columns.forEach(c => c.classList.remove('drag-over'));
+            
+            isDragging = false;
+            draggedCard = null;
+        });
+
+        function initializeBoard() {
+            const initialTasks = [
+                "Modelar Banco de Dados", "Criar Rota POST (Create)", "Criar Rota GET (Read)", 
+                "Criar Rota PUT (Update)", "Criar Rota DELETE (Delete)", "Desenvolver UI de Listagem", 
+                "Desenvolver Formulário (Create/Update)"
+            ];
+            const todoColumn = document.querySelector('[data-column-id="todo"] .kanban-cards');
+            initialTasks.forEach(taskText => {
+                const card = createCard(taskText);
+                todoColumn.appendChild(card);
+            });
+        }
+
+        function handleDrop(column) {
+            const cardContainer = column.querySelector('.kanban-cards');
+            if (draggedCard) {
+                cardContainer.appendChild(draggedCard);
+            }
+        }
+        
+        columns.forEach(column => {
+            column.addEventListener('dragover', e => { e.preventDefault(); column.classList.add('drag-over'); });
+            column.addEventListener('dragleave', () => { column.classList.remove('drag-over'); });
+            column.addEventListener('drop', e => {
+                e.preventDefault();
+                column.classList.remove('drag-over');
+                
+                const dragEndX = e.clientX;
+                const dragEndY = e.clientY;
+                const distance = Math.hypot(dragEndX - dragStartX, dragEndY - dragStartY);
+                
+                if (draggedCard && distance < 10) { // Limite de 10 pixels para evitar "falsos" arrastes
+                    return; 
+                }
+
+                handleDrop(column);
+            });
+        });
+
+        // Lógica dos Modais
+        addTaskBtn.addEventListener('click', () => {
+            cardToEdit = null;
+            taskModalTitle.textContent = 'Adicionar Tarefa';
+            taskInput.value = '';
+            taskModal.style.display = 'flex';
+            taskInput.focus();
+        });
+
+        cancelTaskBtn.addEventListener('click', () => taskModal.style.display = 'none');
+        saveTaskBtn.addEventListener('click', () => {
+            const text = taskInput.value.trim();
+            if (text) {
+                if (cardToEdit) {
+                    cardToEdit.querySelector('.card-text').textContent = text;
+                } else {
+                    const newCard = createCard(text);
+                    document.querySelector('[data-column-id="todo"] .kanban-cards').appendChild(newCard);
+                }
+                taskModal.style.display = 'none';
+            }
+        });
+
+        cancelDeleteBtn.addEventListener('click', () => deleteModal.style.display = 'none');
+        confirmDeleteBtn.addEventListener('click', () => {
+            if (cardToDelete) {
+                cardToDelete.remove();
+                cardToDelete = null;
+            }
+            deleteModal.style.display = 'none';
+        });
+
+        // Lógica de Salvar/Carregar
+        saveButton.addEventListener('click', () => {
+            const boardState = {};
+            columns.forEach(column => {
+                const columnId = column.dataset.columnId;
+                const cards = column.querySelectorAll('.kanban-card .card-text');
+                boardState[columnId] = Array.from(cards).map(cardText => cardText.textContent);
+            });
+            const blob = new Blob([JSON.stringify(boardState, null, 2)], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'kanban_board.kb';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        loadButton.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const boardState = JSON.parse(e.target.result);
+                    columns.forEach(column => { column.querySelector('.kanban-cards').innerHTML = ''; });
+                    for (const columnId in boardState) {
+                        const column = document.querySelector(`.kanban-column[data-column-id="${columnId}"]`);
+                        if (column) {
+                            const cardContainer = column.querySelector('.kanban-cards');
+                            boardState[columnId].forEach(cardText => {
+                                const newCard = createCard(cardText);
+                                cardContainer.appendChild(newCard);
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error("Erro ao carregar o arquivo:", error);
+                    alert("Formato de arquivo inválido.");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        });
+        
+        initializeBoard();
+    });
+    </script>
+</body>
+</html>
+

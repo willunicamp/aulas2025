@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula Interativa - Análise de Riscos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .slide { 
+                page-break-inside: avoid; 
+                border-bottom: none !important;
+                min-height: auto !important;
+            }
+        }
+        
+        :root {
+            /* Nova Paleta de Cores - Deep Sea */
+            --bg: #f0f9ff; /* sky-50 */
+            --text: #1e293b; /* slate-800 */
+            --primary: #3b82f6; /* blue-500 */
+            --primary-dark: #2563eb; /* blue-600 */
+            --gradient-from: #06b6d4; /* cyan-500 */
+            --gradient-to: #3b82f6; /* blue-500 */
+            --gray-1: #f1f5f9;
+            --gray-2: #e2e8f0;
+            --gray-3: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5rem 1.5rem;
+            border-bottom: 1px solid var(--gray-2);
+        }
+        .slide:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            background-image: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .nav-button {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-size: 1.25rem;
+            line-height: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .nav-button:hover:not(:disabled) {
+            background-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .nav-button:disabled {
+            background-color: var(--gray-3);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Estilos SWOT */
+        .swot-quadrant {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-sky-50">
+
+    <main id="slide-container">
+
+        <section id="slide-1" class="slide">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-7xl font-extrabold section-title">Análise de Riscos</h1>
+                <p class="text-xl md:text-2xl mt-4 text-slate-600 max-w-4xl">Identificando e se preparando para o inesperado</p>
+            </div>
+        </section>
+        
+        <section id="slide-2" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Por que se preocupar com riscos?</h2>
+            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl">
+                Gerenciar um projeto sem analisar os riscos é como planejar uma viagem sem checar a previsão do tempo. Você pode ter sorte e ter um dia ensolarado, ou pode ser pego por uma tempestade sem um guarda-chuva.
+            </p>
+            <p class="mt-6 text-lg text-center text-slate-700 leading-relaxed max-w-3xl">
+                A análise de riscos nos dá o <strong class="highlight">"guarda-chuva"</strong>: ela nos ajuda a antecipar problemas, preparar respostas e aumentar drasticamente as chances de sucesso do projeto.
+            </p>
+        </section>
+        
+        <section id="slide-3" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">O que é um Risco?</h2>
+            <div class="text-center text-lg text-slate-700 leading-relaxed max-w-3xl space-y-4">
+                <p>É um <strong class="highlight">evento ou condição incerta</strong> que, se ocorrer, terá um efeito <strong class="text-green-600">positivo (oportunidade)</strong> ou <strong class="text-red-600">negativo (ameaça)</strong> em um ou mais objetivos do projeto.</p>
+                <p class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg"><strong>Risco vs. Problema:</strong> Um risco é algo que <strong>pode</strong> acontecer no futuro. Um problema (ou issue) é algo que <strong>já está</strong> acontecendo agora.</p>
+            </div>
+        </section>
+
+        <section id="slide-4" class="slide bg-blue-900 text-white">
+            <div class="text-center">
+                <p class="text-lg font-semibold text-cyan-300">Etapa 1</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Identificação com SWOT</h1>
+                <p class="text-xl mt-4 max-w-2xl">Vamos usar a Análise SWOT para mapear o cenário do nosso projeto.</p>
+            </div>
+        </section>
+
+        <section id="slide-5" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Ferramenta Principal: Análise SWOT</h2>
+            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
+                A Análise SWOT (ou FOFA, em português) é uma ferramenta de planejamento estratégico usada para identificar e analisar os ambientes <strong>interno</strong> e <strong>externo</strong> de um projeto.
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl w-full text-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-green-600">S</h3><p>Strengths (Forças)</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-red-600">W</h3><p>Weaknesses (Fraquezas)</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-sky-600">O</h3><p>Opportunities (Oportunidades)</p></div>
+                <div class="bg-white p-6 rounded-lg shadow-lg"><h3 class="text-3xl font-bold text-orange-600">T</h3><p>Threats (Ameaças)</p></div>
+            </div>
+        </section>
+
+        <section id="slide-6" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Análise SWOT: Fatores Internos</h2>
+            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
+                São os fatores que estão <strong class="highlight">sob o controle</strong> da equipe ou da organização.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-green-600">Forças (Strengths)</h3>
+                    <p>Características da equipe ou do projeto que lhe dão uma <strong>vantagem</strong>. <br>Ex: Equipe experiente, tecnologia própria, boa reputação.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-red-600">Fraquezas (Weaknesses)</h3>
+                    <p>Características que colocam a equipe ou o projeto em <strong>desvantagem</strong>. <br>Ex: Falta de experiência, orçamento limitado, tecnologia desatualizada.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-7" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Análise SWOT: Fatores Externos</h2>
+            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
+                São os fatores que estão <strong class="highlight">fora do controle</strong> da equipe, vindos do mercado ou do ambiente.
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-sky-600">Oportunidades (Opportunities)</h3>
+                    <p>Elementos no ambiente que o projeto poderia explorar a seu <strong>favor</strong>. <br>Ex: Mercado em crescimento, poucos concorrentes, nova tecnologia disponível.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-orange-600">Ameaças (Threats)</h3>
+                    <p>Elementos no ambiente que podem causar <strong>problemas</strong> para o projeto. <br>Ex: Novo concorrente forte, mudança na legislação, crise econômica.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="slide-8" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">SWOT na Prática: Projeto "GesCafé"</h2>
+            <div class="w-full max-w-4xl bg-white shadow-xl rounded-lg p-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="swot-quadrant bg-green-50 p-4 rounded-lg">
+                        <h3 class="text-2xl font-bold text-green-700">Forças</h3>
+                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
+                            <li>Equipe com forte conhecimento em backend e APIs.</li>
+                            <li>Acesso direto ao dono da cafeteria para feedback rápido.</li>
+                            <li>Metodologia ágil já implementada na equipe.</li>
+                        </ul>
+                    </div>
+                    <div class="swot-quadrant bg-red-50 p-4 rounded-lg">
+                        <h3 class="text-2xl font-bold text-red-700">Fraquezas (Riscos)</h3>
+                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
+                            <li><strong>Risco de atraso</strong> devido à inexperiência da equipe em UI/UX.</li>
+                            <li><strong>Risco de gargalo no frontend</strong> por ter apenas um desenvolvedor.</li>
+                            <li><strong>Risco de baixa adoção</strong> inicial por falta de orçamento de marketing.</li>
+                        </ul>
+                    </div>
+                    <div class="swot-quadrant bg-sky-50 p-4 rounded-lg">
+                        <h3 class="text-2xl font-bold text-sky-700">Oportunidades</h3>
+                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
+                            <li>Mercado de cafeterias especiais em alta na região.</li>
+                            <li>Poucos concorrentes oferecem um sistema tão específico.</li>
+                            <li>Possibilidade de vender o software para outras cafeterias.</li>
+                        </ul>
+                    </div>
+                    <div class="swot-quadrant bg-orange-50 p-4 rounded-lg">
+                        <h3 class="text-2xl font-bold text-orange-700">Ameaças (Riscos)</h3>
+                        <ul class="list-disc pl-5 mt-2 text-sm md:text-base">
+                            <li><strong>Risco de aumento de custo</strong> do servidor na nuvem.</li>
+                            <li><strong>Risco de perda de mercado</strong> para um concorrente grande.</li>
+                            <li><strong>Risco de instabilidade</strong> ao usar uma nova biblioteca de pagamentos.</li>
+                             <li><strong>Risco de falha crítica</strong> no servidor de hospedagem.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="slide-9" class="slide bg-blue-900 text-white">
+            <div class="text-center">
+                <p class="text-lg font-semibold text-cyan-300">Etapa 2</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Priorização com a Matriz</h1>
+                <p class="text-xl mt-4 max-w-2xl">Avaliando a probabilidade e o impacto de cada risco.</p>
+            </div>
+        </section>
+
+        <section id="slide-10" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Priorizando Riscos com a Matriz</h2>
+            <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
+                Após identificar as <strong>Fraquezas</strong> e <strong>Ameaças</strong>, usamos a Matriz de Probabilidade e Impacto para decidir em quais focar primeiro.
+            </p>
+            <div class="w-full max-w-4xl bg-white shadow-xl rounded-lg p-6 relative">
+                 <table class="w-full border-collapse text-center text-sm md:text-base">
+                    <thead>
+                        <tr>
+                            <th class="border p-2"></th>
+                            <th class="border p-2 bg-slate-100 font-bold">Baixo Impacto</th>
+                            <th class="border p-2 bg-slate-100 font-bold">Médio Impacto</th>
+                            <th class="border p-2 bg-slate-100 font-bold">Alto Impacto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border p-2 bg-slate-100 font-bold">Alta Prob.</td>
+                            <td class="border p-4 bg-yellow-300"></td>
+                            <td class="border p-4 bg-orange-400"><strong>Gargalo no Frontend</strong></td>
+                            <td class="border p-4 bg-red-500 text-white"><strong>Instabilidade da Biblioteca</strong></td>
+                        </tr>
+                         <tr>
+                            <td class="border p-2 bg-slate-100 font-bold">Média Prob.</td>
+                            <td class="border p-4 bg-green-300"></td>
+                            <td class="border p-4 bg-yellow-300"><strong>Atraso em UI/UX</strong></td>
+                            <td class="border p-4 bg-orange-400"><strong>Aumento do Custo (Nuvem)</strong></td>
+                        </tr>
+                         <tr>
+                            <td class="border p-2 bg-slate-100 font-bold">Baixa Prob.</td>
+                            <td class="border p-4 bg-green-300"><strong>Baixa Adoção Inicial</strong></td>
+                            <td class="border p-4 bg-green-300"></td>
+                            <td class="border p-4 bg-yellow-300"><strong>Falha no Servidor</strong><br><strong>Concorrente Grande</strong></td>
+                        </tr>
+                    </tbody>
+                 </table>
+            </div>
+        </section>
+        
+        <section id="slide-11" class="slide bg-blue-900 text-white">
+            <div class="text-center">
+                <p class="text-lg font-semibold text-cyan-300">Etapa 3</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold mt-2">Planejamento das Respostas</h1>
+                <p class="text-xl mt-4 max-w-2xl">Definindo como lidar com os principais riscos.</p>
+            </div>
+        </section>
+
+        <section id="slide-12" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Estratégias de Resposta a Riscos</h2>
+             <p class="text-lg text-center text-slate-700 leading-relaxed max-w-3xl mb-8">
+                Uma vez que os riscos são identificados e priorizados, decidimos como responder a eles.
+            </p>
+            <div class="grid grid-cols-2 gap-8 max-w-6xl">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Mitigar</h3>
+                    <p><strong>Reduzir</strong> a probabilidade ou o impacto do risco. </p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Transferir</h3>
+                    <p><strong>Passar</strong> o risco para um terceiro.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Aceitar</h3>
+                    <p><strong>Reconhecer</strong> o risco, mas não tomar nenhuma ação proativa.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold mb-3 text-blue-700">Evitar</h3>
+                    <p><strong>Mudar</strong> o plano do projeto para eliminar o risco completamente.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="slide-13" class="slide">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12 section-title text-center">Respostas na Prática: "GesCafé"</h2>
+            <div class="space-y-6 max-w-4xl w-full">
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Instabilidade da biblioteca de pagamentos.</p>
+                    <p class="mt-2"><strong class="highlight">Estratégia (Evitar):</strong> Mudar o plano e usar uma biblioteca de pagamentos já estabelecida no mercado, eliminando o risco.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Atraso na entrega devido à inexperiência em UI/UX.</p>
+                    <p class="mt-2"><strong class="highlight">Estratégia (Mitigar):</strong> Alocar 20 horas do cronograma para um curso online de Figma para o desenvolvedor, reduzindo o impacto da curva de aprendizagem.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Falha crítica no servidor de hospedagem.</p>
+                    <p class="mt-2"><strong class="highlight">Estratégia (Transferir):</strong> Contratar um plano de hospedagem com SLA (Acordo de Nível de Serviço) que garanta 99.9% de uptime e backups automáticos.</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <p><strong class="text-blue-700 text-lg">Para o risco:</strong> Baixa adoção inicial do produto.</p>
+                    <p class="mt-2"><strong class="highlight">Estratégia (Aceitar):</strong> Lançar a versão MVP, aceitar que poucos clientes usarão no início e focar em coletar feedback para melhorar o produto.</p>
+                </div>
+                <div class="mt-6 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-r-lg max-w-4xl w-full"><strong>O que é MVP?</strong> É o "Produto Mínimo Viável". A versão mais simples de um produto que pode ser lançada para testar a ideia principal e coletar feedback real dos usuários com o mínimo de esforço.</div>
+            </div>
+        </section>
+
+        <section id="slide-14" class="slide">
+             <h2 class="text-4xl md:text-5xl font-bold mb-8 section-title text-center">Perguntas?</h2>
+        </section>
+
+    </main>
+    
+    <div id="navigation-controls" class="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 z-50 no-print">
+        <button id="prev-btn" class="nav-button">◀</button>
+        <span id="slide-indicator" class="text-lg font-semibold text-gray-600 w-16 text-center"></span>
+        <button id="next-btn" class="nav-button">▶</button>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideIndicator = document.getElementById('slide-indicator');
+
+        let currentSlide = 0;
+        
+        const goToSlide = (slideIndex) => {
+            if (slideIndex < 0 || slideIndex >= slides.length) return;
+            
+            currentSlide = slideIndex;
+            const targetSlide = slides[slideIndex];
+            targetSlide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            updateControls();
+        };
+
+        const updateControls = () => {
+            slideIndicator.textContent = `${currentSlide + 1} / ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        };
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                goToSlide(currentSlide - 1);
+            }
+        });
+        
+        prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const index = Array.from(slides).indexOf(entry.target);
+                    currentSlide = index;
+                    updateControls();
+                }
+            });
+        }, { threshold: 0.7 });
+
+        slides.forEach(slide => observer.observe(slide));
+        updateControls();
+    });
+    </script>
+
+</body>
+</html>
+
