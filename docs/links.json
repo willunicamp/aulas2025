@@ -45,16 +45,29 @@
                     "items": [
                         { "text": "Aula 04 - Git Branch",   "link": "./fi/04/" },
                         { "text": "Aula 05 - Pull Request",   "link": "./fi/05/" },
-                        { "text": "Aula 04 - Conflito",   "link": "./fi/06/" }
+                        { "text": "Aula 04 - Conflito",   "link": "./fi/06/" },
+                        { "text": "Introdução ao Linux",   "link": "./fi/07/" },
+                        { "text": "Permissões em Linux",   "link": "./fi/08/" },
+                        { "text": "Gerenciamento de Processos",   "link": "./fi/09/" },
+                        { "text": "Redirecionamento e o Editor VIM",   "link": "./fi/10/" },
+                        { "text": "Introdução ao Shell Script",   "link": "./fi/11/" },
+                        { "text": "Quiz 1",   "link": "./fi/11/ex.html" },
+                        { "text": "Exercícios 1",   "link": "./fi/11/ex2.html" },
+                        { "text": "Condicionais e Laços",   "link": "./fi/12/" },
+                        { "text": "Quiz 2",   "link": "./fi/12/ex.html" },
+                        { "text": "Exercícios 2",   "link": "./fi/12/ex2.html" },
+                        { "text": "Shell Script: Revisão Prática",   "link": "./fi/13/" },
+                        { "text": "Quiz 3",   "link": "./fi/13/ex.html" },
+                        { "text": "Exercícios 3",   "link": "./fi/13/ex2.html" }
                     ]
                 },
                 {
                     "folder": "Projeto Integrador I | PI-I",
                     "items": [
                         { "text": "Aula 02 - Exemplo WBS",  "link": "./pii/02/" },
-                        { "text": "Aula 03 - Gantt",    "link": "./pii/03/" }
-                        { "text": "Aula 04 - Análise de Custos",    "link": "./pii/04/" }
-                        { "text": "Aula 05 - Análise de Riscos",    "link": "./pii/05/" }
+                        { "text": "Aula 03 - Gantt",    "link": "./pii/03/" },
+                        { "text": "Aula 04 - Análise de Custos",    "link": "./pii/04/" },
+                        { "text": "Aula 05 - Análise de Riscos",    "link": "./pii/05/" },
                         { "text": "Aula 06 - Kanban",    "link": "./pii/06/" }
                     ]
                 },
