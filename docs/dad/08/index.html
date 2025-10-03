@@ -18,7 +18,7 @@
             --header-height: 60px;
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--primary-bg); color: var(--primary-text); }
-        .slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--header-height) + 2rem) 1rem 4rem 1rem; border-bottom: 1px solid #e2e8f0; }
+        .slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--header-height) + 1rem) 1rem 3rem 1rem; border-bottom: 1px solid #e2e8f0; }
         .slide:last-child { border-bottom: none; }
         .fixed-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #e2e8f0; }
         .nav-controls { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1000; }
@@ -26,9 +26,9 @@
         .nav-button:hover { background-color: var(--accent-color); transform: scale(1.1); }
         .doc-note { background-color: #e0f2fe; border-left: 4px solid #0ea5e9; padding: 1rem; border-radius: 0.5rem; }
         .mission-box { background-color: #fefce8; border: 1px solid var(--accent-color); padding: 1.5rem; border-radius: 0.75rem; }
-        .code-snippet { position: relative; background-color: var(--code-bg); border-radius: 0.5rem; padding: 1.5rem 1rem 1.5rem 4em; font-family: 'Fira Code', monospace; }
-        .code-block { color: #fbf1c7; font-size: 0.9rem; line-height: 1.6; white-space: pre; overflow-x: auto; }
-        .line-numbers { position: absolute; left: 0; top: 1.5rem; width: 3.5em; text-align: right; color: #928374; user-select: none; }
+        .code-snippet { position: relative; background-color: var(--code-bg); border-radius: 0.5rem; padding: 1rem 1rem 1rem 3.5em; font-family: 'Fira Code', monospace; }
+        .code-block { color: #fbf1c7; font-size: 0.85rem; line-height: 1.6; white-space: pre; overflow-x: auto; }
+        .line-numbers { position: absolute; left: 0; top: 1rem; width: 3em; text-align: right; color: #928374; user-select: none; font-size: 0.85rem; line-height: 1.6;}
         .cg-keyword { color: #fb4934; } .cg-type { color: #fabd2f; } .cg-string { color: #b8bb26; } .cg-comment { color: #928374; font-style: italic; } .cg-method { color: #83a598; } .cg-variable { color: #fbf1c7; } .cg-number { color: #d3869b; } .cg-property { color: #8ec07c; }
         .highlight-code { background-color: rgba(250, 189, 47, 0.3); transition: background-color 0.3s; border-radius: 3px; }
         .interactive-step { opacity: 0; transition: opacity 0.5s ease-in-out; }
@@ -59,14 +59,14 @@
         <section class="slide">
             <div class="text-center">
                 <p class="text-lg font-semibold" style="color:var(--accent-color);">Aula 0.1 Beta</p>
-                <h1 class="text-5xl font-extrabold tracking-tight">A Origem dos Heróis</h1>
-                <p class="mt-4 text-xl text-slate-600 max-w-3xl mx-auto">Vamos solidificar nossa base em Orientação a Objetos, aprendendo a criar hierarquias de classes com Herança, Sobrescrita e Sobrecarga.</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">A Origem dos Heróis</h1>
+                <p class="mt-4 text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">Vamos solidificar nossa base em Orientação a Objetos, aprendendo a criar hierarquias de classes com Herança, Sobrescrita e Sobrecarga.</p>
             </div>
         </section>
 
         <section class="slide interactive-slide">
-            <h2 class="text-3xl font-bold w-full">Anatomia de uma Classe (Interativo)</h2>
-            <p class="text-lg text-secondary-text my-6 w-full">Uma <strong>Classe</strong> é um molde que agrupa <strong>Atributos</strong> e <strong>Métodos</strong>. Pressione a seta para a direita para destacar cada parte.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Anatomia de uma Classe (Interativo)</h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">Uma <strong>Classe</strong> é um molde que agrupa <strong>Atributos</strong> e <strong>Métodos</strong>. Pressione a seta para a direita para destacar cada parte.</p>
             <div class="w-full">
                 <div class="code-snippet">
 <pre class="code-block"><span id="c-class"><span class="cg-keyword">public</span> <span class="cg-keyword">class</span> <span class="cg-type">SuperHeroi</span>
@@ -84,18 +84,55 @@
 </pre>
                 </div>
                 <div id="interactive-descriptions" class="mt-4 text-left space-y-2">
-                    <p class="interactive-step text-lg" data-highlight="c-class"><strong>1. Classe:</strong> O molde completo, nosso projeto de <code>SuperHeroi</code>.</p>
-                    <p class="interactive-step text-lg" data-highlight="c-attributes"><strong>2. Atributos:</strong> As características, ou "o que ele tem". Ex: <code>PoderEspecial</code>, <code>Nivel</code>.</p>
-                    <p class="interactive-step text-lg" data-highlight="c-methods"><strong>3. Métodos:</strong> As ações, ou "o que ele faz". Ex: <code>UsaPoderEspecial()</code>.</p>
+                    <p class="interactive-step text-base md:text-lg" data-highlight="c-class"><strong>1. Classe:</strong> O molde completo, nosso projeto de <code>SuperHeroi</code>.</p>
+                    <p class="interactive-step text-base md:text-lg" data-highlight="c-attributes"><strong>2. Atributos:</strong> As características, ou "o que ele tem". Ex: <code>PoderEspecial</code>, <code>Nivel</code>.</p>
+                    <p class="interactive-step text-base md:text-lg" data-highlight="c-methods"><strong>3. Métodos:</strong> As ações, ou "o que ele faz". Ex: <code>UsaPoderEspecial()</code>.</p>
+                </div>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div class="doc-note"><strong>Método <code>virtual</code>:</strong> A palavra <code>virtual</code> é um "convite". Ela sinaliza que qualquer classe filha que herdar de <code>SuperHeroi</code> tem a permissão para modificar (sobrescrever) este método, se precisar.</div>
+                    <div class="doc-note"><strong>Níveis de Acesso:</strong> <code>public</code> significa que qualquer um pode ver e usar. Outros níveis são <code>private</code> (só a própria classe vê), <code>protected</code> (a classe e suas filhas veem) e <code>internal</code> (qualquer um no mesmo projeto vê).</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="slide">
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Propriedades: O Jeito Longo vs. O Jeito Curto</h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">A sintaxe <code>{ get; set; }</code> é um atalho do C#. Por trás dos panos, o compilador cria a versão "longa" para nós.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                <div>
+                    <h3 class="font-bold text-xl mb-2">A Forma "Longa" (Clássica)</h3>
+                    <div class="code-snippet">
+<pre class="code-block"><span class="cg-comment">// Campo privado para guardar o valor</span>
+<span class="cg-keyword">private</span> <span class="cg-type">string</span> <span class="cg-variable">_poderEspecial</span>;
+
+<span class="cg-comment">// Propriedade pública para controlar o acesso</span>
+<span class="cg-keyword">public</span> <span class="cg-type">string</span> <span class="cg-property">PoderEspecial</span>
+{
+    <span class="cg-keyword">get</span> { <span class="cg-keyword">return</span> <span class="cg-variable">_poderEspecial</span>; }
+    <span class="cg-keyword">set</span> { <span class="cg-variable">_poderEspecial</span> = <span class="cg-variable">value</span>; }
+}</pre>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-2">A Forma "Curta" (Autoimplementada)</h3>
+                    <div class="code-snippet">
+<pre class="code-block"><span class="cg-comment">// O compilador cria o campo privado</span>
+<span class="cg-comment">// e o get/set para nós!</span>
+<span class="cg-keyword">public</span> <span class="cg-type">string</span> <span class="cg-property">PoderEspecial</span> { <span class="cg-keyword">get</span>; <span class="cg-keyword">set</span>; }
+</pre>
+                    </div>
+                    <div class="doc-note mt-4">
+                        Pense no <code>{ get; set; }</code> como uma <strong>promessa</strong>: começamos com ele pela simplicidade, com a promessa de que, se precisarmos de validação no futuro (como não permitir um nível negativo), nós o expandiremos para a "forma longa" para adicionar essa lógica.
+                    </div>
                 </div>
             </div>
         </section>
         
         <section class="slide interactive-slide">
-            <h2 class="text-3xl font-bold w-full">Usando o Molde: Criando Objetos</h2>
-            <p class="text-lg text-secondary-text my-6 w-full">Com a classe (molde) pronta, podemos criar <strong>Objetos</strong> (instâncias) e interagir com eles. Pressione a seta para a direita para ver passo a passo.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Usando o Molde: Criando Objetos</h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">Com a classe (molde) pronta, podemos criar <strong>Objetos</strong> (instâncias) e interagir com eles. Pressione a seta para a direita para ver passo a passo.</p>
             <div class="doc-note w-full">
-                 <h3 class="font-bold text-2xl !mt-0">Instanciando e Usando um Herói</h3>
+                 <h3 class="font-bold text-xl md:text-2xl !mt-0">Instanciando e Usando um Herói</h3>
                  <div class="code-snippet mt-4">
 <pre class="code-block"><span class="interactive-step block"><span class="cg-comment">// 1. Instancia um novo objeto da classe SuperHeroi</span>
 <span class="cg-type">SuperHeroi</span> <span class="cg-variable">meuHeroi</span> = <span class="cg-keyword">new</span> <span class="cg-method">SuperHeroi</span>();
@@ -114,24 +151,24 @@
         </section>
         
         <section class="slide">
-            <h2 class="text-3xl font-bold w-full">O Poder da Herança: Evitando Repetição</h2>
-            <p class="text-lg text-secondary-text my-6 w-full">Herança permite que uma classe filha adquira os atributos e métodos de uma classe pai. É o princípio do "É UM". Por exemplo: "O SuperHomem **É UM** SuperHeroi".</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">O Poder da Herança: Evitando Repetição</h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">Herança permite que uma classe filha adquira os atributos e métodos de uma classe pai. É o princípio do "É UM". Por exemplo: "O SuperComum **É UM** SuperHeroi".</p>
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center">
                  <div>
-                    <img src="diagrama.png" alt="Diagrama de Classes de Super-Heróis" class="rounded-lg shadow-md mx-auto">
+                    <img src="https://i.imgur.com/k9E4gY8.png" alt="Diagrama de Classes de Super-Heróis" class="rounded-lg shadow-md mx-auto">
                  </div>
                  <div class="doc-note">
                     <h3 class="!mt-0 font-bold text-xl">Classe Pai (Base)</h3>
                     <p><code>SuperHeroi</code> é a nossa classe pai. Ela define tudo que é <strong>comum</strong> a todos os heróis.</p>
                     <h3 class="mt-4 font-bold text-xl">Classes Filhas (Derivadas)</h3>
-                    <p><code>HomemOvoFrito</code>, <code>SuperHomem</code>, etc, são classes filhas. Elas herdam tudo de <code>SuperHeroi</code> e podem adicionar suas próprias características.</p>
+                    <p><code>HomemOvoFrito</code>, <code>SuperComum</code>, etc, são classes filhas. Elas herdam tudo de <code>SuperHeroi</code> e podem adicionar suas próprias características.</p>
                 </div>
             </div>
         </section>
 
         <section class="slide">
-            <h2 class="text-3xl font-bold w-full">Herança Simples: O <code>HomemOvoFrito</code></h2>
-            <p class="text-lg text-secondary-text my-6 w-full">O HomemOvoFrito é um super-herói, então ele herda da classe <code>SuperHeroi</code>. Ele não tem nada de novo, então sua classe é bem simples.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Herança Simples: O <code>HomemOvoFrito</code></h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">O HomemOvoFrito é um super-herói, então ele herda da classe <code>SuperHeroi</code>. Ele não tem nada de novo, então sua classe é bem simples.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center">
                 <div class="code-snippet">
 <pre class="code-block"><span class="cg-keyword">public</span> <span class="cg-keyword">class</span> <span class="cg-type">HomemOvoFrito</span> : <span class="cg-type">SuperHeroi</span>
@@ -142,80 +179,78 @@
     <span class="cg-comment">// de SuperHeroi.</span>
 }</pre>
                 </div>
-                <div>
-                    <img src="https://placehold.co/400x300/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com HomemOvoFrito" class="rounded-lg shadow-md mx-auto mb-4">
-                    <img src="frito.png" alt="Imagem do HomemOvoFrito" class="rounded-lg shadow-md mx-auto">
+                <div class="space-y-2">
+                    <img src="https://placehold.co/400x200/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com HomemOvoFrito" class="rounded-lg shadow-md mx-auto w-full object-contain">
+                    <img src="https://placehold.co/400x200/fefce8/1d2021?text=Imagem+Divertida" alt="Imagem do HomemOvoFrito" class="rounded-lg shadow-md mx-auto w-full object-contain">
                 </div>
             </div>
         </section>
 
         <section class="slide">
-            <h2 class="text-3xl font-bold w-full">Herança com Adição: O <code>SuperHomem</code></h2>
-            <p class="text-lg text-secondary-text my-6 w-full">O SuperHomem também herda de <code>SuperHeroi</code>, mas ele tem uma característica a mais: um ponto fraco. Podemos adicionar novas propriedades e métodos na classe filha.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Herança com Adição: O <code>SuperComum</code></h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">O SuperComum também herda de <code>SuperHeroi</code>, mas ele tem uma característica a mais: um ponto fraco. Podemos adicionar novas propriedades e métodos na classe filha.</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center">
                 <div class="code-snippet">
-<pre class="code-block"><span class="cg-keyword">public</span> <span class="cg-keyword">class</span> <span class="cg-type">SuperHomem</span> : <span class="cg-type">SuperHeroi</span>
+<pre class="code-block"><span class="cg-keyword">public</span> <span class="cg-keyword">class</span> <span class="cg-type">SuperComum</span> : <span class="cg-type">SuperHeroi</span>
 {
-    <span class="cg-comment">// Nova propriedade, exclusiva do SuperHomem</span>
+    <span class="cg-comment">// Nova propriedade</span>
     <span class="cg-keyword">public</span> <span class="cg-type">string</span> <span class="cg-property">PontoFraco</span> { <span class="cg-keyword">get</span>; <span class="cg-keyword">set</span>; }
 
-    <span class="cg-comment">// Novo método, exclusivo do SuperHomem</span>
+    <span class="cg-comment">// Novo método</span>
     <span class="cg-keyword">public</span> <span class="cg-type">string</span> <span class="cg-method">AtivaFraqueza</span>()
     {
         <span class="cg-keyword">return</span> <span class="cg-string">$"Ah, não! {PontoFraco}!"</span>;
     }
 }</pre>
                 </div>
-                <div>
-                    <img src="https://placehold.co/400x300/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com SuperHomem" class="rounded-lg shadow-md mx-auto mb-4">
-                    <img src="comum.png" alt="Imagem do SuperComum" class="rounded-lg shadow-md mx-auto">
+                <div class="space-y-2">
+                    <img src="https://placehold.co/400x200/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com SuperComum" class="rounded-lg shadow-md mx-auto w-full object-contain">
+                    <img src="https://placehold.co/400x200/fefce8/1d2021?text=Imagem+Divertida" alt="Imagem do SuperComum" class="rounded-lg shadow-md mx-auto w-full object-contain">
                 </div>
             </div>
         </section>
 
         <section class="slide">
-            <h2 class="text-3xl font-bold w-full">Sobrescrita: O Caso da <code>MulherBateria</code></h2>
-            <p class="text-lg text-secondary-text my-6 w-full">A <strong>Sobrescrita</strong> (<code>override</code>) permite que uma classe filha modifique um comportamento herdado. Para isso, o método na classe pai deve ser marcado como <code>virtual</code>.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Sobrescrita: O Caso da <code>MulherBateria</code></h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">A <strong>Sobrescrita</strong> (<code>override</code>) permite que uma classe filha modifique um comportamento herdado. Para isso, o método na classe pai deve ser marcado como <code>virtual</code>.</p>
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center">
                 <div class="code-snippet">
 <pre class="code-block"><span class="cg-keyword">public</span> <span class="cg-keyword">class</span> <span class="cg-type">MulherBateria</span> : <span class="cg-type">SuperHeroi</span>
 {
     <span class="cg-keyword">public</span> <span class="cg-type">int</span> <span class="cg-property">Energia</span> { <span class="cg-keyword">get</span>; <span class="cg-keyword">set</span>; }
 
-    <span class="cg-comment">// 'override' substitui o comportamento</span>
     <span class="cg-keyword">public</span> <span class="cg-keyword">override</span> <span class="cg-type">string</span> <span class="cg-method">UsaPoderEspecial</span>()
     {
         <span class="cg-keyword">if</span> (<span class="cg-property">Energia</span> > <span class="cg-number">10</span>) {
              <span class="cg-property">Energia</span> -= <span class="cg-number">10</span>;
-             <span class="cg-keyword">return</span> <span class="cg-string">$"BZZZT! Energia restante: {Energia}%"</span>;
+             <span class="cg-keyword">return</span> <span class="cg-string">$"BZZZT! Energia: {Energia}%"</span>;
         } <span class="cg-keyword">else</span> {
              <span class="cg-keyword">return</span> <span class="cg-string">"Energia baixa demais!"</span>;
         }
     }
 }</pre>
                 </div>
-                <div>
-                    <img src="https://placehold.co/400x300/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com MulherBateria" class="rounded-lg shadow-md mx-auto mb-4">
-                    <img src="bateria.png" alt="Imagem da MulherBateria" class="rounded-lg shadow-md mx-auto">
+                <div class="space-y-2">
+                    <img src="https://placehold.co/400x200/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com MulherBateria" class="rounded-lg shadow-md mx-auto w-full object-contain">
+                    <img src="https://placehold.co/400x200/fefce8/1d2021?text=Imagem+Divertida" alt="Imagem da MulherBateria" class="rounded-lg shadow-md mx-auto w-full object-contain">
                 </div>
             </div>
         </section>
 
         <section class="slide">
-            <h2 class="text-3xl font-bold w-full">Sobrecarga: O Caso do <code>HomemPum</code></h2>
-            <p class="text-lg text-secondary-text my-6 w-full">A <strong>Sobrecarga</strong> (<code>overload</code>) é ter vários métodos com o mesmo nome, mas com parâmetros diferentes.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Sobrecarga: O Caso do <code>HomemPum</code></h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">A <strong>Sobrecarga</strong> (<code>overload</code>) é ter vários métodos com o mesmo nome, mas com parâmetros diferentes.</p>
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full items-center">
                 <div class="code-snippet">
 <pre class="code-block"><span class="cg-keyword">public</span> <span class="cg-keyword">class</span> <span class="cg-type">HomemPum</span> : <span class="cg-type">SuperHeroi</span>
 {
-    <span class="cg-comment">// Ele já tem o método UsaPoderEspecial()</span>
-    <span class="cg-comment">// herdado, que não recebe parâmetros.</span>
+    <span class="cg-comment">// Já herdou: UsaPoderEspecial()</span>
 
-    <span class="cg-comment">// Esta é uma SOBRECARGA: mesmo nome,</span>
-    <span class="cg-comment">// mas com um parâmetro a mais.</span>
+    <span class="cg-comment">// SOBRECARGA: mesmo nome,</span>
+    <span class="cg-comment">// mas com parâmetro.</span>
     <span class="cg-keyword">public</span> <span class="cg-type">string</span> <span class="cg-method">UsaPoderEspecial</span>(<span class="cg-type">string</span> <span class="cg-variable">arma</span>)
     {
-        <span class="cg-keyword">if</span> (<span class="cg-variable">arma</span>.<span class="cg-method">ToLower</span>() == <span class="cg-string">"fósforo"</span>)
+        <span class="cg-keyword">if</span> (<span class="cg-variable">arma</span> == <span class="cg-string">"fósforo"</span>)
         {
             <span class="cg-keyword">return</span> <span class="cg-string">"PFFFF... BOOM!"</span>;
         }
@@ -223,16 +258,16 @@
     }
 }</pre>
                 </div>
-                <div>
-                    <img src="https://placehold.co/400x300/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com HomemPum" class="rounded-lg shadow-md mx-auto mb-4">
-                    <img src="pum.png" alt="Imagem do HomemPum" class="rounded-lg shadow-md mx-auto">
+                <div class="space-y-2">
+                    <img src="https://placehold.co/400x200/1d2021/fbf1c7?text=Diagrama+Atualizado" alt="Diagrama com HomemPum" class="rounded-lg shadow-md mx-auto w-full object-contain">
+                    <img src="https://placehold.co/400x200/fefce8/1d2021?text=Imagem+Divertida" alt="Imagem do HomemPum" class="rounded-lg shadow-md mx-auto w-full object-contain">
                 </div>
             </div>
         </section>
 
         <section class="slide">
-            <h2 class="text-3xl font-bold w-full">Próxima Aula: Mão na Massa!</h2>
-            <p class="text-lg text-secondary-text my-6 w-full">Agora que entendemos a teoria, vamos aplicar tudo isso no nosso projeto <code>Gerenciador de Heróis</code> para conectá-lo ao banco de dados.</p>
+            <h2 class="text-2xl md:text-3xl font-bold w-full">Próxima Aula: Mão na Massa!</h2>
+            <p class="text-base md:text-lg text-secondary-text my-4 w-full">Agora que entendemos a teoria, vamos aplicar tudo isso no nosso projeto <code>Gerenciador de Heróis</code> para conectá-lo ao banco de dados.</p>
             <div class="mission-box w-full">
                 <h3 class="!mt-0">Plano de Batalha:</h3>
                 <ol class="list-decimal pl-5 space-y-2 text-secondary-text text-lg">
@@ -250,7 +285,7 @@
         <button id="prev-btn" class="nav-button" title="Slide Anterior (←)">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </button>
-        <div id="slide-counter" class="text-lg font-semibold bg-white px-4 py-2 rounded-full shadow-md">1 / 9</div>
+        <div id="slide-counter" class="text-lg font-semibold bg-white px-4 py-2 rounded-full shadow-md">1 / 10</div>
         <button id="next-btn" class="nav-button" title="Próximo Slide (→)">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
