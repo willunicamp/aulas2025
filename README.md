@@ -1,3 +1,3 @@
-# daw2025
+# Aulas 2025
 
-Material das aulas de Desenvolvimento de Aplicações Web
+Material das aulas do Prof. Will para as disciplinas do COTIL em 2025
