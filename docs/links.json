@@ -15,12 +15,12 @@
                         { "text": "Aula 06 - Exercício",   "link": "./dawi/06/ex.html" },
                         { "text": "Aula 07 - Bootstrap - Componentes interativos",   "link": "./dawi/07/" },
                         { "text": "Aula 07 - Exercício",   "link": "./dawi/07/ex.html" },
-                        { "text": "Aula 08 - Bootstrap - Revisão",   "link": "./dawi/07/" },
-                        { "text": "Aula 08 - Exercício",   "link": "./dawi/07/ex.html" },
-                        { "text": "Aula 09 - Javascript - Introdução",   "link": "./dawi/07/" },
-                        { "text": "Aula 09 - Exercício",   "link": "./dawi/07/ex.html" },
-                        { "text": "Aula 10 - Javascript - JSON",   "link": "./dawi/07/" },
-                        { "text": "Projeto Final",   "link": "./dawi/07/ex.html" }
+                        { "text": "Aula 08 - Bootstrap - Revisão",   "link": "./dawi/08/" },
+                        { "text": "Aula 08 - Exercício",   "link": "./dawi/08/ex.html" },
+                        { "text": "Aula 09 - Javascript - Introdução",   "link": "./dawi/09/" },
+                        { "text": "Aula 09 - Exercício",   "link": "./dawi/09/ex.html" },
+                        { "text": "Aula 10 - Javascript - JSON",   "link": "./dawi/10/" },
+                        { "text": "Projeto Final",   "link": "./dawi/10/ex.html" }
                         
                     ]
                 },
@@ -30,7 +30,9 @@
                         { "text": "Aula 05 - Exercício de Revisão",   "link": "./dad/05/ex.html" },
                         { "text": "Aula 06 - Update",   "link": "./dad/06/index.html" },
                         { "text": "Aula 06 - Exercício Update",   "link": "./dad/06/ex.html" },
-                        { "text": "Aula 07 - Delete",   "link": "./dad/07/index.html" }
+                        { "text": "Aula 07 - Delete",   "link": "./dad/07/index.html" },
+                        { "text": "Aula 08 - Classes e Herança",   "link": "./dad/08/index.html" },
+                        { "text": "Aula 07 - Organizando o Projeto",   "link": "./dad/09/index.html" }
                     ]
                 },
                                 {
