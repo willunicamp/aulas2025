@@ -9,7 +9,7 @@ listar_diretorio() {
     
     # Pega todos os itens (arquivos e diretórios), exceto os ocultos,
     # e os coloca em um array. Usar 'find' é mais seguro para nomes com espaços.
-    local itens=($(find "$diretorio" -maxdepth 1 -mindepth 1 -not -path '*/.*' | sort))
+    local itens=($(find "$diretorio" -maxdepth 1 -mindepth 1 -type d -not -path '*/.*' | sort))
     local total_itens=${#itens[@]}
     local contador=0
 

@@ -323,7 +323,7 @@
                <div class="flex gap-8 mt-8">
                    <div class="w-1/2">
                        <h3 class="font-bold text-lg mb-2 text-center">Código</h3>
-                       <div class="code-block-wrapper debugger"><pre id="debugger-struct-code"><div class="line" data-line="1"><span class="token-keyword">struct</span> Aluno {</div><div class="line" data-line="2">    <span class="token-type">float</span> nota;</div><div class="line" data-line="3">};</div><div class="line" data-line="4"><span class="token-type">void</span> <span class="token-function">darPontoExtra</span>(<span class="token-keyword">struct</span> Aluno <span class="token-pointer">*</span>p) {</div><div class="line" data-line="5">    p->nota += <span class="token-number">1.0</span>;</div><div class="line" data-line="6">}</div><div class="line" data-line="7"><span class="token-type">int</span> <span class="token-function">main</span>() {</div><div class="line" data-line="8">    <span class="token-keyword">struct</span> Aluno aluno1 = {<span class="token-number">8.5</span>};</div><div class="line" data-line="9">    <span class="token-function">darPontoExtra</span>(&aluno1);</div><div class="line" data-line="10">    <span class="token-keyword">return</span> <span class="token-number">0</span>;</div><div class="line" data-line="11">}</div></pre></div>
+                       <div class="code-block-wrapper debugger"><pre id="debugger-struct-code"><div class="line" data-line="1"><span class="token-keyword">struct</span> Aluno {</div><div class="line" data-line="2">    <span class="token-type">float</span> nota;</div><div class="line" data-line="3">};</div><div class="line" data-line="4"><span class="token-type">void</span> <span class="token-function">darPontoExtra</span>(<span class="token-keyword">struct</span> Aluno <span class="token-pointer">*</span>p) {</div><div class="line" data-line="5">    p->nota += <span class="token-number">1.0</span>;</div><div class="line" data-line="6">}</div><div class="line" data-line="7"><span class="token-type">int</span> <span class="token-function">main</span>() {</div><div class="line" data-line="8">    <span class="token-keyword">struct</span> Aluno aluno1;</div><div class="line" data-line="9">    aluno1.nota = <span class="token-number">8.5</span>;</div><div class="line" data-line="10">    <span class="token-function">darPontoExtra</span>(&aluno1);</div><div class="line" data-line="11">    <span class="token-keyword">return</span> <span class="token-number">0</span>;</div><div class="line" data-line="12">}</div></pre></div>
                    </div>
                    <div class="w-1/2">
                        <h3 class="font-bold text-lg mb-2 text-center">Teste de Mesa (Memória)</h3>
@@ -542,14 +542,15 @@
                     const lines = Array.from(slide.querySelectorAll('#debugger-struct-code .line'));
                     const executionPath = [
                         { line: 7, memory: [] },
-                        { line: 8, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{8.5}' }] },
-                        { line: 9, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{8.5}' }] },
-                        { line: 4, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{8.5}' }, { scope: 'darPontoExtra', var: 'p', addr: '0x400', val: '0x300' }] },
-                        { line: 5, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{8.5}' }, { scope: 'darPontoExtra', var: 'p', addr: '0x400', val: '0x300' }] },
-                        { line: 6, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{9.5}', changed: true }, { scope: 'darPontoExtra', var: 'p', addr: '0x400', val: '0x300' }] },
-                        { line: 9, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{9.5}' }] },
-                        { line: 10, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{9.5}' }] },
-                        { line: 11, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '{9.5}' }] },
+                        { line: 8, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '??' }] },
+                        { line: 9, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '8.5' }] },
+                        { line: 10, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '8.5' }] },
+                        { line: 4, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '8.5' }, { scope: 'darPontoExtra', var: 'p', addr: '0x400', val: '0x300' }] },
+                        { line: 5, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '8.5' }, { scope: 'darPontoExtra', var: 'p', addr: '0x400', val: '0x300' }] },
+                        { line: 6, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '9.5', changed: true }, { scope: 'darPontoExtra', var: 'p', addr: '0x400', val: '0x300' }] },
+                        { line: 10, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '9.5' }] },
+                        { line: 11, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '9.5' }] },
+                        { line: 12, memory: [{ scope: 'main', var: 'aluno1', addr: '0x300', val: '9.5' }] },
                     ];
                     let currentStep = -1;
                     debuggers[animationType] = {
@@ -559,8 +560,8 @@
                              lines.forEach(l => l.classList.remove('highlight', 'return-point'));
                              const currentLine = lines.find(l => parseInt(l.dataset.line) === currentLineNumber);
                              if (currentLine) currentLine.classList.add('highlight');
-                             const returnLine = lines.find(l => parseInt(l.dataset.line) === 9);
-                             if (currentStep >= 3 && currentStep <= 5) { if(returnLine) returnLine.classList.add('return-point'); }
+                             const returnLine = lines.find(l => parseInt(l.dataset.line) === 10);
+                             if (currentStep >= 4 && currentStep <= 6) { if(returnLine) returnLine.classList.add('return-point'); }
                              tableBody.innerHTML = '';
                              memory.forEach(mem => {
                                  const row = document.createElement('tr');
