@@ -32,7 +32,9 @@
                         { "text": "Aula 06 - Exercício Update",   "link": "./dad/06/ex.html" },
                         { "text": "Aula 07 - Delete",   "link": "./dad/07/index.html" },
                         { "text": "Aula 08 - Classes e Herança",   "link": "./dad/08/index.html" },
-                        { "text": "Aula 07 - Organizando o Projeto",   "link": "./dad/09/index.html" }
+                        { "text": "Aula 07 - Organizando o Projeto",   "link": "./dad/09/index.html" },
+                        { "text": "Projeto Final",   "link": "./dad/10/index.html" }
+
                     ]
                 },
                                 {
