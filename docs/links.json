@@ -42,8 +42,8 @@
                     "items": [
                         { "text": "Aula 04 - CSMA/CA",   "link": "./sord/04/" },
                         { "text": "Aula 05 - Cabeamento",   "link": "./sord/05/" },
-                        { "text": "Aula 08 - Roteadores e TCP/IP",   "link": "./sord/08/" }
-
+                        { "text": "Aula 08 - Roteadores e TCP/IP",   "link": "./sord/08/" },
+                        { "text": "Aula 09 - Protocolos de Transporte e Aplicação",   "link": "./sord/09/" }
                     ]
                 },
                 {
