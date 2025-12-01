@@ -101,6 +101,7 @@
                         { "text": "Aula 10 - Exercícios",    "link": "./lp/10/ex.html" },
                         { "text": "Aula 11 - Modularização .h e .c",    "link": "./lp/11/" },
                         { "text": "Aula 11 - Exercícios",    "link": "./lp/11/ex.html" },
+                        { "text": "Aula 12 - Alocação Dinâmica",    "link": "./lp/12/" },
                         { "text": "Projeto Final",    "link": "./lp/projetos.html" }
                     ]
                 }
